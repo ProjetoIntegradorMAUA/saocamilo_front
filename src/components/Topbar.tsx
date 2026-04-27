@@ -8,7 +8,7 @@ interface ITopbar {
 export default function Topbar({ titulo, foto }: ITopbar) {
 
     return (
-        <div className="w-full bg-white flex gap-3  items-center ps-5 pe-5">
+        <div className="w-full bg-gray-50 flex gap-3  items-center ps-5 pe-5">
             <button className="cursor-pointer text-2xl  p-2">{icons.seta_esquerda}</button>
             <div className="w-11/12 ps-15 font-semibold">
                 {titulo}
