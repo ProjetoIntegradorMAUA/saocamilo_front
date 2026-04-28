@@ -23,15 +23,16 @@ export default function Preferencias() {
     };
 
     return (
-        <div className="flex flex-col border border-gray-300 rounded-2xl bg-white w-full max-w-md px-8 py-8 shadow-sm">
+        <div className="flex flex-col border border-black-300 rounded-2xl bg-white w-full max-w-md px-8 py-8 ">
             <h2 className="text-2xl font-semibold text-gray-800 mb-8">
                 Preferências
             </h2>
 
-            <div className="flex items-center justify-between py-4 border-t border-gray-200">
+            <div className="grid grid-cols-[180px_1fr] items-center py-4 border-t border-gray-200">
                 <p className="text-gray-700 font-medium">Tema</p>
-                <div className="flex gap-6">
-                    <label className="flex items-center gap-2 cursor-pointer">
+
+                <div className="flex gap-8">
+                    <label className="flex items-center gap-2 cursor-pointer min-w-20">
                         <input
                             type="radio"
                             name="tema"
@@ -43,7 +44,7 @@ export default function Preferencias() {
                         <span className="text-gray-700">Claro</span>
                     </label>
 
-                    <label className="flex items-center gap-2 cursor-pointer">
+                    <label className="flex items-center gap-2 cursor-pointer min-w-20">
                         <input
                             type="radio"
                             name="tema"
@@ -57,10 +58,11 @@ export default function Preferencias() {
                 </div>
             </div>
 
-            <div className="flex items-center justify-between py-4 border-t border-gray-200">
+            <div className="grid grid-cols-[180px_1fr] items-center py-4 border-t border-gray-200">
                 <p className="text-gray-700 font-medium">Unidade de medida</p>
-                <div className="flex gap-6">
-                    <label className="flex items-center gap-2 cursor-pointer">
+
+                <div className="flex gap-8">
+                    <label className="flex items-center gap-2 cursor-pointer min-w-20">
                         <input
                             type="radio"
                             name="unidade"
@@ -72,7 +74,7 @@ export default function Preferencias() {
                         <span className="text-gray-700">kg</span>
                     </label>
 
-                    <label className="flex items-center gap-2 cursor-pointer">
+                    <label className="flex items-center gap-2 cursor-pointer min-w-20">
                         <input
                             type="radio"
                             name="unidade"
@@ -86,10 +88,11 @@ export default function Preferencias() {
                 </div>
             </div>
 
-            <div className="flex items-center justify-between py-4 border-t border-gray-200">
+            <div className="grid grid-cols-[180px_1fr] items-center py-4 border-t border-gray-200">
                 <p className="text-gray-700 font-medium">Temperatura</p>
-                <div className="flex gap-6">
-                    <label className="flex items-center gap-2 cursor-pointer">
+
+                <div className="flex gap-8">
+                    <label className="flex items-center gap-2 cursor-pointer min-w-20">
                         <input
                             type="radio"
                             name="temperatura"
@@ -101,7 +104,7 @@ export default function Preferencias() {
                         <span className="text-gray-700">°C</span>
                     </label>
 
-                    <label className="flex items-center gap-2 cursor-pointer">
+                    <label className="flex items-center gap-2 cursor-pointer min-w-20">
                         <input
                             type="radio"
                             name="temperatura"
