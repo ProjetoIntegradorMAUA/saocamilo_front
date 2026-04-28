@@ -23,74 +23,97 @@ export default function Preferencias() {
     };
 
     return (
-        <div>
-            <h2>Preferências</h2>
+        <div className="flex flex-col border border-gray-300 rounded-2xl bg-white w-full max-w-md px-8 py-8 shadow-sm">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-8">
+                Preferências
+            </h2>
 
-            <p>Tema</p>
-            <label>
-                <input
-                    type="radio"
-                    name="tema"
-                    value="claro"
-                    checked={tema === "claro"}
-                    onChange={handleTemaChange}
-                />
-                Claro
-            </label>
-            <label>
-                <input
-                    type="radio"
-                    name="tema"
-                    value="escuro"
-                    checked={tema === "escuro"}
-                    onChange={handleTemaChange}
-                />
-                Escuro
-            </label>
+            <div className="flex items-center justify-between py-4 border-t border-gray-200">
+                <p className="text-gray-700 font-medium">Tema</p>
+                <div className="flex gap-6">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="radio"
+                            name="tema"
+                            value="claro"
+                            checked={tema === "claro"}
+                            onChange={handleTemaChange}
+                            className="accent-red-600 w-4 h-4"
+                        />
+                        <span className="text-gray-700">Claro</span>
+                    </label>
 
-            <p>Unidade de medida</p>
-            <label>
-                <input
-                    type="radio"
-                    name="unidade"
-                    value="kg"
-                    checked={unidade === "kg"}
-                    onChange={handleUnidadeChange}
-                />
-                kg
-            </label>
-            <label>
-                <input
-                    type="radio"
-                    name="unidade"
-                    value="lb"
-                    checked={unidade === "lb"}
-                    onChange={handleUnidadeChange}
-                />
-                lb
-            </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="radio"
+                            name="tema"
+                            value="escuro"
+                            checked={tema === "escuro"}
+                            onChange={handleTemaChange}
+                            className="accent-red-600 w-4 h-4"
+                        />
+                        <span className="text-gray-700">Escuro</span>
+                    </label>
+                </div>
+            </div>
 
-            <p>Temperatura</p>
-            <label>
-                <input
-                    type="radio"
-                    name="temperatura"
-                    value="c"
-                    checked={temperatura === "c"}
-                    onChange={handleTemperaturaChange}
-                />
-                °C
-            </label>
-            <label>
-                <input
-                    type="radio"
-                    name="temperatura"
-                    value="f"
-                    checked={temperatura === "f"}
-                    onChange={handleTemperaturaChange}
-                />
-                °F
-            </label>
+            <div className="flex items-center justify-between py-4 border-t border-gray-200">
+                <p className="text-gray-700 font-medium">Unidade de medida</p>
+                <div className="flex gap-6">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="radio"
+                            name="unidade"
+                            value="kg"
+                            checked={unidade === "kg"}
+                            onChange={handleUnidadeChange}
+                            className="accent-red-600 w-4 h-4"
+                        />
+                        <span className="text-gray-700">kg</span>
+                    </label>
+
+                    <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="radio"
+                            name="unidade"
+                            value="lb"
+                            checked={unidade === "lb"}
+                            onChange={handleUnidadeChange}
+                            className="accent-red-600 w-4 h-4"
+                        />
+                        <span className="text-gray-700">lb</span>
+                    </label>
+                </div>
+            </div>
+
+            <div className="flex items-center justify-between py-4 border-t border-gray-200">
+                <p className="text-gray-700 font-medium">Temperatura</p>
+                <div className="flex gap-6">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="radio"
+                            name="temperatura"
+                            value="c"
+                            checked={temperatura === "c"}
+                            onChange={handleTemperaturaChange}
+                            className="accent-red-600 w-4 h-4"
+                        />
+                        <span className="text-gray-700">°C</span>
+                    </label>
+
+                    <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="radio"
+                            name="temperatura"
+                            value="f"
+                            checked={temperatura === "f"}
+                            onChange={handleTemperaturaChange}
+                            className="accent-red-600 w-4 h-4"
+                        />
+                        <span className="text-gray-700">°F</span>
+                    </label>
+                </div>
+            </div>
         </div>
     );
 }
