@@ -4,7 +4,7 @@ import { GoGear } from "react-icons/go";
 import { IoAddOutline } from "react-icons/io5";
 import { TbLockPassword } from "react-icons/tb";
 import { MdDateRange, MdEdit, MdHorizontalRule, MdOutlinePalette } from "react-icons/md";
-import { IoIosMenu, IoMdClose, IoIosArrowForward } from "react-icons/io";
+import { IoIosMenu, IoMdClose, IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import { SiStagetimer } from "react-icons/si";
 import { CiSearch, CiStar, CiBellOn } from "react-icons/ci";
 
@@ -27,6 +27,7 @@ export const icons = {
     "negativo": <MdHorizontalRule />,
     "estrela": <CiStar />,
     "seta_direita": <IoIosArrowForward />,
+    "seta_esquerda": <IoIosArrowBack />,
     "paleta": <MdOutlinePalette />,
     "termometro": <FaThermometerHalf />,
     "peso": <LuWeight />,
