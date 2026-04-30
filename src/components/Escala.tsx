@@ -1,15 +1,11 @@
-import type { ReactNode } from "react";
+import { icons } from "../utils/IconsJson";
 
-interface IEscalaUrina {
-    texto: string;
-    icone?: ReactNode;
-}
 
-export default function EscalaUrina({ texto, icone }: IEscalaUrina) {
+export default function EscalaUrina() {
     return (
         <div>
             <div className="flex items-center gap-2 text-3xl  text-black mb-4">
-                <span>{icone}</span>
+                <span className="border rounded-3xl">{icons.estrela}</span>
                 <p> Escala Visual </p>
             </div>
             <div className="border-1 rounded-3xl gap-3 py-8 w-300 bg-white">
