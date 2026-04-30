@@ -1,28 +1,24 @@
 import type { ReactNode } from "react";
+import { icons } from "../utils/IconsJson";
 
 
-interface IDetectacao {
-    texto: string;
-    icone?: ReactNode;
-}
 
-
-export default function Detectacao({ texto, icone }: IDetectacao) {
+export default function Detectacao() {
     return (
         <div>
             <div className="flex items-center gap-2 text-3xl  text-black mb-4">
-                <span>{icone}</span>
-                <p> Detectação de Inconscistências </p>
+                <span className="border rounded-3xl">{icons.negativo}</span>
+                <p> Detectação de Inconsistências </p>
             </div>
-            <div className="border-1 rounded-3xl gap-3 py-8 w-300 bg-white">
-                <div>
+            <div className="border rounded-3xl p-6 bg-white w-175 flex flex-col gap-4">
+                <div className="border border-red-500 rounded-2xl text-red-500 text-center py-3">
                     <p>Taxa de sudorese &gt; 2.5 L/h </p>
                 </div>
-                <div>
+                <div className="border border-red-500 rounded-2xl text-red-500 text-center py-3">
                     <p>Variação de massa corporal &gt; 2% </p>
                     <p>(Risco de desidratação clínica)</p>
                 </div>
-                <div>
+                <div className="border border-red-500 rounded-2xl text-red-500 text-center py-3">
                     <p>Balanço hídrico positivo</p>
                     <p>(Risco de hiponatremia por superingestão)</p>
                 </div>
