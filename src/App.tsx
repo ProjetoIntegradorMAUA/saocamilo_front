@@ -1,8 +1,8 @@
-import './App.css'
+import "./App.css";
 
 export default function App() {
-  return (
-    <>
-    </>
-  );
+    return (
+        <>
+        </>
+    );
 }
