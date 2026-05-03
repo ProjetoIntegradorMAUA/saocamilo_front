@@ -44,9 +44,9 @@ export default function CardAvaliacoes({
                 </div>
             </div>
 
-            {avaliacoes.map((avaliacao, index) => (
+            {avaliacoes.map((avaliacao) => (
                 <div
-                    key={index}
+                    key={`${avaliacao.nome}-${avaliacao.data.toISOString()}-${avaliacao.sudorese}`}
                     className="grid grid-cols-12 items-center border border-black rounded-2xl bg-[#ffffff] px-8 py-5"
                 >
                     <div className="flex items-center gap-3 w-40 sm:w-60 md:w-72 col-span-6">
