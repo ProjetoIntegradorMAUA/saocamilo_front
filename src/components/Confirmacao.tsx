@@ -12,8 +12,8 @@ export default function Confirmacao({ texto, textob1, textob2} : iConfirmacao) {
                 {texto}
             </div>
             <div className="flex gap-8">
-                <button className="border-2  px-4 rounded-3x1 border-b-gray-400">{textob1}</button>
-                <button className="border-2  px-4 rounded-2x1 border-red-500">{textob2}</button>
+                <button className="border-2  px-5 py-2 rounded-xl border-gray-500 text-gray-500 cursor-pointer hover:bg-gray-200">{textob1}</button>
+                <button className="border-2  px-5 py-2 rounded-xl border-red-500 text-red-500 cursor-pointer hover:bg-red-200 " >{textob2}</button>
             </div>
     </div>
     )
