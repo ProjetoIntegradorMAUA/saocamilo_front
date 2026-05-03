@@ -8,7 +8,7 @@ export default function EscalaUrina() {
                 <span className="border rounded-3xl">{icons.estrela}</span>
                 <p> Escala Visual </p>
             </div>
-            <div className="border-1 rounded-3xl gap-3 py-8 w-300 bg-white">
+            <div className="border rounded-3xl gap-3 py-8 w-300 bg-white">
                 <p className="text-center text-gray-600 text-lg mb-8">
                     Utilize para estimular o estado de hidratação basal do
                     atleta antes do início da sessão.

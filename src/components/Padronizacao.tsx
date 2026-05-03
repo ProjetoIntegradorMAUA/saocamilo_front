@@ -23,7 +23,7 @@ export default function Padronizacao() {
                         <p>Vestimenta mínima e consistente.</p>
                         <p>(preferencialmente apenas roupa íntima ou uniforme seco)</p>
                     </div>
-          </div>
+                </div>
                 <div className="flex itens-center gap-4">
                     <p className="flex items-center justify-center rounded-full bg-red-700 text-white text-xl font-semibold w-7 h-7 ">4</p>
                     <p>Secar o suor da pele com toalha antes da pesagem pós-exercício.</p>
