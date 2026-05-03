@@ -31,18 +31,19 @@ export default function CardAvaliacoes({
     avaliacoes,
 }: ICardAvaliacoes) {
     return (
-        <div className="flex flex-col gap-6 border border-black rounded-2xl bg-[#e9e9e9] px-8 py-6 w-full max-w-4xl">
+        <div className="flex flex-col gap-6 border border-black rounded-2xl bg-[#f3f3f3] px-8 py-6 w-full max-w-4xl">
             <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <div className="text-4xl text-gray-600">{icons.calendario}</div>
-                    <h2 className="text-4xl font-medium text-black">
+                <div className="flex items-center gap-3 w-full">
+                    <div className="text-xl sm:text-3xl text-gray-600">{icons.calendario}</div>
+                    <p className="text-xl sm:text-2xl text-black">
                         Avaliações Recentes
-                    </h2>
+                    </p>
+                    <button className="text-green-500 hover:underline cursor-pointer ml-auto">
+                        Ver todas
+                    </button>
                 </div>
 
-                <button className="text-green-500 text-xl font-medium hover:underline">
-                    Ver todas
-                </button>
+
             </div>
 
             {avaliacoes.map((avaliacao, index) => (
