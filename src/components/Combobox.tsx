@@ -12,9 +12,9 @@ export default function ComboBox({ texto, placeholder, options }: IComboBox) {
 
             <select className="border border-gray-300 rounded-lg px-4 py-2 w-80 bg-white text-black" defaultValue="">
                 <option value="" disabled>{placeholder}</option>
-                {options.map((option, index) => {
+                {options.map((option) => {
                     return (
-                        <option key={index} value={option.toLowerCase()}>{option}</option>
+                        <option key={option} value={option}>{option}</option>
                     )
                 })}
             </select>
