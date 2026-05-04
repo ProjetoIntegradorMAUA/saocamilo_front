@@ -1,12 +1,13 @@
 import "./App.css"
-import Preferencias from "./components/Preferencias";
+import Navbar from "./components/Navbar";
 
 
 export default function App() {
     return (
-        <>
-            <Preferencias/>
-        </>
+        <div className="h-lvh">
+            <Navbar index={1}></Navbar>
+            
+        </div>
     );
 }
 
