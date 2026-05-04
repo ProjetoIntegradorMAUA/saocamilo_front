@@ -1,24 +1,18 @@
-import type { ReactNode } from "react";
-
+import { icons } from "../utils/IconsJson";
 
 interface ICardDashboard {
     texto: string;
     quantidade: number;
-    icone: ReactNode;
-    cor: string;
 }
 
-export default function CardDashboard({ texto, quantidade, icone, cor }: ICardDashboard) {
+export default function CardDashboard({ texto, quantidade }: ICardDashboard) {
     return (
-        <div className="flex items-center justify-center gap-4 border border-2 border-black rounded-xl bg-white px-10 py-6 w-80">
-
-            <div className={`flex items-center justify-center text-4xl text-${cor}-500`}>
-                {icone}
+        <div className="flex items-center justify-center gap-4 border-2 border-black rounded-xl bg-white px-10 py-6 w-80">
+            <div className={texto == "Atletas" ? "flex items-center justify-center text-4xl text-blue-500" : "flex items-center justify-center text-4xl text-green-500"}>
+                {texto == "Atletas" ? icons.usuario : icons.avaliacoes}
             </div>
-
             <div className="flex items-center gap-2 text-gray-700 text-2xl font-medium">
-                <p>{texto}</p>
-                <p>- {quantidade}</p>
+                <span>{texto} - {quantidade}</span>
             </div>
         </div>
     )

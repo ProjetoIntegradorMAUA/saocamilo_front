@@ -1,6 +1,5 @@
 import { icons } from "../utils/IconsJson";
 
-
 export default function EscalaUrina() {
     return (
         <div>
