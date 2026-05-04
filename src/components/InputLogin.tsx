@@ -1,15 +1,14 @@
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
+import { icons } from "../utils/IconsJson";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-
 
 interface IInputLogin {
     placeholder: string;
-    icon: ReactNode;
     type: string;
     id: number;
 }
 
-export default function InputLogin({ placeholder, icon, type, id }: IInputLogin) {
+export default function InputLogin({ placeholder, type, id }: IInputLogin) {
     const [showPassword, setShowPassword] = useState(false);
 
     const isPassword = type === "password";
@@ -18,7 +17,7 @@ export default function InputLogin({ placeholder, icon, type, id }: IInputLogin)
     return (
         <div className="flex border border-gray-400 w-fit rounded-2xl">
             <div className="flex items-center justify-center px-3 text-2xl">
-                {icon}
+                {placeholder == "Usuário" ? icons.usuario : icons.senha}
             </div>
 
             <input
