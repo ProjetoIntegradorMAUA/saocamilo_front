@@ -17,7 +17,7 @@ export default function InputLogin({ placeholder, type, id }: IInputLogin) {
     return (
         <div className="flex border border-gray-400 w-fit rounded-2xl">
             <div className="flex items-center justify-center px-3 text-2xl">
-                {placeholder == "Usuário" ? icons.usuario : icons.senha}
+                {isPassword ? icons.senha : icons.usuario}
             </div>
 
             <input
