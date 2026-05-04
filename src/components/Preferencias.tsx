@@ -7,7 +7,7 @@ type Temperatura = "c" | "f";
 
 export default function Preferencias() {
     const configsString = localStorage.getItem("configs")
-    const configs = JSON.parse(configsString ? configsString : '{"tema":"escuro","unidade":"kg","temperatura":"c"}')
+    const configs = JSON.parse(configsString ? configsString : '{"tema":"claro","unidade":"kg","temperatura":"c"}')
     const [tema, setTema] = useState<Tema>(configs.tema);
     const [unidade, setUnidade] = useState<Unidade>(configs.unidade);
     const [temperatura, setTemperatura] = useState<Temperatura>(configs.temperatura);
