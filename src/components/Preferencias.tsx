@@ -6,21 +6,33 @@ type Unidade = "kg" | "lb";
 type Temperatura = "c" | "f";
 
 export default function Preferencias() {
-    const [tema, setTema] = useState<Tema>("claro");
-    const [unidade, setUnidade] = useState<Unidade>("kg");
-    const [temperatura, setTemperatura] = useState<Temperatura>("c");
+    const configsString = localStorage.getItem("configs")
+    const configs = JSON.parse(configsString ? configsString : '{"tema":"escuro","unidade":"kg","temperatura":"c"}')
+    const [tema, setTema] = useState<Tema>(configs.tema);
+    const [unidade, setUnidade] = useState<Unidade>(configs.unidade);
+    const [temperatura, setTemperatura] = useState<Temperatura>(configs.temperatura);
 
     const handleTemaChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setTema(e.target.value as Tema);
+        const newTema = e.target.value as Tema;
+        setTema(newTema);
+        setLocalStorage(newTema, unidade, temperatura);
     };
 
     const handleUnidadeChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setUnidade(e.target.value as Unidade);
+        const newUnidade = e.target.value as Unidade;
+        setUnidade(newUnidade);
+        setLocalStorage(tema, newUnidade, temperatura);
     };
 
     const handleTemperaturaChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setTemperatura(e.target.value as Temperatura);
+        const newTemperatura = e.target.value as Temperatura;
+        setTemperatura(newTemperatura);
+        setLocalStorage(tema, unidade, newTemperatura);
     };
+
+    const setLocalStorage = (tema: Tema, unidade: Unidade, temperatura: Temperatura) => {
+        localStorage.setItem("configs", JSON.stringify({ tema, unidade, temperatura }))
+    }
 
     return (
         <div className="flex flex-col border border-black-300 rounded-2xl bg-white w-full max-w-md px-8 py-8 ">
@@ -117,6 +129,6 @@ export default function Preferencias() {
                     </label>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
