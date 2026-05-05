@@ -8,13 +8,13 @@ export default function Padronizacao() {
                 <span className="border rounded-3xl">{icons.check}</span>
                 <p> Padronização de pesagem</p>
             </div>
-            <div className="border rounded-3xl p-6 bg-white w-160 flex flex-col gap-4">
+            <div className="border rounded-3xl p-14 bg-white w-full min-h-75 flex flex-col gap-4">
                 <div className="flex itens-center gap-4">
                     <p className="flex items-center justify-center rounded-full bg-red-700 text-white text-xl font-semibold w-7 h-7 ">1</p>
                     <p>Esvaziamento vesical obrigatório antes de ambas as pesagens.</p>
                 </div>
                 <div className="flex itens-center gap-4" >
-                    <p className="flex items-center justify-center rounded-full bg-red-700 text-white text-xl font-semibold w-7 h-7 ">2</p>
+                    <p className="flex items-center justify-center rounded-full bg-red-700 text-white text-x1 font-semibold w-7 h-7 ">2</p>
                     <p>Utilizar a mesma balança em superfície nivelada.</p>
                 </div>
                 <div className="flex itens-center gap-4" >

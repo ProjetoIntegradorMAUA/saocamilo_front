@@ -7,7 +7,7 @@ export default function Detectacao() {
                 <span className="border rounded-3xl">{icons.negativo}</span>
                 <p> Detectação de Inconsistências </p>
             </div>
-            <div className="border rounded-3xl p-6 bg-white w-175 flex flex-col gap-4">
+            <div className="border rounded-3xl p-6 bg-white w-full min-h-[300px] flex flex-col gap-4 justify-center ">
                 <div className="border border-red-500 rounded-2xl text-red-500 text-center py-3">
                     <p>Taxa de sudorese &gt; 2.5 L/h </p>
                 </div>
