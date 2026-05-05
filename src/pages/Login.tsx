@@ -1,6 +1,26 @@
+import { useState } from "react";
 import InputLogin from "../components/InputLogin";
 
 export default function Login() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError("");
+
+        if (!email || !password) {
+            setError("Por favor, preencha todos os campos");
+            return;
+        }
+
+        if (!email.includes("@")) {
+            setError("Por favor, insira um email válido");
+            return;
+        }
+    };
+
     return (
         <div className="min-h-screen w-full bg-linear-to-br from-red-50 via-white to-red-50 flex items-center justify-center px-4 py-6">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -12,97 +32,74 @@ export default function Login() {
                     <div className="bg-linear-to-r from-red-500 to-red-600 px-6 py-12">
                         <div className="flex flex-col items-center gap-4">
                             <div className="bg-white rounded-full p-4 shadow-lg">
-                                <img
-                                    className="w-14"
-                                    src="src/assets/logo_saocamilo.webp"
-                                    alt="Logo Sao camilo"
-                                />
+                                <img className="w-14" src="src/assets/logo_saocamilo.webp" alt="Logo Sao camilo" />
                             </div>
                             <div className="text-center">
-                                <h1 className="text-3xl font-bold text-white mb-1">
-                                    SÃO CAMILO
-                                </h1>
-                                <p className="text-red-100 text-sm font-medium">
-                                    Bem-vindo de volta
-                                </p>
+                                <h1 className="text-3xl font-bold text-white mb-1">SÃO CAMILO</h1>
+                                <p className="text-red-100 text-sm font-medium">Bem-vindo de volta</p>
                             </div>
                         </div>
                     </div>
-                    <form className="px-6 py-8 sm:px-8">
+                    <form onSubmit={handleSubmit} className="px-6 py-8 sm:px-8">
+                        {error && (
+                            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                                <p className="text-red-700 text-sm font-medium flex items-center gap-2">
+                                    <span className="text-lg">⚠️</span>
+                                    {error}
+                                </p>
+                            </div>
+                        )}
                         <div className="mb-6">
-                            <label
-                                htmlFor="email"
-                                className="block text-gray-700 font-semibold mb-2 text-sm"
-                            >
+                            <label htmlFor="email" className="block text-gray-700 font-semibold mb-2 text-sm">
                                 Email
                             </label>
                             <InputLogin
                                 id="email"
                                 placeholder="seu@email.com"
                                 type="email"
+                                value={email}
+                                onChange={(value) => {
+                                    setEmail(value);
+                                    setError("");
+                                }}
                             />
                         </div>
                         <div className="mb-2">
-                            <label
-                                htmlFor="password"
-                                className="block text-gray-700 font-semibold mb-2 text-sm"
-                            >
+                            <label htmlFor="password" className="block text-gray-700 font-semibold mb-2 text-sm">
                                 Senha
                             </label>
                             <InputLogin
                                 id="password"
                                 placeholder="Sua senha"
                                 type="password"
+                                value={password}
+                                onChange={(value) => {
+                                    setPassword(value);
+                                    setError("");
+                                }}
                             />
                         </div>
                         <div className="mb-8 flex justify-end">
-                            <a
-                                href="#"
-                                className="text-red-500 hover:text-red-600 text-xs font-medium transition-colors"
-                            >
+                            <a href="#" className="text-red-500 hover:text-red-600 text-xs font-medium transition-colors">
                                 Esqueceu sua senha?
                             </a>
                         </div>
                         <button
                             type="submit"
-                            className="w-full bg-linear-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:hover:scale-100 shadow-lg mb-4 flex items-center justify-center gap-2"
-                        >Entrar
+                            className="w-full bg-linear-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg mb-4 flex items-center justify-center gap-2 cursor-pointer"
+                        >
+                            Entrar
                         </button>
-                        <div className="relative my-6">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-gray-300"></div>
-                            </div>
-                            <div className="relative flex justify-center text-xs uppercase">
-                                <span className="px-2 bg-white text-gray-500 font-medium">
-                                    ou
-                                </span>
-                            </div>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-gray-600 text-sm mb-3">
-                                Não tem uma conta?{" "}
-                                <a
-                                    href="#"
-                                    className="text-red-500 font-semibold hover:text-red-600 transition-colors"
-                                >
-                                    Crie uma agora
-                                </a>
-                            </p>
-                        </div>
                     </form>
                     <div className="bg-gray-50 px-6 py-4 sm:px-8 border-t border-gray-100">
                         <p className="text-center text-gray-500 text-xs">
                             Ao fazer login, você concorda com nossos{" "}
-                            <a
-                                href="#"
-                                className="text-red-500 hover:text-red-600 font-medium transition-colors"
-                            >
+                            <a href="#" className="text-red-500 hover:text-red-600 font-medium transition-colors">
                                 Termos de Serviço
                             </a>
                         </p>
                     </div>
                 </div>
-                
             </div>
         </div>
     );
