@@ -6,9 +6,11 @@ interface IInputLogin {
     placeholder: string;
     type: string;
     id: string;
+    value?: string;
+    onChange?: (value: string) => void;
 }
 
-export default function InputLogin({ placeholder, type, id }: IInputLogin) {
+export default function InputLogin({ placeholder, type, id, value, onChange }: IInputLogin) {
     const [showPassword, setShowPassword] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
 
@@ -31,6 +33,8 @@ export default function InputLogin({ placeholder, type, id }: IInputLogin) {
                 id={id}
                 type={isPassword && !showPassword ? "password" : "text"}
                 placeholder={placeholder}
+                value={value || ""}
+                onChange={(e) => onChange?.(e.target.value)}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 className="flex-1 min-w-0 sm:w-56 md:w-64 bg-transparent outline-none text-gray-800 placeholder-gray-400 ml-2 transition-colors duration-200"
