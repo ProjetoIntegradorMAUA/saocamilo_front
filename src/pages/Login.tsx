@@ -44,6 +44,12 @@ export default function Login() {
                                 Esqueceu sua senha?
                             </a>
                         </div>
+                        <button
+                            type="submit"
+                            className="w-full bg-linear-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:hover:scale-100 shadow-lg mb-4 flex items-center justify-center gap-2"
+                        >
+                            Entrar
+                        </button>
                     </form>
                 </div>
             </div>
