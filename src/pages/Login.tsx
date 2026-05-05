@@ -68,7 +68,27 @@ export default function Login() {
                             className="w-full bg-linear-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:hover:scale-100 shadow-lg mb-4 flex items-center justify-center gap-2"
                         >Entrar
                         </button>
-                        
+                        <div className="relative my-6">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-gray-300"></div>
+                            </div>
+                            <div className="relative flex justify-center text-xs uppercase">
+                                <span className="px-2 bg-white text-gray-500 font-medium">
+                                    ou
+                                </span>
+                            </div>
+                        </div>
+                        <div className="text-center">
+                            <p className="text-gray-600 text-sm mb-3">
+                                Não tem uma conta?{" "}
+                                <a
+                                    href="#"
+                                    className="text-red-500 font-semibold hover:text-red-600 transition-colors"
+                                >
+                                    Crie uma agora
+                                </a>
+                            </p>
+                        </div>
                     </form>
                     <div className="bg-gray-50 px-6 py-4 sm:px-8 border-t border-gray-100">
                         <p className="text-center text-gray-500 text-xs">
