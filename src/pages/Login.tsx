@@ -91,14 +91,6 @@ export default function Login() {
                             Entrar
                         </button>
                     </form>
-                    <div className="bg-gray-50 px-6 py-4 sm:px-8 border-t border-gray-100">
-                        <p className="text-center text-gray-500 text-xs">
-                            Ao fazer login, você concorda com nossos{" "}
-                            <a href="#" className="text-red-500 hover:text-red-600 font-medium transition-colors">
-                                Termos de Serviço
-                            </a>
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
