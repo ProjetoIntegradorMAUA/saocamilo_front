@@ -9,6 +9,25 @@ export default function Login() {
             </div>
             <div className="w-full max-w-md relative z-10">
                 <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                    <div className="bg-linear-to-r from-red-500 to-red-600 px-3 py-8">
+                        <div className="flex flex-col items-center gap-4">
+                            <div className="bg-white rounded-full p-4 shadow-lg">
+                                <img
+                                    className="w-14"
+                                    src="src/assets/logo_saocamilo.webp"
+                                    alt="Logo Sao camilo"
+                                />
+                            </div>
+                            <div className="text-center">
+                                <h1 className="text-3xl font-bold text-white mb-1">
+                                    SÃO CAMILO
+                                </h1>
+                                <p className="text-red-100 text-sm font-medium">
+                                    Bem-vindo
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                     <form className="px-6 py-8 sm:px-8">
                         <div className="mb-6">
                             <label
