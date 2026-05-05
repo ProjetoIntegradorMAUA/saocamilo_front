@@ -3,7 +3,7 @@ import EscalaUrina from "../components/Escala";
 import Navbar from "../components/Navbar";
 import Padronizacao from "../components/Padronizacao";
 
-export default function App() {
+export default function Manual() {
     return (
         <div className="min-h-screen bg-[#f4f4f4] flex">
             <Navbar index={3} />

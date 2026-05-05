@@ -1,25 +1,30 @@
 import { useState } from "react";
 import InputLogin from "../components/InputLogin";
+import { useNavigate } from "react-router";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
-    const handleSubmit = async (e: React.SubmitEvent) => {
-        e.preventDefault();
-        setError("");
 
-        if (!email || !password) {
-            setError("Por favor, preencha todos os campos");
-            return;
-        }
+    // USO FUTURO
+    // const handleSubmit = async (e: React.SubmitEvent) => {
+    //     e.preventDefault();
+    //     setError("");
 
-        if (!email.includes("@")) {
-            setError("Por favor, insira um email válido");
-            return;
-        }
-    };
+    //     if (!email || !password) {
+    //         setError("Por favor, preencha todos os campos");
+    //         return;
+    //     }
+
+    //     if (!email.includes("@")) {
+    //         setError("Por favor, insira um email válido");
+    //         return;
+    //     }
+    // };
+
+    const navigate = useNavigate()
 
     return (
         <div className="min-h-screen w-full bg-linear-to-br from-red-50 via-white to-red-50 flex items-center justify-center px-4 py-6">
@@ -36,7 +41,7 @@ export default function Login() {
                             </div>
                         </div>
                     </div>
-                    <form onSubmit={handleSubmit} className="px-6 py-8 sm:px-8">
+                    <form onSubmit={()=>navigate("/manual")} className="px-6 py-8 sm:px-8">
                         {error && (
                             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
                                 <p className="text-red-700 text-sm font-medium flex items-center gap-2">
