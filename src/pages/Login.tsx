@@ -9,7 +9,7 @@ export default function Login() {
             </div>
             <div className="w-full max-w-md relative z-10">
                 <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-                    <div className="bg-linear-to-r from-red-500 to-red-600 px-3 py-8">
+                    <div className="bg-linear-to-r from-red-500 to-red-600 px-6 py-12">
                         <div className="flex flex-col items-center gap-4">
                             <div className="bg-white rounded-full p-4 shadow-lg">
                                 <img
@@ -23,7 +23,7 @@ export default function Login() {
                                     SÃO CAMILO
                                 </h1>
                                 <p className="text-red-100 text-sm font-medium">
-                                    Bem-vindo
+                                    Bem-vindo de volta
                                 </p>
                             </div>
                         </div>
@@ -66,11 +66,23 @@ export default function Login() {
                         <button
                             type="submit"
                             className="w-full bg-linear-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:hover:scale-100 shadow-lg mb-4 flex items-center justify-center gap-2"
-                        >
-                            Entrar
+                        >Entrar
                         </button>
+                        
                     </form>
+                    <div className="bg-gray-50 px-6 py-4 sm:px-8 border-t border-gray-100">
+                        <p className="text-center text-gray-500 text-xs">
+                            Ao fazer login, você concorda com nossos{" "}
+                            <a
+                                href="#"
+                                className="text-red-500 hover:text-red-600 font-medium transition-colors"
+                            >
+                                Termos de Serviço
+                            </a>
+                        </p>
+                    </div>
                 </div>
+                
             </div>
         </div>
     );
