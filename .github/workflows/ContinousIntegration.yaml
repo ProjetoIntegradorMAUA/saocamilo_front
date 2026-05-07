@@ -1,8 +1,8 @@
-name: Continous Integration
+name: Continuous Integration
 
-on: 
-    pull_request: 
-        branches: 
+on:
+    pull_request:
+        branches:
             - main
 
 jobs:
@@ -16,6 +16,6 @@ jobs:
               with:
                 node-version: 24.x
             - name: Installing dependencies
-              run: npm ci
+              run: npm install
             - name: Building project
               run: npm run build
