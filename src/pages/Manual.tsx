@@ -1,0 +1,41 @@
+import Detectacao from "../components/Detectacao";
+import EscalaUrina from "../components/Escala";
+import Navbar from "../components/Navbar";
+import Padronizacao from "../components/Padronizacao";
+
+export default function Manual() {
+    return (
+        <div className="min-h-screen bg-[#f4f4f4] flex">
+            <div className="fixed bottom-0 left-0 right-0 z-40 lg:static lg:z-auto">
+                <Navbar index={3} />
+            </div>
+
+            <main className="flex-1 lg:ml-60 px-3 sm:px-6 py-2 sm:py-6 flex justify-center">
+            <div className="w-98% sm:w-full max-w-350 bg-transparent sm:bg-[#e9e9ed] rounded-3xl px-1 sm:px-6 py-2 sm:py-6 mx-auto sm:mx-4 transform scale-90 sm:scale-100 origin-top">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 lg:gap-10 items-start">
+                        
+                        <div className="flex justify-center">
+                            <div className="w-full">
+                                <Padronizacao />
+                            </div>
+                        </div>
+
+                        <div className="flex justify-center">
+                            <div className="w-full">
+                                <Detectacao />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div className="mt-6 sm:mt-8 flex justify-center">
+                        <div className="w-full">
+                            <EscalaUrina />
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    );
+}
