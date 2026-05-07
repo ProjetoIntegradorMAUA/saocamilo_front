@@ -1,21 +1,21 @@
 name: Continuous Integration
 
 on:
-    pull_request:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 
 jobs:
-    continous-integration:
-        runs-on: ubuntu-latest
+  continous-integration:
+    runs-on: ubuntu-latest
 
-        steps:
-            - uses: actions/checkout@v4
-            - name: Installing Node.js
-              uses: actions/setup-node@v4
-              with:
-                node-version: 24.x
-            - name: Installing dependencies
-              run: npm install
-            - name: Building project
-              run: npm run build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Installing Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+      - name: Installing dependencies
+        run: npm install
+      - name: Building project
+        run: npm run build
