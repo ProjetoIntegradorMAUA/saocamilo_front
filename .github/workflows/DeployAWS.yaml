@@ -30,8 +30,8 @@ jobs:
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-region: us-east-1
 
-            - name: Sincronizar Arquivos com S3
+            - name: Sync with S3
               run: aws s3 sync dist/ s3://${{ secrets.AWS_S3_BUCKET }} --delete
 
-            - name: Limpar Cache do CloudFront (Invalidation)
+            - name: Clean CloudFront cache
               run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DISTRIBUTION_ID }} --paths "/*"
