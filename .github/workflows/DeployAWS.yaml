@@ -1,0 +1,37 @@
+name: Deploy React to AWS
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    DeployToAWS:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Installing Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+
+            - name: Installing dependencies
+              run: npm install
+
+            - name: Building project
+              run: npm run build
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: us-east-1
+
+            - name: Sincronizar Arquivos com S3
+              run: aws s3 sync dist/ s3://${{ secrets.AWS_S3_BUCKET }} --delete
+
+            - name: Limpar Cache do CloudFront (Invalidation)
+              run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DISTRIBUTION_ID }} --paths "/*"
