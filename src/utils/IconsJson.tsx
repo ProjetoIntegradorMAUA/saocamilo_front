@@ -7,6 +7,7 @@ import { MdDateRange, MdEdit, MdHorizontalRule, MdOutlinePalette } from "react-i
 import { IoIosMenu, IoMdClose, IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import { SiStagetimer } from "react-icons/si";
 import { CiSearch, CiStar, CiBellOn } from "react-icons/ci";
+import { BiBarChartAlt } from "react-icons/bi";
 
 export const icons = {
     "usuario": <FaRegUser />,
@@ -32,5 +33,6 @@ export const icons = {
     "termometro": <FaThermometerHalf />,
     "peso": <LuWeight />,
     "sino": <CiBellOn />,
-    "cargo": <LuBriefcaseBusiness />
+    "cargo": <LuBriefcaseBusiness />,
+    "grafico": <BiBarChartAlt />
 }

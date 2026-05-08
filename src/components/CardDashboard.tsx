@@ -10,7 +10,7 @@ export default function CardDashboard({ texto, quantidade }: ICardDashboard) {
         <div className="flex items-center justify-center gap-4 border-2 border-gray-300 rounded-3xl bg-white px-10 py-6 w-80">
             
             <div className={texto == "Atletas"
-                ? "w-16 h-16 rounded-full border border-blue-300 flex items-center justify-center text-4xl text-blue-500"
+                ? "w-20 h-16 rounded-full border border-blue-300 flex items-center justify-center text-4xl text-blue-500"
                 : "w-16 h-16 rounded-full border border-green-300 flex items-center justify-center text-4xl text-green-500"
             }>
                 {texto == "Atletas" ? icons.usuario : icons.avaliacoes}
