@@ -7,7 +7,7 @@ interface ICardDashboard {
 
 export default function CardDashboard({ texto, quantidade }: ICardDashboard) {
     return (
-        <div className="flex items-center justify-center gap-4 border-2 border-black rounded-xl bg-white px-10 py-6 w-80">
+        <div className="flex items-center justify-center gap-4 border-2 border-gray-300 rounded-3xl bg-white px-10 py-6 w-80">
             <div className={texto == "Atletas" ? "flex items-center justify-center text-4xl text-blue-500" : "flex items-center justify-center text-4xl text-green-500"}>
                 {texto == "Atletas" ? icons.usuario : icons.avaliacoes}
             </div>
