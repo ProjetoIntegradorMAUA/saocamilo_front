@@ -54,7 +54,7 @@ export default function Login() {
                     <div className="bg-linear-to-r from-red-500 to-red-600 px-6 py-12">
                         <div className="flex flex-col items-center gap-4">
                             <div className="bg-white rounded-full p-4 shadow-lg">
-                                <img className="w-14" src="src/assets/logo_saocamilo.webp" alt="Logo Sao camilo" />
+                                <img className="w-16" src="src/assets/logo_espiral.svg" alt="Logo Sao camilo" />
                             </div>
                             <div className="text-center">
                                 <h1 className="text-3xl font-bold text-white mb-1">SÃO CAMILO</h1>
