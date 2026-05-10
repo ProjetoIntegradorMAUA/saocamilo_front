@@ -18,7 +18,7 @@ export default function CardHistorico({ nome, horarioAtual, modalidade, duracao,
 
       <div className="bg-white border border-gray-200 rounded-xl p-3 flex items-center gap-6 shadow-sm">
         
-        <div className="w-16 h-16 rounded-full bg-[#e0e0e0] flex items-center justify-center border border-gray-300 flex-shrink-0">
+        <div className="w-16 h-16 rounded-full bg-[#e0e0e0] flex items-center justify-center border border-gray-300 shrink-0">
           <span className="scale-150">{icons.usuario}</span>
         </div>
 
