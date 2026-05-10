@@ -5,7 +5,7 @@ type AvaliacaoProps = {
     nome: string;
     data: Date;
     sudorese: number;
-}
+};
 
 interface ICardAvaliacoes {
     // icone: ReactNode;
@@ -27,14 +27,14 @@ const meses = [
     "Dezembro",
 ];
 
-export default function CardAvaliacoes({
-    avaliacoes,
-}: ICardAvaliacoes) {
+export default function CardAvaliacoes({ avaliacoes }: ICardAvaliacoes) {
     return (
         <div className="flex flex-col gap-3 border border-gray-300 rounded-2xl bg-white px-3 py-4 md:px-8 md:py-6 lg:px-6 lg:py-5 w-full max-w-4xl">
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 w-full">
-                    <div className="text-xl sm:text-3xl text-red-500">{icons.calendario}</div>
+                    <div className="text-xl sm:text-3xl text-red-500">
+                        {icons.calendario}
+                    </div>
                     <p className="text-xl sm:text-2xl text-black">
                         Avaliações Recentes
                     </p>
@@ -68,7 +68,9 @@ export default function CardAvaliacoes({
                     </div>
 
                     <div className="flex flex-col md:flex-row md:gap-3 items-center md:items-start col-span-6 md:col-span-3 ml-auto md:ml-0">
-                        <span className="sm:text-xl text-gray-400">Sudorese: </span>
+                        <span className="sm:text-xl text-gray-400">
+                            Sudorese:{" "}
+                        </span>
                         <span className="text-sm md:text-lg text-green-500">
                             {avaliacao.sudorese} L/h
                         </span>
