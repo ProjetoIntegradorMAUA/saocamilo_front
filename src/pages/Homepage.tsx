@@ -16,7 +16,7 @@ export default function Homepage() {
                         <CardDashboard texto="Avaliações" quantidade={8} />
 
                         <button className="border-2 border-gray-300 rounded-3xl bg-white flex items-center gap-5 px-6 py-6  hover:bg-gray-100 transition cursor-pointer">
-                            <div className="w-16 h-16 rounded-full border border-red-300 flex items-center justify-center text-red-500 text-4xl ">
+                            <div className="w-16 h-16 rounded-full border border-red-200 flex items-center justify-center text-red-500 text-4xl ">
                                 +
                             </div>
 

@@ -6,18 +6,24 @@ interface ICardDashboard {
 }
 
 export default function CardDashboard({ texto, quantidade }: ICardDashboard) {
+    const atleta = texto === "Atletas";
+
     return (
-        <div className="flex items-center justify-center gap-4 border-2 border-gray-300 rounded-3xl bg-white px-10 py-6 w-80">
-            
-            <div className={texto == "Atletas"
-                ? "w-20 h-16 rounded-full border border-blue-300 flex items-center justify-center text-4xl text-blue-500"
-                : "w-16 h-16 rounded-full border border-green-300 flex items-center justify-center text-4xl text-green-500"
-            }>
-                {texto == "Atletas" ? icons.usuario : icons.avaliacoes}
+        <div className="flex items-center gap-5 border border-gray-300 rounded-2xl bg-white px-5 py-4 w-full h-27.5">
+            <div className={`w-16 h-16 rounded-full border flex items-center justify-center text-3xl shrink-0
+                ${atleta ? "border-red-200 text-red-500": "border-red-200 text-red-500"}`}>
+                {atleta ? icons.usuario : icons.avaliacoes}
             </div>
-            <div className="flex items-center gap-2 text-gray-700 text-2xl font-medium">
-                <span>{texto} - {quantidade}</span>
+
+            <div className="flex flex-col leading-none">
+                <span className="text-gray-600 text-[18px] font-medium mb-2">
+                    {texto}
+                </span>
+
+                <span className="text-[30px] font-semibold text-gray-900">
+                    {quantidade}
+                </span>
             </div>
         </div>
-    )
+    );
 }
