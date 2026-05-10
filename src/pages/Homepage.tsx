@@ -25,167 +25,178 @@ export default function Homepage() {
                             </p>
                         </button>
                     </div>
+                       <div className="flex flex-col xl:flex-row items-stretch gap-4 mb-5">
 
-                    <div className="border border-gray-300 rounded-3xl bg-white px-6 py-5 mb-5 w-fit">
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="text-red-500 text-3xl">
-                                {icons.grafico}
-                            </div>
+    <div className="border border-gray-300 rounded-3xl bg-white px-6 py-5 flex-1 flex flex-col">
 
-                            <p className="text-[18px] text-gray-800 font-medium">
-                                Taxa de Sudorese Média da Equipe Por Modalidade
-                            </p>
-                        </div>
+        <div className="flex items-center gap-3 mb-8 min-h-17.5">
+            <div className="text-red-500 text-3xl shrink-0">
+                {icons.grafico}
+            </div>
 
-                        <div className="flex">
-                            <div className="flex flex-col justify-between h-[280px] mr-4 text-gray-500 text-[12px] pb-[40px]">
-                                <span>L/h</span>
-                                <span>3,0</span>
-                                <span>2,5</span>
-                                <span>2,0</span>
-                                <span>1,5</span>
-                                <span>1,0</span>
-                                <span>0,5</span>
-                                <span>0</span>
-                            </div>
+            <p className="text-[20px] text-gray-800 font-medium leading-7">
+                Taxa de Sudorese Média da Equipe Por Modalidade
+            </p>
+        </div>
 
-                            <div className="relative w-175">
-                                <div className="absolute left-0 top-0 h-60 border-l border-gray-300"></div>
+        <div className="flex flex-1">
+            <div className="flex flex-col justify-between h-70 mr-4 text-gray-500 text-[14px] pb-10">
+                <span>L/h</span>
+                <span>3,0</span>
+                <span>2,5</span>
+                <span>2,0</span>
+                <span>1,5</span>
+                <span>1,0</span>
+                <span>0,5</span>
+                <span>0</span>
+            </div>
 
-                                <div className="absolute left-0 top-60 w-full border-b border-gray-300"></div>
+            <div className="relative flex-1 min-w-125">
+                <div className="absolute left-0 top-0 h-60 border-l border-gray-300"></div>
 
-                                <div className="flex items-end justify-around h-60 pl-6">
-                                    <div className="flex flex-col items-center justify-end h-full">
-                                        <span className="text-[12px] text-gray-700 font-medium mb-2">
-                                            2,31
-                                        </span>
+                <div className="absolute left-0 top-60 w-full border-b border-gray-300"></div>
 
-                                        <div className="w-23.75 h-39 bg-blue-500 rounded-t-md"></div>
-                                    </div>
+                <div className="flex items-end justify-around h-60 pl-6">
+                    <div className="flex flex-col items-center justify-end h-full">
+                        <span className="text-[18px] text-gray-700 font-medium mb-3">
+                            2,31
+                        </span>
 
-                                    <div className="flex flex-col items-center justify-end h-full">
-                                        <span className="text-[12px] text-gray-700 font-medium mb-2">
-                                            1,78
-                                        </span>
-
-                                        <div className="w-23.75 h-32 bg-green-500 rounded-t-md"></div>
-                                    </div>
-
-                                    <div className="flex flex-col items-center justify-end h-full">
-                                        <span className="text-[12px] text-gray-700 font-medium mb-2">
-                                            1,65
-                                        </span>
-
-                                        <div className="w-23.75 h-30 bg-yellow-400 rounded-t-md"></div>
-                                    </div>
-
-                                    <div className="flex flex-col items-center justify-end h-full">
-                                        <span className="text-[12px] text-gray-700 font-medium mb-2">
-                                            1,42
-                                        </span>
-
-                                        <div className="w-23.75 h-25 bg-purple-500 rounded-t-md"></div>
-                                    </div>
-                                </div>
-
-                                <div className="flex justify-around pl-6 mt-4">
-                                    <p className="text-[13px] text-gray-600">
-                                        Corrida
-                                    </p>
-                                    <p className="text-[13px] text-gray-600">
-                                        Ciclismo
-                                    </p>
-                                    <p className="text-[13px] text-gray-600">
-                                        Natação
-                                    </p>
-                                    <p className="text-[13px] text-gray-600">
-                                        Funcional
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        <div className="w-24 h-39 bg-blue-500 rounded-t-md"></div>
                     </div>
-                    <div className="border border-gray-300 rounded-3xl bg-white px-6 py-5 w-fit">
-                        <div className="text-[20px] text-gray-800 font-medium text-center leading-7 mb-6 flex itens-center gap-3">
-                            <div className="text-red-500 text-3xl">
-                                {" "}
-                                {icons.grafico2}
-                            </div>
-                            <p>Distribuição das Avaliações por Modalidade</p>
-                        </div>
 
-                        <div className="flex items-center gap-10">
-                            <div className="relative w-55 h-55 rounded-full bg-[conic-gradient(#1677ff_0deg_135deg,#4caf50_135deg_225deg,#ffb300_225deg_315deg,#6f2bd9_315deg_360deg)]">
-                                <div className="absolute inset-9.5 bg-white rounded-full flex flex-col items-center justify-center">
-                                    <span className="text-gray-500 text-[16px]">
-                                        Total
-                                    </span>
+                    <div className="flex flex-col items-center justify-end h-full">
+                        <span className="text-[18px] text-gray-700 font-medium mb-3">
+                            1,78
+                        </span>
 
-                                    <span className="text-[40px] font-semibold text-gray-800 leading-none">
-                                        8
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col gap-4">
-                                <div className="flex items-start gap-3">
-                                    <div className="w-4 h-4 bg-blue-500 mt-1"></div>
-
-                                    <div>
-                                        <p className="text-[18px] text-gray-700 leading-5">
-                                            Corrida (3)
-                                        </p>
-
-                                        <p className="text-[18px] text-gray-500">
-                                            37,5%
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-3">
-                                    <div className="w-4 h-4 bg-green-500 mt-1"></div>
-
-                                    <div>
-                                        <p className="text-[18px] text-gray-700 leading-5">
-                                            Ciclismo (2)
-                                        </p>
-
-                                        <p className="text-[18px] text-gray-500">
-                                            25,0%
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-3">
-                                    <div className="w-4 h-4 bg-yellow-400 mt-1"></div>
-
-                                    <div>
-                                        <p className="text-[18px] text-gray-700 leading-5">
-                                            Natação (2)
-                                        </p>
-
-                                        <p className="text-[18px] text-gray-500">
-                                            25,0%
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-3">
-                                    <div className="w-4 h-4 bg-purple-600 mt-1"></div>
-
-                                    <div>
-                                        <p className="text-[18px] text-gray-700 leading-5">
-                                            Funcional (1)
-                                        </p>
-
-                                        <p className="text-[18px] text-gray-500">
-                                            12,5%
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div className="w-24 h-32 bg-green-500 rounded-t-md"></div>
                     </div>
+
+                    <div className="flex flex-col items-center justify-end h-full">
+                        <span className="text-[18px] text-gray-700 font-medium mb-3">
+                            1,65
+                        </span>
+
+                        <div className="w-24 h-30 bg-yellow-400 rounded-t-md"></div>
+                    </div>
+
+                    <div className="flex flex-col items-center justify-end h-full">
+                        <span className="text-[18px] text-gray-700 font-medium mb-3">
+                            1,42
+                        </span>
+
+                        <div className="w-24 h-25 bg-purple-500 rounded-t-md"></div>
+                    </div>
+                </div>
+
+                <div className="flex justify-around pl-6 mt-4">
+                    <p className="text-[16px] text-gray-600">
+                        Corrida
+                    </p>
+
+                    <p className="text-[16px] text-gray-600">
+                        Ciclismo
+                    </p>
+
+                    <p className="text-[16px] text-gray-600">
+                        Natação
+                    </p>
+
+                    <p className="text-[16px] text-gray-600">
+                        Funcional
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div className="border border-gray-300 rounded-3xl bg-white px-6 py-5 flex flex-col justify-between min-w-105">
+
+        <div className="flex items-center gap-3 justify-center mb-8 min-h-17.5">
+            <div className="text-red-500 text-3xl shrink-0">
+                {icons.grafico2}
+            </div>
+
+            <p className="text-[20px] text-gray-800 font-medium leading-7 text-center">
+                Distribuição das Avaliações por Modalidade
+            </p>
+        </div>
+
+        <div className="flex items-center justify-center gap-10 flex-1">
+
+            <div className="relative w-55 h-55 rounded-full bg-[conic-gradient(#1677ff_0deg_135deg,#4caf50_135deg_225deg,#ffb300_225deg_315deg,#6f2bd9_315deg_360deg)] shrink-0">
+                <div className="absolute inset-9.5 bg-white rounded-full flex flex-col items-center justify-center">
+                    <span className="text-gray-500 text-[18px]">
+                        Total
+                    </span>
+
+                    <span className="text-[48px] font-semibold text-gray-800 leading-none">
+                        8
+                    </span>
+                </div>
+            </div>
+
+            <div className="flex flex-col gap-6">
+                <div className="flex items-start gap-3">
+                    <div className="w-5 h-5 bg-blue-500 mt-1"></div>
+
+                    <div>
+                        <p className="text-[18px] text-gray-700 leading-5">
+                            Corrida (3)
+                        </p>
+
+                        <p className="text-[18px] text-gray-500">
+                            37,5%
+                        </p>
+                    </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                    <div className="w-5 h-5 bg-green-500 mt-1"></div>
+
+                    <div>
+                        <p className="text-[18px] text-gray-700 leading-5">
+                            Ciclismo (2)
+                        </p>
+
+                        <p className="text-[18px] text-gray-500">
+                            25,0%
+                        </p>
+                    </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                    <div className="w-5 h-5 bg-yellow-400 mt-1"></div>
+
+                    <div>
+                        <p className="text-[18px] text-gray-700 leading-5">
+                            Natação (2)
+                        </p>
+
+                        <p className="text-[18px] text-gray-500">
+                            25,0%
+                        </p>
+                    </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                    <div className="w-5 h-5 bg-purple-600 mt-1"></div>
+
+                    <div>
+                        <p className="text-[18px] text-gray-700 leading-5">
+                            Funcional (1)
+                        </p>
+
+                        <p className="text-[18px] text-gray-500">
+                            12,5%
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
                     <CardAvaliacoes
                         avaliacoes={[
