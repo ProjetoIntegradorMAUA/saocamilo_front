@@ -10,19 +10,19 @@ export default function Homepage() {
                 <Navbar index={0} />
             </div>
 
-            <main className="flex-1 px-2 sm:px-4 lg:px-6 py-2 sm:py-4 overflow-hidden">
-                <div className="w-full max-w-[1800px] h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-3xl p-2 sm:p-4 lg:p-5 flex flex-col gap-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <main className="flex-1 px-2 sm:px-4 lg:px-6 py-2 sm:py-4 pb-28 lg:pb-4 overflow-hidden">
+                <div className="w-full max-w-[1800px] h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-2xl p-2 sm:p-4 lg:p-5 flex flex-col gap-4">
+                    <div className="grid grid-cols-3 gap-2 sm:gap-3">
                         <CardDashboard texto="Atletas" quantidade={5} />
 
                         <CardDashboard texto="Avaliações" quantidade={8} />
 
-                        <button className="border-2 border-gray-300 rounded-3xl bg-white flex items-center gap-3 px-4 py-4 hover:bg-gray-100 transition cursor-pointer min-h-[110px]">
-                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-red-200 flex items-center justify-center text-red-500 text-3xl sm:text-4xl shrink-0">
+                        <button className="border-1 border-gray-300 rounded-2xl sm:rounded-3xl bg-white flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 px-2 sm:px-4 py-2 sm:py-4 hover:bg-gray-100 transition cursor-pointer min-h-[75px] sm:min-h-[110px]">
+                            <div className="w-8 h-8 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full border border-red-200 flex items-center justify-center text-red-500 text-xl sm:text-3xl shrink-0">
                                 +
                             </div>
 
-                            <p className="text-lg sm:text-xl lg:text-2xl text-red-500 font-medium">
+                            <p className="text-[10px] sm:text-lg lg:text-2xl text-red-500 font-medium leading-tight text-center">
                                 Nova Avaliação
                             </p>
                         </button>
@@ -36,7 +36,8 @@ export default function Homepage() {
                                 </div>
 
                                 <p className="text-sm sm:text-lg lg:text-[20px] text-gray-800 font-medium leading-5 sm:leading-6">
-                                    Taxa de Sudorese Média da Equipe Por Modalidade
+                                    Taxa de Sudorese Média da Equipe Por
+                                    Modalidade
                                 </p>
                             </div>
 
