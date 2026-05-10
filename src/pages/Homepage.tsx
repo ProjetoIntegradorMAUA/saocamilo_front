@@ -50,20 +50,20 @@ export default function Homepage() {
             <span>0</span>
         </div>
 
-        <div className="relative w-[700px]">
+        <div className="relative w-175">
 
-            <div className="absolute left-0 top-0 h-[240px] border-l border-gray-300"></div>
+            <div className="absolute left-0 top-0 h-60 border-l border-gray-300"></div>
 
-            <div className="absolute left-0 top-[240px] w-full border-b border-gray-300"></div>
+            <div className="absolute left-0 top-60 w-full border-b border-gray-300"></div>
 
-            <div className="flex items-end justify-around h-[240px] pl-6">
+            <div className="flex items-end justify-around h-60 pl-6">
 
                 <div className="flex flex-col items-center justify-end h-full">
                     <span className="text-[12px] text-gray-700 font-medium mb-2">
                         2,31
                     </span>
 
-                    <div className="w-[95px] h-[185px] bg-blue-500 rounded-t-md"></div>
+                    <div className="w-23.75 h-39 bg-blue-500 rounded-t-md"></div>
                 </div>
 
                 <div className="flex flex-col items-center justify-end h-full">
@@ -71,7 +71,7 @@ export default function Homepage() {
                         1,78
                     </span>
 
-                    <div className="w-[95px] h-[142px] bg-green-500 rounded-t-md"></div>
+                    <div className="w-23.75 h-32 bg-green-500 rounded-t-md"></div>
                 </div>
 
                 <div className="flex flex-col items-center justify-end h-full">
@@ -79,7 +79,7 @@ export default function Homepage() {
                         1,65
                     </span>
 
-                    <div className="w-[95px] h-[132px] bg-yellow-400 rounded-t-md"></div>
+                    <div className="w-23.75 h-30 bg-yellow-400 rounded-t-md"></div>
                 </div>
 
                 <div className="flex flex-col items-center justify-end h-full">
@@ -87,7 +87,7 @@ export default function Homepage() {
                         1,42
                     </span>
 
-                    <div className="w-[95px] h-[114px] bg-purple-500 rounded-t-md"></div>
+                    <div className="w-23.75 h-25 bg-purple-500 rounded-t-md"></div>
                 </div>
 
             </div>
@@ -101,14 +101,90 @@ export default function Homepage() {
         </div>
     </div>
 
-    <div className="flex items-center justify-center gap-2 mt-6">
-        <div className="w-3 h-3 bg-blue-500"></div>
-
-        <p className="text-[12px] text-gray-500">
-            Taxa média de sudorese (L/h)
-        </p>
-    </div>
 </div>  
+<div className="border border-gray-300 rounded-3xl bg-white px-6 py-5 w-fit">
+
+    <p className="text-[20px] text-gray-800 font-medium text-center leading-7 mb-6">
+        Distribuição das Avaliações <br />
+        por Modalidade
+    </p>
+
+    <div className="flex items-center gap-10">
+
+        <div className="relative w-55 h-55 rounded-full bg-[conic-gradient(#1677ff_0deg_135deg,#4caf50_135deg_225deg,#ffb300_225deg_315deg,#6f2bd9_315deg_360deg)]">
+
+            <div className="absolute inset-9.5 bg-white rounded-full flex flex-col items-center justify-center">
+                <span className="text-gray-500 text-[16px]">
+                    Total
+                </span>
+
+                <span className="text-[40px] font-semibold text-gray-800 leading-none">
+                    8
+                </span>
+            </div>
+        </div>
+
+        <div className="flex flex-col gap-4">
+
+            <div className="flex items-start gap-3">
+                <div className="w-4 h-4 bg-blue-500 mt-1"></div>
+
+                <div>
+                    <p className="text-[18px] text-gray-700 leading-5">
+                        Corrida (3)
+                    </p>
+
+                    <p className="text-[18px] text-gray-500">
+                        37,5%
+                    </p>
+                </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+                <div className="w-4 h-4 bg-green-500 mt-1"></div>
+
+                <div>
+                    <p className="text-[18px] text-gray-700 leading-5">
+                        Ciclismo (2)
+                    </p>
+
+                    <p className="text-[18px] text-gray-500">
+                        25,0%
+                    </p>
+                </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+                <div className="w-4 h-4 bg-yellow-400 mt-1"></div>
+
+                <div>
+                    <p className="text-[18px] text-gray-700 leading-5">
+                        Natação (2)
+                    </p>
+
+                    <p className="text-[18px] text-gray-500">
+                        25,0%
+                    </p>
+                </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+                <div className="w-4 h-4 bg-purple-600 mt-1"></div>
+
+                <div>
+                    <p className="text-[18px] text-gray-700 leading-5">
+                        Funcional (1)
+                    </p>
+
+                    <p className="text-[18px] text-gray-500">
+                        12,5%
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
                     <CardAvaliacoes
                         avaliacoes={[
