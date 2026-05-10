@@ -36,8 +36,7 @@ export default function Homepage() {
                                 </div>
 
                                 <p className="text-sm sm:text-lg lg:text-[20px] text-gray-800 font-medium leading-5 sm:leading-6">
-                                    Taxa de Sudorese Média da Equipe Por
-                                    Modalidade
+                                    Taxa de Sudorese Média da Equipe Por Modalidade
                                 </p>
                             </div>
 
@@ -113,85 +112,85 @@ export default function Homepage() {
                             </div>
                         </div>
 
-                        <div className="border border-gray-300 rounded-3xl bg-white px-4 sm:px-5 py-4 flex flex-col min-w-0">
-                            <div className="flex items-center gap-3 justify-center mb-5">
-                                <div className="text-red-500 text-2xl sm:text-3xl shrink-0">
+                        <div className="border border-gray-300 rounded-3xl bg-white px-3 sm:px-5 py-4 flex flex-col min-w-0">
+                            <div className="flex items-center gap-2 sm:gap-3 justify-center mb-4">
+                                <div className="text-red-500 text-xl sm:text-2xl lg:text-3xl shrink-0">
                                     {icons.grafico2}
                                 </div>
 
-                                <p className="text-base sm:text-lg lg:text-[20px] text-gray-800 font-medium leading-6 text-center">
+                                <p className="text-sm sm:text-base lg:text-[20px] text-gray-800 font-medium leading-5 text-center">
                                     Distribuição das Avaliações por Modalidade
                                 </p>
                             </div>
 
-                            <div className="flex flex-col xl:flex-row items-center justify-center gap-6 flex-1">
-                                <div className="relative w-40 h-40 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full bg-[conic-gradient(#1677ff_0deg_135deg,#4caf50_135deg_225deg,#ffb300_225deg_315deg,#6f2bd9_315deg_360deg)] shrink-0">
-                                    <div className="absolute inset-7 sm:inset-8 bg-white rounded-full flex flex-col items-center justify-center">
-                                        <span className="text-gray-500 text-sm sm:text-base">
+                            <div className="flex items-center justify-center gap-3 sm:gap-5 lg:gap-8 flex-1 min-w-0">
+                                <div className="relative w-24 h-24 sm:w-36 sm:h-36 lg:w-52 lg:h-52 rounded-full bg-[conic-gradient(#1677ff_0deg_135deg,#4caf50_135deg_225deg,#ffb300_225deg_315deg,#6f2bd9_315deg_360deg)] shrink-0">
+                                    <div className="absolute inset-4 sm:inset-6 lg:inset-8 bg-white rounded-full flex flex-col items-center justify-center">
+                                        <span className="text-gray-500 text-[10px] sm:text-sm lg:text-base">
                                             Total
                                         </span>
 
-                                        <span className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-800 leading-none">
+                                        <span className="text-lg sm:text-3xl lg:text-5xl font-semibold text-gray-800 leading-none">
                                             8
                                         </span>
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-x-6 gap-y-4">
-                                    <div className="flex items-start gap-2">
-                                        <div className="w-4 h-4 bg-blue-500 mt-1"></div>
+                                <div className="flex flex-col gap-2 sm:gap-3 lg:gap-5 min-w-0">
+                                    <div className="flex items-center justify-between gap-3 min-w-0">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-blue-500 shrink-0"></div>
 
-                                        <div>
-                                            <p className="text-sm sm:text-base text-gray-700">
+                                            <p className="text-[10px] sm:text-sm lg:text-base text-gray-700 truncate">
                                                 Corrida (3)
                                             </p>
-
-                                            <p className="text-sm sm:text-base text-gray-500">
-                                                37,5%
-                                            </p>
                                         </div>
+
+                                        <p className="text-[10px] sm:text-sm lg:text-base text-gray-500 shrink-0">
+                                            37,5%
+                                        </p>
                                     </div>
 
-                                    <div className="flex items-start gap-2">
-                                        <div className="w-4 h-4 bg-green-500 mt-1"></div>
+                                    <div className="flex items-center justify-between gap-3 min-w-0">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 shrink-0"></div>
 
-                                        <div>
-                                            <p className="text-sm sm:text-base text-gray-700">
+                                            <p className="text-[10px] sm:text-sm lg:text-base text-gray-700 truncate">
                                                 Ciclismo (2)
                                             </p>
-
-                                            <p className="text-sm sm:text-base text-gray-500">
-                                                25,0%
-                                            </p>
                                         </div>
+
+                                        <p className="text-[10px] sm:text-sm lg:text-base text-gray-500 shrink-0">
+                                            25,0%
+                                        </p>
                                     </div>
 
-                                    <div className="flex items-start gap-2">
-                                        <div className="w-4 h-4 bg-yellow-400 mt-1"></div>
+                                    <div className="flex items-center justify-between gap-3 min-w-0">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-yellow-400 shrink-0"></div>
 
-                                        <div>
-                                            <p className="text-sm sm:text-base text-gray-700">
+                                            <p className="text-[10px] sm:text-sm lg:text-base text-gray-700 truncate">
                                                 Natação (2)
                                             </p>
-
-                                            <p className="text-sm sm:text-base text-gray-500">
-                                                25,0%
-                                            </p>
                                         </div>
+
+                                        <p className="text-[10px] sm:text-sm lg:text-base text-gray-500 shrink-0">
+                                            25,0%
+                                        </p>
                                     </div>
 
-                                    <div className="flex items-start gap-2">
-                                        <div className="w-4 h-4 bg-purple-600 mt-1"></div>
+                                    <div className="flex items-center justify-between gap-3 min-w-0">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-purple-600 shrink-0"></div>
 
-                                        <div>
-                                            <p className="text-sm sm:text-base text-gray-700">
+                                            <p className="text-[10px] sm:text-sm lg:text-base text-gray-700 truncate">
                                                 Funcional (1)
                                             </p>
-
-                                            <p className="text-sm sm:text-base text-gray-500">
-                                                12,5%
-                                            </p>
                                         </div>
+
+                                        <p className="text-[10px] sm:text-sm lg:text-base text-gray-500 shrink-0">
+                                            12,5%
+                                        </p>
                                     </div>
                                 </div>
                             </div>
