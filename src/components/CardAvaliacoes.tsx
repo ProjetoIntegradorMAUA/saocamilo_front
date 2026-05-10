@@ -31,14 +31,14 @@ export default function CardAvaliacoes({
     avaliacoes,
 }: ICardAvaliacoes) {
     return (
-        <div className="flex flex-col gap-3 border border-gray-300 rounded-2xl bg-[#f3f3f3] px-3 py-4 md:px-8 md:py-6 lg:px-6 lg:py-5 w-full max-w-4xl">
+        <div className="flex flex-col gap-3 border border-gray-300 rounded-2xl bg-white px-3 py-4 md:px-8 md:py-6 lg:px-6 lg:py-5 w-full max-w-4xl">
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 w-full">
                     <div className="text-xl sm:text-3xl text-red-500">{icons.calendario}</div>
                     <p className="text-xl sm:text-2xl text-black">
                         Avaliações Recentes
                     </p>
-                    <button className="text-green-500 hover:underline cursor-pointer ml-auto">
+                    <button className="text-red-500 hover:underline cursor-pointer ml-auto">
                         Ver todas
                     </button>
                 </div>
@@ -75,7 +75,7 @@ export default function CardAvaliacoes({
                     </div>
 
                     <div className="hidden md:block ml-auto col-span-3">
-                        <button className="bg-white text-red-400 px-6 py-3 rounded-xl shadow-sm hover:bg-gray-100 transition">
+                        <button className="bg-white text-red-400 px-6 py-3 rounded-xl border-red-500 border-1 shadow-sm hover:bg-gray-100 transition">
                             Visualizar
                         </button>
                     </div>

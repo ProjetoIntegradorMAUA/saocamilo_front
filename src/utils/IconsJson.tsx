@@ -8,6 +8,7 @@ import { IoIosMenu, IoMdClose, IoIosArrowForward, IoIosArrowBack } from "react-i
 import { SiStagetimer } from "react-icons/si";
 import { CiSearch, CiStar, CiBellOn } from "react-icons/ci";
 import { BiBarChartAlt } from "react-icons/bi";
+import { MdOutlineDataUsage } from "react-icons/md";
 
 export const icons = {
     "usuario": <FaRegUser />,
@@ -34,5 +35,6 @@ export const icons = {
     "peso": <LuWeight />,
     "sino": <CiBellOn />,
     "cargo": <LuBriefcaseBusiness />,
-    "grafico": <BiBarChartAlt />
+    "grafico": <BiBarChartAlt />,
+    "grafico2": <MdOutlineDataUsage />
 }

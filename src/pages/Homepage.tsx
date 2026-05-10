@@ -104,10 +104,10 @@ export default function Homepage() {
 </div>  
 <div className="border border-gray-300 rounded-3xl bg-white px-6 py-5 w-fit">
 
-    <p className="text-[20px] text-gray-800 font-medium text-center leading-7 mb-6">
-        Distribuição das Avaliações <br />
-        por Modalidade
-    </p>
+    <div className="text-[20px] text-gray-800 font-medium text-center leading-7 mb-6 flex itens-center gap-3">
+        <div className="text-red-500 text-3xl"> {icons.grafico2}</div>
+        <p>Distribuição das Avaliações por Modalidade</p>
+    </div>
 
     <div className="flex items-center gap-10">
 
