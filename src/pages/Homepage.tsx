@@ -64,7 +64,7 @@ export default function Homepage() {
                                                 2,31
                                             </span>
 
-                                            <div className="w-full max-w-[70px] h-[55%] bg-blue-500 rounded-t-md"></div>
+                                            <div className="w-full max-w-[70px] h-[67%] bg-blue-500 rounded-t-md"></div>
                                         </div>
 
                                         <div className="flex flex-col items-center justify-end h-full flex-1">
@@ -72,7 +72,7 @@ export default function Homepage() {
                                                 1,78
                                             </span>
 
-                                            <div className="w-full max-w-[70px] h-[45%] bg-green-500 rounded-t-md"></div>
+                                            <div className="w-full max-w-[70px] h-[57%] bg-green-500 rounded-t-md"></div>
                                         </div>
 
                                         <div className="flex flex-col items-center justify-end h-full flex-1">
@@ -80,7 +80,7 @@ export default function Homepage() {
                                                 1,65
                                             </span>
 
-                                            <div className="w-full max-w-[70px] h-[40%] bg-yellow-400 rounded-t-md"></div>
+                                            <div className="w-full max-w-[70px] h-[54%] bg-yellow-400 rounded-t-md"></div>
                                         </div>
 
                                         <div className="flex flex-col items-center justify-end h-full flex-1">
@@ -88,7 +88,7 @@ export default function Homepage() {
                                                 1,42
                                             </span>
 
-                                            <div className="w-full max-w-[70px] h-[32%] bg-purple-500 rounded-t-md"></div>
+                                            <div className="w-full max-w-[70px] h-[50%] bg-purple-500 rounded-t-md"></div>
                                         </div>
                                     </div>
 
