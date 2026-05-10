@@ -12,7 +12,6 @@ export default function Homepage() {
 
             <main className="flex-1 px-2 sm:px-4 lg:px-6 py-2 sm:py-4 overflow-hidden">
                 <div className="w-full max-w-[1800px] h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-3xl p-2 sm:p-4 lg:p-5 flex flex-col gap-4">
-
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <CardDashboard texto="Atletas" quantidade={5} />
 
@@ -30,22 +29,20 @@ export default function Homepage() {
                     </div>
 
                     <div className="grid grid-cols-1 2xl:grid-cols-[1.5fr_1fr] gap-4">
-
-                        <div className="border border-gray-300 rounded-3xl bg-white px-4 sm:px-5 py-4 flex flex-col min-w-0">
-
+                        <div className="border border-gray-300 rounded-3xl bg-white px-3 sm:px-5 py-4 flex flex-col min-w-0">
                             <div className="flex items-center gap-3 mb-5">
                                 <div className="text-red-500 text-2xl sm:text-3xl shrink-0">
                                     {icons.grafico}
                                 </div>
 
-                                <p className="text-base sm:text-lg lg:text-[20px] text-gray-800 font-medium leading-6">
-                                    Taxa de Sudorese Média da Equipe Por Modalidade
+                                <p className="text-sm sm:text-lg lg:text-[20px] text-gray-800 font-medium leading-5 sm:leading-6">
+                                    Taxa de Sudorese Média da Equipe Por
+                                    Modalidade
                                 </p>
                             </div>
 
-                            <div className="flex flex-1 overflow-x-auto pb-2">
-
-                                <div className="flex flex-col justify-between h-52 sm:h-60 mr-2 text-gray-500 text-xs sm:text-sm pb-8 shrink-0">
+                            <div className="flex flex-1">
+                                <div className="flex flex-col justify-between h-40 sm:h-52 lg:h-60 mr-2 text-gray-500 text-[10px] sm:text-xs lg:text-sm pb-6 sm:pb-8 shrink-0">
                                     <span>L/h</span>
                                     <span>3,0</span>
                                     <span>2,5</span>
@@ -56,60 +53,59 @@ export default function Homepage() {
                                     <span>0</span>
                                 </div>
 
-                                <div className="relative flex-1 min-w-[500px]">
-                                    <div className="absolute left-0 top-0 h-52 sm:h-60 border-l border-gray-300"></div>
+                                <div className="relative flex-1 min-w-0">
+                                    <div className="absolute left-0 top-0 h-40 sm:h-52 lg:h-60 border-l border-gray-300"></div>
 
-                                    <div className="absolute left-0 top-52 sm:top-60 w-full border-b border-gray-300"></div>
+                                    <div className="absolute left-0 top-40 sm:top-52 lg:top-60 w-full border-b border-gray-300"></div>
 
-                                    <div className="flex items-end justify-around h-52 sm:h-60 pl-4">
-
-                                        <div className="flex flex-col items-center justify-end h-full">
-                                            <span className="text-sm sm:text-base text-gray-700 font-medium mb-2">
+                                    <div className="flex items-end justify-around h-40 sm:h-52 lg:h-60 pl-2 sm:pl-4 gap-2">
+                                        <div className="flex flex-col items-center justify-end h-full flex-1">
+                                            <span className="text-[10px] sm:text-sm lg:text-base text-gray-700 font-medium mb-1 sm:mb-2">
                                                 2,31
                                             </span>
 
-                                            <div className="w-12 sm:w-16 lg:w-20 h-36 bg-blue-500 rounded-t-md"></div>
+                                            <div className="w-full max-w-[70px] h-[55%] bg-blue-500 rounded-t-md"></div>
                                         </div>
 
-                                        <div className="flex flex-col items-center justify-end h-full">
-                                            <span className="text-sm sm:text-base text-gray-700 font-medium mb-2">
+                                        <div className="flex flex-col items-center justify-end h-full flex-1">
+                                            <span className="text-[10px] sm:text-sm lg:text-base text-gray-700 font-medium mb-1 sm:mb-2">
                                                 1,78
                                             </span>
 
-                                            <div className="w-12 sm:w-16 lg:w-20 h-28 bg-green-500 rounded-t-md"></div>
+                                            <div className="w-full max-w-[70px] h-[45%] bg-green-500 rounded-t-md"></div>
                                         </div>
 
-                                        <div className="flex flex-col items-center justify-end h-full">
-                                            <span className="text-sm sm:text-base text-gray-700 font-medium mb-2">
+                                        <div className="flex flex-col items-center justify-end h-full flex-1">
+                                            <span className="text-[10px] sm:text-sm lg:text-base text-gray-700 font-medium mb-1 sm:mb-2">
                                                 1,65
                                             </span>
 
-                                            <div className="w-12 sm:w-16 lg:w-20 h-24 bg-yellow-400 rounded-t-md"></div>
+                                            <div className="w-full max-w-[70px] h-[40%] bg-yellow-400 rounded-t-md"></div>
                                         </div>
 
-                                        <div className="flex flex-col items-center justify-end h-full">
-                                            <span className="text-sm sm:text-base text-gray-700 font-medium mb-2">
+                                        <div className="flex flex-col items-center justify-end h-full flex-1">
+                                            <span className="text-[10px] sm:text-sm lg:text-base text-gray-700 font-medium mb-1 sm:mb-2">
                                                 1,42
                                             </span>
 
-                                            <div className="w-12 sm:w-16 lg:w-20 h-20 bg-purple-500 rounded-t-md"></div>
+                                            <div className="w-full max-w-[70px] h-[32%] bg-purple-500 rounded-t-md"></div>
                                         </div>
                                     </div>
 
-                                    <div className="flex justify-around pl-4 mt-3">
-                                        <p className="text-xs sm:text-sm lg:text-base text-gray-600">
+                                    <div className="flex justify-around pl-2 sm:pl-4 mt-2 sm:mt-3 gap-2">
+                                        <p className="text-[10px] sm:text-xs lg:text-base text-gray-600 text-center flex-1">
                                             Corrida
                                         </p>
 
-                                        <p className="text-xs sm:text-sm lg:text-base text-gray-600">
+                                        <p className="text-[10px] sm:text-xs lg:text-base text-gray-600 text-center flex-1">
                                             Ciclismo
                                         </p>
 
-                                        <p className="text-xs sm:text-sm lg:text-base text-gray-600">
+                                        <p className="text-[10px] sm:text-xs lg:text-base text-gray-600 text-center flex-1">
                                             Natação
                                         </p>
 
-                                        <p className="text-xs sm:text-sm lg:text-base text-gray-600">
+                                        <p className="text-[10px] sm:text-xs lg:text-base text-gray-600 text-center flex-1">
                                             Funcional
                                         </p>
                                     </div>
@@ -118,7 +114,6 @@ export default function Homepage() {
                         </div>
 
                         <div className="border border-gray-300 rounded-3xl bg-white px-4 sm:px-5 py-4 flex flex-col min-w-0">
-
                             <div className="flex items-center gap-3 justify-center mb-5">
                                 <div className="text-red-500 text-2xl sm:text-3xl shrink-0">
                                     {icons.grafico2}
@@ -130,7 +125,6 @@ export default function Homepage() {
                             </div>
 
                             <div className="flex flex-col xl:flex-row items-center justify-center gap-6 flex-1">
-
                                 <div className="relative w-40 h-40 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full bg-[conic-gradient(#1677ff_0deg_135deg,#4caf50_135deg_225deg,#ffb300_225deg_315deg,#6f2bd9_315deg_360deg)] shrink-0">
                                     <div className="absolute inset-7 sm:inset-8 bg-white rounded-full flex flex-col items-center justify-center">
                                         <span className="text-gray-500 text-sm sm:text-base">
@@ -144,7 +138,6 @@ export default function Homepage() {
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-x-6 gap-y-4">
-
                                     <div className="flex items-start gap-2">
                                         <div className="w-4 h-4 bg-blue-500 mt-1"></div>
 
@@ -200,7 +193,6 @@ export default function Homepage() {
                                             </p>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -227,7 +219,6 @@ export default function Homepage() {
                             ]}
                         />
                     </div>
-
                 </div>
             </main>
         </div>
