@@ -1,4 +1,5 @@
 import Navbar from "../components/Navbar";
+import Preferencias from "../components/Preferencias";
 import Topbar from "../components/Topbar";
 import { Users } from "../mock/users";
 import { icons } from "../utils/IconsJson";
@@ -69,6 +70,9 @@ export default function Configuracoes() {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div>
+                            <Preferencias />
                         </div>
                     </div>
                 </div>

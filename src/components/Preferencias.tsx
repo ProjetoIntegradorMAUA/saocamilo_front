@@ -35,7 +35,7 @@ export default function Preferencias() {
     }
 
     return (
-        <div className="flex flex-col border border-black-300 rounded-2xl bg-white w-full max-w-md px-8 py-8 ">
+        <div className="flex flex-col border border-gray-300 rounded-3xl bg-white w-full max-w-md px-8 py-8 shadow ">
             <h2 className="text-2xl font-semibold text-gray-800 mb-8">
                 Preferências
             </h2>
