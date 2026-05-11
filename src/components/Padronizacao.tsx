@@ -5,7 +5,7 @@ export default function Padronizacao() {
     return (
         <div>
             <div className="flex items-center gap-2 text-3xl  text-black mb-4">
-                <span className="border rounded-3xl">{icons.check}</span>
+                <span className="border rounded-3xl p-1 ">{icons.check}</span>
                 <p> Padronização de pesagem</p>
             </div>
             <div className="border rounded-3xl p-4 sm:p-8 bg-white w-full min-h-37.5 sm:min-h-55 flex flex-col gap-3 sm:gap-4">

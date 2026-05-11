@@ -3,7 +3,7 @@ import { LuLayoutDashboard, LuBookText, LuWeight, LuBriefcaseBusiness } from "re
 import { GoGear } from "react-icons/go";
 import { IoAddOutline } from "react-icons/io5";
 import { TbLockPassword } from "react-icons/tb";
-import { MdDateRange, MdEdit, MdHorizontalRule, MdOutlinePalette } from "react-icons/md";
+import { MdDateRange, MdEdit, MdHorizontalRule, MdOutlinePalette, MdAlternateEmail } from "react-icons/md";
 import { IoIosMenu, IoMdClose, IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import { SiStagetimer } from "react-icons/si";
 import { CiSearch, CiStar, CiBellOn } from "react-icons/ci";
@@ -36,5 +36,6 @@ export const icons = {
     "sino": <CiBellOn />,
     "cargo": <LuBriefcaseBusiness />,
     "grafico": <BiBarChartAlt />,
-    "grafico2": <MdOutlineDataUsage />
+    "grafico2": <MdOutlineDataUsage />, 
+    "email":<MdAlternateEmail/>
 }
