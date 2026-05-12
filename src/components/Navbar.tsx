@@ -2,6 +2,7 @@ import { useState } from "react"
 import { icons } from "../utils/IconsJson"
 import Botao from "./Botao";
 import { useNavigate } from "react-router";
+import logoSaoCamilo from "../assets/logo_saocamilo_completo.svg";
 
 interface INavbar {
     index: number;
@@ -66,7 +67,7 @@ export default function Navbar({ index }: INavbar) {
             </div>
             <div id="navbar-desktop" className="hidden lg:w-60 lg:h-dvh lg:fixed border-r border-r-gray-300 bg-gray-50 lg:flex lg:flex-col lg:items-center text-lg">
                 <div id="logo" className="m-10 w-full flex justify-center ">
-                    <img src="src/assets/logo_saocamilo_completo.svg" alt="Logo São Camilo" className="w-1/2 cursor-pointer" onClick={() => fnavigate("homepage")} />
+                    <img src={logoSaoCamilo} alt="Logo São Camilo" className="w-1/2 cursor-pointer" onClick={() => fnavigate("homepage")} />
                 </div>
                 <div id="conteudo" className="h-2/5">
                     <div onClick={() => fnavigate("atletas")} className={`w-full flex gap-3 items-center pl-10 p-4 cursor-pointer ${activeIndex === 1 ? 'text-red-500' : 'text-gray-500'}`}>
