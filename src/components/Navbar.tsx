@@ -11,6 +11,7 @@ interface INavbar {
 export default function Navbar({ index }: INavbar) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
     const [activeIndex] = useState<number>(index)
+    const [isNavigating, setIsNavigating] = useState(false)
     const navigate = useNavigate()
 
     const toggleDropdown = () => {
@@ -18,13 +19,20 @@ export default function Navbar({ index }: INavbar) {
     }
 
     function fnavigate(rota: string) {
+        setIsNavigating(true)
         setTimeout(() => {
+            setIsNavigating(false)
             navigate("/" + rota)
         }, 500)
     }
 
     return (
         <div>
+            {isNavigating && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+                    <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            )}
             <div id="navbar-mobile" className="lg:hidden flex gap-16 h-30 w-full fixed bottom-0 place-self-center justify-center items-center transition-all bg-white">
                 <div onClick={() => fnavigate("atletas")}
                     className={`flex flex-col justify-center items-center gap-2 text-xl cursor-pointer hover:opacity-70 transition-colors ${activeIndex === 1 ? 'text-red-500' : ''}`}
