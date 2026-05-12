@@ -1,9 +1,9 @@
-import { FaRegUser, FaHistory, FaRegTrashAlt, FaCheck, FaThermometerHalf } from "react-icons/fa";
+import { FaRegUser, FaHistory, FaRegTrashAlt, FaCheck, FaThermometerHalf, FaEye, FaEyeSlash } from "react-icons/fa";
 import { LuLayoutDashboard, LuBookText, LuWeight, LuBriefcaseBusiness } from "react-icons/lu";
 import { GoGear } from "react-icons/go";
-import { IoAddOutline } from "react-icons/io5";
+import { IoAddCircleOutline } from "react-icons/io5";
 import { TbLockPassword } from "react-icons/tb";
-import { MdDateRange, MdEdit, MdHorizontalRule, MdOutlinePalette } from "react-icons/md";
+import { MdDateRange, MdEdit, MdHorizontalRule, MdOutlinePalette, MdAlternateEmail } from "react-icons/md";
 import { IoIosMenu, IoMdClose, IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import { SiStagetimer } from "react-icons/si";
 import { CiSearch, CiStar, CiBellOn } from "react-icons/ci";
@@ -17,7 +17,7 @@ export const icons = {
     "historico": <FaHistory />,
     "manual": <LuBookText />,
     "configuracoes": <GoGear />,
-    "adicionar": <IoAddOutline />,
+    "adicionar": <IoAddCircleOutline />,
     "calendario": <MdDateRange />,
     "menu": <IoIosMenu />,
     "avaliacoes": <SiStagetimer />,
@@ -36,5 +36,8 @@ export const icons = {
     "sino": <CiBellOn />,
     "cargo": <LuBriefcaseBusiness />,
     "grafico": <BiBarChartAlt />,
-    "grafico2": <MdOutlineDataUsage />
+    "grafico2": <MdOutlineDataUsage />,
+    "email": <MdAlternateEmail />,
+    "olhoAberto": <FaEye />,
+    "olhoFechado": <FaEyeSlash />
 }

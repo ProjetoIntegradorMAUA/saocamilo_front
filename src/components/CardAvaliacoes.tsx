@@ -89,7 +89,7 @@ export default function CardAvaliacoes({ avaliacoes }: ICardAvaliacoes) {
                     </div>
 
                     <div className="shrink-0">
-                        <button className="bg-white text-red-400 px-3 sm:px-5 lg:px-10 py-1.5 sm:py-2.5 lg:py-4 rounded-xl border border-red-400 hover:bg-gray-100 transition text-[10px] sm:text-sm lg:text-xl">
+                        <button className="bg-white text-red-400 px-3 sm:px-5 lg:px-10 py-1.5 sm:py-2.5 lg:py-4 rounded-xl border border-red-400 hover:bg-gray-100 transition text-[10px] sm:text-sm lg:text-xl cursor-pointer">
                             Visualizar
                         </button>
                     </div>
