@@ -12,13 +12,21 @@ export default function Configuracoes() {
     const [mostrarSenha, setMostrarSenha] = useState(false);
     const [showConfirmacao, setShowConfirmacao] = useState(false);
     const navigate = useNavigate()
+    const [isNavigating, setIsNavigating] = useState(false)
     function fnavigate(rota: string) {
+        setIsNavigating(true)
         setTimeout(() => {
+            setIsNavigating(false)
             navigate("/" + rota)
         }, 500)
     }
     return (
         <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row overflow-hidden">
+            {isNavigating && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+                    <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            )}
             <div className="fixed bottom-0 left-0 right-0 z-40 lg:static lg:w-60">
                 <Navbar index={4} />
             </div>
