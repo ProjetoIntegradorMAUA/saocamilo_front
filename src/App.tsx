@@ -3,8 +3,7 @@ import { BrowserRouter } from "react-router"
 import { Routes, Route } from "react-router-dom"
 import Login from "./pages/Login";
 import Manual from "./pages/Manual";
-import Homepage from "./pages/Homepage";
-import Configuracoes from "./pages/Configuracoes";
+import Atletas from "./pages/Atletas";
 
 export default function App() {
     return (
@@ -13,8 +12,8 @@ export default function App() {
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="/manual" element={<Manual />} />
-                    <Route path="/homepage" element={<Homepage />} />
-                    <Route path="/configuracoes" element={<Configuracoes />} />
+                    <Route path="/atletas" element={<Atletas />} />
+
                 </Routes>
             </BrowserRouter>
         </>

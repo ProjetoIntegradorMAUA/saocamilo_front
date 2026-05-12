@@ -6,22 +6,25 @@ interface ICardAtleta {
 
 export default function CardAtleta({ nome }: ICardAtleta) {
     return (
-        <div className="w-40 h-47.5 bg-[#e9e9e9] border border-black rounded-xl flex flex-col items-center justify-between p-4 box-border font-sans">
-            <div className="w-15 h-15 rounded-full bg-[#d3d3d3] flex items-center justify-center border">
-                <span className="text-[20px] text-[#555] font-medium border-[1px solid red]">
+        <div className="w-[220px] h-[300px] bg-[#e9e9e9] border border-[#555] rounded-[24px] flex flex-col items-center pt-8 pb-6 px-5 shrink-0">
+            <div className="w-[90px] h-[90px] rounded-full border border-[#777] bg-[#d9d9d9] flex items-center justify-center">
+                <span className="text-[42px] font-light leading-none">
                     {nome[0]}
                 </span>
             </div>
-            <p className="my-3 text-[20px] text-[#333] text-center">
+
+            <p className="mt-8 text-[20px] text-[#222] text-center leading-tight break-words">
                 {nome}
             </p>
-            <div className="w-full flex justify-between">
-                <div className="text-[28px] w-8 h-8 rounded-md flex items-center justify-center cursor-pointer text-black">
+
+            <div className="w-full flex justify-around mt-auto">
+                <button className="text-[38px] text-black">
                     {icons.editar}
-                </div>
-                <div className="text-[28px] w-8 h-8 rounded-md flex items-center justify-center cursor-pointer text-black">
+                </button>
+
+                <button className="text-[38px] text-black">
                     {icons.lixeira}
-                </div>
+                </button>
             </div>
         </div>
     );
