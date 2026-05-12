@@ -35,13 +35,13 @@ export default function Preferencias() {
     }
 
     return (
-        <div className="flex flex-col border border-gray-300 rounded-3xl bg-white w-full px-8 py-8 overflow-scroll">
+        <div className="flex flex-col border border-gray-300 rounded-3xl bg-white w-full px-8 py-8">
             <h2 className="text-2xl font-semibold text-gray-800 mb-8">
                 Preferências
             </h2>
 
-            <div className="grid grid-cols-[180px_1fr] items-center py-4 border-t border-gray-200 w-fit">
-                <p className="text-gray-700 font-medium">Tema</p>
+            <div className="flex flex-col md:grid md:grid-cols-[180px_1fr] items-start md:items-center py-4 border-t border-gray-200">
+                <p className="text-gray-700 font-medium">Tema:</p>
 
                 <div className="flex gap-8">
                     <label className="flex items-center gap-2 cursor-pointer min-w-20">
@@ -70,8 +70,8 @@ export default function Preferencias() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-[180px_1fr] items-center py-4 border-t border-gray-200 w-fit">
-                <p className="text-gray-700 font-medium">Unidade de medida</p>
+            <div className="flex flex-col md:grid md:grid-cols-[180px_1fr] items-start md:items-center py-4 border-t border-gray-200">
+                <p className="text-gray-700 font-medium">Unidade de medida:</p>
 
                 <div className="flex gap-8">
                     <label className="flex items-center gap-2 cursor-pointer min-w-20">
@@ -100,8 +100,8 @@ export default function Preferencias() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-[180px_1fr] items-center py-4 border-t border-gray-200 w-fit">
-                <p className="text-gray-700 font-medium">Temperatura</p>
+            <div className="flex flex-col md:grid md:grid-cols-[180px_1fr] items-start md:items-center py-4 border-t border-gray-200">
+                <p className="text-gray-700 font-medium">Temperatura:</p>
 
                 <div className="flex gap-8">
                     <label className="flex items-center gap-2 cursor-pointer min-w-20">
