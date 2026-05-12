@@ -80,7 +80,7 @@ export default function Configuracoes() {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex flex-col gap-6 w-full max-w-2xl xl:w-1/2">
+                        <div className="flex flex-col gap-6 w-full max-w-2xl xl:w-1/3">
                             <div className="shadow-sm rounded-3xl">
                                 <Preferencias />
                             </div>
