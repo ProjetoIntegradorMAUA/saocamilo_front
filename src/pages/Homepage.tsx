@@ -2,8 +2,10 @@ import Navbar from "../components/Navbar";
 import CardAvaliacoes from "../components/CardAvaliacoes";
 import CardDashboard from "../components/CardDashboard";
 import { icons } from "../utils/IconsJson";
+import { useNavigate } from "react-router-dom";
 
 export default function Homepage() {
+    const navigate = useNavigate();
     return (
         <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row overflow-hidden">
             <div className="fixed bottom-0 left-0 right-0 z-40 lg:static lg:w-60">
@@ -17,7 +19,9 @@ export default function Homepage() {
 
                         <CardDashboard texto="Avaliações" quantidade={8} />
 
-                        <button className="border-1 border-gray-300 rounded-2xl sm:rounded-3xl bg-white flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 px-2 sm:px-4 py-2 sm:py-4 hover:bg-gray-100 transition cursor-pointer min-h-[75px] sm:min-h-[110px]">
+                        <button 
+                            onClick={() => navigate('/nova-atividade')}
+                            className="border-1 border-gray-300 rounded-2xl sm:rounded-3xl bg-white flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 px-2 sm:px-4 py-2 sm:py-4 hover:bg-gray-100 transition cursor-pointer min-h-[75px] sm:min-h-[110px]">
                             <div className="w-8 h-8 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full border border-red-200 flex items-center justify-center text-red-500 text-xl sm:text-3xl shrink-0">
                                 +
                             </div>
