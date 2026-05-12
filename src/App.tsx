@@ -6,6 +6,7 @@ import Homepage from "./pages/Homepage";
 import Manual from "./pages/Manual";
 import Atletas from "./pages/Atletas";
 import Configuracoes from "./pages/Configuracoes";
+import Historico from "./pages/Historico";
 
 export default function App() {
     return (
@@ -16,7 +17,9 @@ export default function App() {
                     <Route path="/homepage" element={<Homepage />} />
                     <Route path="/manual" element={<Manual />} />
                     <Route path="/atletas" element={<Atletas />} />
+                    <Route path="/historico" element={<Historico />} />
                     <Route path="/configuracoes" element={<Configuracoes />} />
+                    
                 </Routes>
             </BrowserRouter>
         </>
