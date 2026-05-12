@@ -1,3 +1,6 @@
+import { useNavigate } from "react-router-dom";
+import Botao from "../components/Botao";
+import Confirmacao from "../components/Confirmacao";
 import Navbar from "../components/Navbar";
 import Preferencias from "../components/Preferencias";
 import Topbar from "../components/Topbar";
@@ -7,7 +10,13 @@ import { useState } from "react";
 
 export default function Configuracoes() {
     const [mostrarSenha, setMostrarSenha] = useState(false);
-
+    const [showConfirmacao, setShowConfirmacao] = useState(false);
+    const navigate = useNavigate()
+    function fnavigate(rota: string) {
+        setTimeout(() => {
+            navigate("/" + rota)
+        }, 500)
+    }
     return (
         <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row overflow-hidden">
             <div className="fixed bottom-0 left-0 right-0 z-40 lg:static lg:w-60">
@@ -71,8 +80,38 @@ export default function Configuracoes() {
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <Preferencias />
+                        <div className="flex flex-col gap-6 w-full max-w-2xl xl:w-1/2">
+                            <div className="shadow-sm rounded-3xl">
+                                <Preferencias />
+                            </div>
+                            <div className="flex flex-col border border-gray-300 rounded-3xl bg-white p-6 sm:p-8 shadow-sm w-full">
+                                <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-3">
+                                    Conta
+                                </h2>
+
+                                <p className="text-gray-600 mb-6 text-sm">
+                                    Gerencie o acesso da sua conta e encerramento de sessão.
+                                </p>
+
+                                <div className="flex gap-4">
+                                    <div onClick={() => setShowConfirmacao(true)}>
+                                        <Botao texto="Sair da Conta" />
+                                    </div>
+                                </div>
+                                {showConfirmacao && (
+                                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
+                                        <Confirmacao
+                                            texto="Tem certeza que deseja sair?"
+                                            onCancel={() => setShowConfirmacao(false)}
+                                            onConfirm={() => {
+                                                setShowConfirmacao(false)
+                                                localStorage.clear()
+                                                fnavigate("")
+                                            }}
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
