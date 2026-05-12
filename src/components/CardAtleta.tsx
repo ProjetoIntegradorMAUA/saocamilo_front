@@ -6,23 +6,23 @@ interface ICardAtleta {
 
 export default function CardAtleta({ nome }: ICardAtleta) {
     return (
-        <div className="w-[220px] h-[300px] bg-[#e9e9e9] border border-[#555] rounded-[24px] flex flex-col items-center pt-8 pb-6 px-5 shrink-0">
-            <div className="w-[90px] h-[90px] rounded-full border border-[#777] bg-[#d9d9d9] flex items-center justify-center">
-                <span className="text-[42px] font-light leading-none">
+        <div className="w-full max-w-[240px] h-[320px] bg-white border border-gray-200 rounded-[32px] flex flex-col items-center pt-10 pb-6 px-6 shadow-sm hover:shadow-md transition-shadow duration-300 group cursor-pointer">
+            <div className="w-24 h-24 rounded-full border-2 border-red-100 bg-red-50 flex items-center justify-center text-red-500 transition-colors group-hover:bg-red-100">
+                <span className="text-2xl font-semibold leading-none">
                     {nome[0]}
                 </span>
             </div>
 
-            <p className="mt-8 text-[20px] text-[#222] text-center leading-tight break-words">
-                {nome}
+            <p className="mt-6 text-xl text-gray-800 font-medium text-center leading-tight wrap-break-words">
+                {nome.split(' ')[0] + ' ' + nome.split(' ')[nome.split(' ').length - 1]}
             </p>
 
-            <div className="w-full flex justify-around mt-auto">
-                <button className="text-[38px] text-black">
+            <div className="w-full flex justify-around mt-auto pt-4 border-t border-gray-100">
+                <button className="text-3xl text-gray-400 hover:text-red-500 transition-colors cursor-pointer p-2">
                     {icons.editar}
                 </button>
 
-                <button className="text-[38px] text-black">
+                <button className="text-3xl text-gray-400 hover:text-red-600 transition-colors cursor-pointer p-2">
                     {icons.lixeira}
                 </button>
             </div>
