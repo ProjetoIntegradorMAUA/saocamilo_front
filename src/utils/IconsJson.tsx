@@ -9,6 +9,12 @@ import { SiStagetimer } from "react-icons/si";
 import { CiSearch, CiStar, CiBellOn } from "react-icons/ci";
 import { BiBarChartAlt } from "react-icons/bi";
 import { MdOutlineDataUsage } from "react-icons/md";
+import { FaHeartbeat } from "react-icons/fa";
+import { BsDroplet } from "react-icons/bs";
+import { GiRemedy } from "react-icons/gi";
+
+
+
 
 export const icons = {
     "usuario": <FaRegUser />,
@@ -39,5 +45,8 @@ export const icons = {
     "grafico2": <MdOutlineDataUsage />,
     "email": <MdAlternateEmail />,
     "olhoAberto": <FaEye />,
-    "olhoFechado": <FaEyeSlash />
+    "olhoFechado": <FaEyeSlash />,
+    "coracao": <FaHeartbeat /> ,
+    "gota": <BsDroplet /> , 
+    "remedio": <GiRemedy />
 }
