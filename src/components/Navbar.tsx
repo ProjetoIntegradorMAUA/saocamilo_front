@@ -77,18 +77,18 @@ export default function Navbar({ index }: INavbar) {
                 <div id="logo" className="m-10 w-full flex justify-center ">
                     <img src={logoSaoCamilo} alt="Logo São Camilo" className="w-1/2 cursor-pointer" onClick={() => fnavigate("homepage")} />
                 </div>
-                <div id="conteudo" className="h-2/5">
-                    <div onClick={() => fnavigate("atletas")} className={`w-full flex gap-3 items-center pl-10 p-4 cursor-pointer ${activeIndex === 1 ? 'text-red-500' : 'text-gray-500'}`}>
-                        {icons.usuario} - Atletas
+                <div id="conteudo" className="h-2/5 w-full px-2 text-[16px]">
+                    <div onClick={() => fnavigate("atletas")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 1 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
+                        {icons.usuario}- Atletas
                     </div>
-                    <div onClick={() => fnavigate("historico")} className={`w-full flex gap-3 items-center pl-10 p-4 cursor-pointer ${activeIndex === 2 ? 'text-red-500' : 'text-gray-500'}`}>
-                        {icons.historico} - Histórico
+                    <div onClick={() => fnavigate("historico")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 2 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
+                        {icons.historico}- Histórico
                     </div>
-                    <div onClick={() => fnavigate("manual")} className={`w-full flex gap-3 items-center pl-10 p-4 cursor-pointer ${activeIndex === 3 ? 'text-red-500' : 'text-gray-500'}`}>
-                        {icons.manual} - Manual
+                    <div onClick={() => fnavigate("manual")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 3 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
+                        {icons.manual}- Manual
                     </div>
-                    <div onClick={() => fnavigate("configuracoes")} className={`w-full flex gap-3 items-center pl-10 p-4 cursor-pointer ${activeIndex === 4 ? 'text-red-500' : 'text-gray-500'}`}>
-                        {icons.configuracoes} - Configurações
+                    <div onClick={() => fnavigate("configuracoes")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 4 ? 'text-red-500 hover:text-red-700 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
+                        {icons.configuracoes}- Configurações
                     </div>
                 </div>
                 <div className="h-2/5 flex w-full justify-center items-center-safe">
