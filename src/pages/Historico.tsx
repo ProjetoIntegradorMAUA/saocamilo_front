@@ -25,8 +25,8 @@ export default function Historico() {
                         </div>
                         <ComboBox
                             texto="Filtro"
-                            placeholder="Hoje"
-                            options={["Últimos 7 dias", "Últimos 30 dias"]}
+                            placeholder=""
+                            options={["Hoje", "Últimos 7 dias", "Últimos 30 dias"]}
                         />
                     </div>
 
