@@ -9,6 +9,10 @@ import { SiStagetimer } from "react-icons/si";
 import { CiSearch, CiStar, CiBellOn } from "react-icons/ci";
 import { BiBarChartAlt } from "react-icons/bi";
 import { MdOutlineDataUsage } from "react-icons/md";
+import { FaArrowTrendUp } from "react-icons/fa6";
+import { IoIosTimer } from "react-icons/io";    
+import { IoPeople } from "react-icons/io5";
+import { FaFileDownload } from "react-icons/fa";
 
 export const icons = {
     "usuario": <FaRegUser />,
@@ -39,5 +43,10 @@ export const icons = {
     "grafico2": <MdOutlineDataUsage />,
     "email": <MdAlternateEmail />,
     "olhoAberto": <FaEye />,
-    "olhoFechado": <FaEyeSlash />
+    "olhoFechado": <FaEyeSlash />,
+    "setinhaCrescimento": <FaArrowTrendUp />,
+    "relogio": <IoIosTimer />,
+    "pessoas": <IoPeople />,
+    "download": <FaFileDownload />
+
 }
