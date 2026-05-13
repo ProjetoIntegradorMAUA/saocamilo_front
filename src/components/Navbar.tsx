@@ -76,7 +76,7 @@ export default function Navbar({ index }: INavbar) {
                         {icons.configuracoes} - Configurações
                     </div>
                 </div>
-                <div className="h-2/5 flex w-full justify-center items-center-safe">
+                <div className="h-2/5 flex w-full justify-center items-center-safe cursor-pointer" onClick={() => navigate('/nova-atividade')}>
                     <Botao texto="Nova avaliação" icone={icons.adicionar} />
                 </div>
             </div>
