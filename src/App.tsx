@@ -7,6 +7,7 @@ import Manual from "./pages/Manual";
 import Atletas from "./pages/Atletas";
 import Configuracoes from "./pages/Configuracoes";
 import Historico from "./pages/Historico";
+import NewActivity from "./pages/NewActivity";
 
 export default function App() {
     return (
@@ -19,7 +20,7 @@ export default function App() {
                     <Route path="/atletas" element={<Atletas />} />
                     <Route path="/historico" element={<Historico />} />
                     <Route path="/configuracoes" element={<Configuracoes />} />
-                    
+                    <Route path="/nova-atividade" element={<NewActivity />} />
                 </Routes>
             </BrowserRouter>
         </>
