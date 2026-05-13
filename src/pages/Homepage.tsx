@@ -6,6 +6,7 @@ import Topbar from "../components/Topbar";
 import { Users } from "../mock/users";
 
 export default function Homepage() {
+    const navigate = useNavigate();
     return (
         <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row overflow-hidden">
             <div className="fixed bottom-0 left-0 right-0 z-40 lg:static lg:w-60">
