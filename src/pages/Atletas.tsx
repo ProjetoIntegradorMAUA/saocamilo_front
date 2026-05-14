@@ -43,7 +43,7 @@ export default function Atletas() {
                                 <Botao
                                     texto="Adicionar Atleta"
                                     icone={<IoAddOutline />}
-                                    tela="/adicionarAtletas"
+                                    tela="/novoAtleta"
                                 />
                             </div>
                         </div>

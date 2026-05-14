@@ -6,7 +6,8 @@ import Homepage from "./pages/Homepage";
 import Manual from "./pages/Manual";
 import Atletas from "./pages/Atletas";
 import Configuracoes from "./pages/Configuracoes";
-import AdicionarAtletas from "./pages/AdicionarAtletas";
+import NovoAtleta from "./pages/NovoAtleta";
+import NewActivity from "./pages/NewActivity";
 
 export default function App() {
     return (
@@ -18,7 +19,8 @@ export default function App() {
                     <Route path="/homepage" element={<Homepage />} />
                     <Route path="/manual" element={<Manual />} />
                     <Route path="/atletas" element={<Atletas />} />
-                    <Route path="/novoAtleta" element={<AdicionarAtletas />} />
+                    <Route path="/novoAtleta" element={<NovoAtleta />} />
+                    <Route path="/nova-atividade" element={<NewActivity />} />
                     <Route path="/configuracoes" element={<Configuracoes />} />
                 </Routes>
             </BrowserRouter>
