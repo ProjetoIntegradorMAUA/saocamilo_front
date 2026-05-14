@@ -1,22 +1,31 @@
 import type { ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface IBotao {
     texto: string;
     icone?: ReactNode;
+    tela?: string;
 }
 
-export default function Botao({ texto, icone }: IBotao) {
-    return (
-        <div>
-            <button className="flex items-center gap-2 px-3.5 py-2 border border-red-500 bg-white text-red-500 rounded-lg hover:bg-gray-100 transition sm:text-sm lg:text-lg cursor-pointer">
-                {icone && (
-                    <span className="flex items-center justify-center w-4.5 h-4.5 rounded-full text-sm font-bold leading-none">
-                        {icone}
-                    </span>
-                )}
+export default function Botao({ texto, icone, tela }: IBotao) {
+    const navigate = useNavigate();
 
-                {texto}
-            </button>
-        </div>
+    return (
+        <button
+            className="flex items-center gap-2 px-3.5 py-2 border border-red-500 bg-white text-red-500 rounded-lg hover:bg-gray-100 transition sm:text-sm lg:text-lg cursor-pointer"
+            onClick={() => {
+                if (tela) {
+                    navigate(tela);
+                }
+            }}
+        >
+            {icone && (
+                <span className="flex items-center justify-center w-4.5 h-4.5 rounded-full text-sm font-bold leading-none">
+                    {icone}
+                </span>
+            )}
+
+            {texto}
+        </button>
     );
 }
