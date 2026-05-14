@@ -13,6 +13,7 @@ export default function App() {
         <>
             <BrowserRouter>
                 <Routes>
+                    {/* Pública */}
                     <Route path="/" element={<Login />} />
                     <Route path="/homepage" element={<Homepage />} />
                     <Route path="/manual" element={<Manual />} />

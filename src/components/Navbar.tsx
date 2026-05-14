@@ -1,8 +1,9 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { icons } from "../utils/IconsJson"
 import Botao from "./Botao";
 import { useNavigate } from "react-router";
 import logoSaoCamilo from "../assets/logo_saocamilo_completo.svg";
+import { getRole } from "../services/auth";
 
 interface INavbar {
     index: number;
@@ -12,7 +13,12 @@ export default function Navbar({ index }: INavbar) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
     const [activeIndex] = useState<number>(index)
     const [isNavigating, setIsNavigating] = useState(false)
+    const [role, setRole] = useState<string | null>(null)
     const navigate = useNavigate()
+
+    useEffect(() => {
+        setRole(getRole())
+    }, [])
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen)
@@ -34,12 +40,14 @@ export default function Navbar({ index }: INavbar) {
                 </div>
             )}
             <div id="navbar-mobile" className="lg:hidden flex gap-16 h-30 w-full fixed bottom-0 place-self-center justify-center items-center transition-all bg-white">
-                <div onClick={() => fnavigate("atletas")}
-                    className={`flex flex-col justify-center items-center gap-2 text-xl cursor-pointer hover:opacity-70 transition-colors ${activeIndex === 1 ? 'text-red-500' : ''}`}
-                >
-                    <span>{icons.usuario}</span>
-                    <span>Atletas</span>
-                </div>
+                {role === 'NUTRITIONIST' && (
+                    <div onClick={() => fnavigate("atletas")}
+                        className={`flex flex-col justify-center items-center gap-2 text-xl cursor-pointer hover:opacity-70 transition-colors ${activeIndex === 1 ? 'text-red-500' : ''}`}
+                    >
+                        <span>{icons.usuario}</span>
+                        <span>Atletas</span>
+                    </div>
+                )}
                 <div onClick={() => fnavigate("historico")}
                     className={`flex flex-col justify-center items-center gap-2 text-xl cursor-pointer hover:opacity-70 transition-colors ${activeIndex === 2 ? 'text-red-500' : ''}`}
                 >
@@ -78,9 +86,11 @@ export default function Navbar({ index }: INavbar) {
                     <img src={logoSaoCamilo} alt="Logo São Camilo" className="w-1/2 cursor-pointer" onClick={() => fnavigate("homepage")} />
                 </div>
                 <div id="conteudo" className="h-2/5 w-full px-2 text-[16px]">
-                    <div onClick={() => fnavigate("atletas")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 1 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
-                        {icons.usuario}- Atletas
-                    </div>
+                    {role === 'NUTRITIONIST' && (
+                        <div onClick={() => fnavigate("atletas")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 1 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
+                            {icons.usuario}- Atletas
+                        </div>
+                    )}
                     <div onClick={() => fnavigate("historico")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 2 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
                         {icons.historico}- Histórico
                     </div>
@@ -91,9 +101,11 @@ export default function Navbar({ index }: INavbar) {
                         {icons.configuracoes}- Configurações
                     </div>
                 </div>
-                <div className="h-2/5 flex w-full justify-center items-center-safe">
-                    <Botao texto="Nova avaliação" icone={icons.adicionar} />
-                </div>
+                {role === 'ATHLETE' && (
+                    <div className="h-2/5 flex w-full justify-center items-center-safe cursor-pointer" onClick={() => navigate('/nova-atividade')}>
+                        <Botao texto="Nova avaliação" icone={icons.adicionar} />
+                    </div>
+                )}
             </div>
         </div>
     )

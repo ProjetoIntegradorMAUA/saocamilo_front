@@ -5,8 +5,10 @@ import { IoAddOutline, IoSearchOutline } from "react-icons/io5";
 import Topbar from "../components/Topbar";
 import { Users } from "../mock/users";
 import CardDashboard from "../components/CardDashboard";
+import { useNavigate } from "react-router-dom";
 
 export default function Atletas() {
+    const navigate = useNavigate();
     return (
         <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row overflow-hidden">
             <div className="fixed bottom-0 left-0 right-0 z-40 lg:static lg:w-60">
@@ -37,7 +39,7 @@ export default function Atletas() {
                                 />
                             </div>
 
-                            <div className="shrink-0 w-full md:w-auto">
+                            <div className="shrink-0 w-full md:w-auto" onClick={() => navigate("/novo-atleta")}>
                                 <Botao
                                     texto="Adicionar Atleta"
                                     icone={<IoAddOutline />}
