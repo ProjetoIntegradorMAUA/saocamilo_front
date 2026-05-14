@@ -39,7 +39,7 @@ export default function Atletas() {
                                 />
                             </div>
 
-                            <div className="shrink-0 w-full md:w-auto" onClick={() => navigate("/novo-atleta")}>
+                            <div className="shrink-0 w-full md:w-auto" onClick={() => navigate("/novoAtleta")}>
                                 <Botao
                                     texto="Adicionar Atleta"
                                     icone={<IoAddOutline />}
