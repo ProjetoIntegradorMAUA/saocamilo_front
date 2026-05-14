@@ -11,12 +11,13 @@ async function request<T>(
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
   try {
+    const { headers: optionHeaders, ...restOptions } = options;
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      ...restOptions,
       headers: {
         "Content-Type": "application/json",
-        ...options.headers,
+        ...optionHeaders,
       },
-      ...options,
     });
 
     const data = await response.json();
@@ -43,6 +44,7 @@ async function request<T>(
 export interface LoginResponse {
   message: string;
   token: string;
+  role: string;
 }
 
 export interface RegisterResponse {

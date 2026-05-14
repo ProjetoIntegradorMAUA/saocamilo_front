@@ -2,7 +2,7 @@ import { useState } from "react";
 import InputLogin from "../components/InputLogin";
 import { useNavigate } from "react-router";
 import { loginUser } from "../services/api";
-import { saveToken } from "../services/auth";
+import { saveToken, saveRole } from "../services/auth";
 import logoEspiral from "../assets/logo_espiral.svg";
 
 export default function Login() {
@@ -39,7 +39,8 @@ export default function Login() {
 
             if (response.data) {
                 saveToken(response.data.token);
-                navigate("/manual");
+                saveRole(response.data.role);
+                navigate("/homepage");
             }
         } catch {
             setError("Ocorreu um erro inesperado. Tente novamente.");
