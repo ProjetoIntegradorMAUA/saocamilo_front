@@ -87,3 +87,15 @@ export interface MeResponse {
 export async function getMe() {
   return authRequest<MeResponse>("/api/auth/me");
 }
+
+export interface AthleteResponse {
+  id: string;
+  name: string;
+  email: string;
+  nutritionistId: string;
+  createdAt: string;
+}
+
+export async function getAthletes() {
+  return authRequest<AthleteResponse[]>("/api/athletes");
+}
