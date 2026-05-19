@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import CardAvaliacoes from "../components/CardAvaliacoes";
 import CardDashboard from "../components/CardDashboard";
@@ -5,9 +6,25 @@ import { icons } from "../utils/IconsJson";
 import Topbar from "../components/Topbar";
 import { Users } from "../mock/users";
 import { useNavigate } from "react-router-dom";
+import { getDashboard, type DashboardResponse } from "../services/api";
+import { getRole } from "../services/auth";
 
 export default function Homepage() {
     const navigate = useNavigate();
+    const [dashboardData, setDashboardData] = useState<DashboardResponse | null>(null);
+    const [loading, setLoading] = useState(true);
+    const role = getRole();
+
+    useEffect(() => {
+        const fetchDashboard = async () => {
+            const response = await getDashboard();
+            if (response.data) {
+                setDashboardData(response.data);
+            }
+            setLoading(false);
+        };
+        fetchDashboard();
+    }, []);
     return (
         <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row overflow-hidden">
             <div className="fixed bottom-0 left-0 right-0 z-40 lg:static lg:w-60">
@@ -20,9 +37,11 @@ export default function Homepage() {
                         <Topbar titulo="Início" foto={Users.user1.foto} />
                     </div>
                     <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                        <CardDashboard texto="Atletas" quantidade={5} />
+                        {role === 'NUTRITIONIST' && (
+                            <CardDashboard texto="Atletas" quantidade={dashboardData?.totalAtletas || 0} />
+                        )}
 
-                        <CardDashboard texto="Avaliações" quantidade={8} />
+                        <CardDashboard texto="Avaliações" quantidade={dashboardData?.totalAvaliacoes || 0} />
 
                         <button 
                             onClick={() => navigate('/nova-atividade')}
@@ -208,25 +227,17 @@ export default function Homepage() {
                     </div>
 
                     <div className="min-h-0 overflow-hidden">
-                        <CardAvaliacoes
-                            avaliacoes={[
-                                {
-                                    nome: "Diego Piol",
-                                    data: new Date("2026-05-01"),
-                                    sudorese: 2.1,
-                                },
-                                {
-                                    nome: "Lucca Rodrigues",
-                                    data: new Date("2026-05-01"),
-                                    sudorese: 1.8,
-                                },
-                                {
-                                    nome: "Caíque Frassão",
-                                    data: new Date("2026-05-01"),
-                                    sudorese: 2.4,
-                                },
-                            ]}
-                        />
+                        {loading ? (
+                            <p className="text-gray-500 p-4">Carregando avaliações...</p>
+                        ) : (
+                            <CardAvaliacoes
+                                avaliacoes={dashboardData?.ultimasAvaliacoes.map(av => ({
+                                    nome: av.atletaNome,
+                                    data: new Date(av.dataAvaliacao),
+                                    sudorese: av.taxaSudorese
+                                })) || []}
+                            />
+                        )}
                     </div>
                 </div>
             </main>

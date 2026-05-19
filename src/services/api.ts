@@ -99,3 +99,38 @@ export interface AthleteResponse {
 export async function getAthletes() {
   return authRequest<AthleteResponse[]>("/api/athletes");
 }
+
+export interface UltimaAvaliacao {
+  avaliacaoId: string;
+  atletaNome: string;
+  taxaSudorese: number;
+  dataAvaliacao: string;
+}
+
+export interface DashboardResponse {
+  totalAtletas: number;
+  totalAvaliacoes: number;
+  ultimasAvaliacoes: UltimaAvaliacao[];
+}
+
+export async function getDashboard() {
+  return authRequest<DashboardResponse>("/api/dashboard");
+}
+
+export interface CreateAvaliacaoDTO {
+  currentWeight: string;
+  finalWeight: string;
+  liquidIngested: string;
+  durationSeconds: number;
+  urineColor: string;
+  thirstLevel: string;
+  symptoms: string;
+  observations: string;
+}
+
+export async function createAvaliacao(data: CreateAvaliacaoDTO) {
+  return authRequest<{ message: string }>("/api/avaliacoes", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
