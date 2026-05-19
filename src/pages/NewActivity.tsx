@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { WiDaySunny, WiCloudy, WiRain, WiSnow, WiThunderstorm, WiFog } from "react-icons/wi";
 import { fetchWeather, type WeatherData } from "../services/weather";
 import { FiPlay, FiSquare, FiCheck, FiArrowLeft } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { createAvaliacao } from "../services/api";
 
 const getWeatherIcon = (code: number) => {
     if (code === 0) return <WiDaySunny className="w-10 h-10 text-yellow-400" />;
@@ -15,6 +16,7 @@ const getWeatherIcon = (code: number) => {
 };
 
 export default function NewActivity() {
+    const navigate = useNavigate();
     const [status, setStatus] = useState<'pre' | 'running' | 'post'>('pre');
     const [time, setTime] = useState(0);
     const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -65,10 +67,28 @@ export default function NewActivity() {
         return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     };
 
-    const handleSave = () => {
-        // Save logic here
-        alert("Atividade salva com sucesso!");
-        window.location.href = "/homepage";
+    const [isSaving, setIsSaving] = useState(false);
+
+    const handleSave = async () => {
+        setIsSaving(true);
+        const response = await createAvaliacao({
+            currentWeight,
+            finalWeight,
+            liquidIngested,
+            durationSeconds: time,
+            urineColor,
+            thirstLevel,
+            symptoms,
+            observations
+        });
+
+        setIsSaving(false);
+        if (response.error) {
+            alert("Erro ao salvar avaliação: " + response.error);
+        } else {
+            alert("Atividade salva com sucesso!");
+            navigate("/homepage");
+        }
     }
 
     return (
@@ -225,9 +245,16 @@ export default function NewActivity() {
 
                         <button 
                             onClick={handleSave}
-                            className="w-full mt-8 bg-red-500 hover:bg-red-600 text-white font-bold text-lg py-4 rounded-2xl shadow-md transition-all flex justify-center items-center gap-2 transform hover:-translate-y-1"
+                            disabled={isSaving}
+                            className={`w-full mt-8 ${isSaving ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'} text-white font-bold text-lg py-4 rounded-2xl shadow-md transition-all flex justify-center items-center gap-2 transform ${isSaving ? '' : 'hover:-translate-y-1'}`}
                         >
-                            <FiCheck className="w-6 h-6" /> Salvar Atividade
+                            {isSaving ? (
+                                <span>Salvando...</span>
+                            ) : (
+                                <>
+                                    <FiCheck className="w-6 h-6" /> Salvar Atividade
+                                </>
+                            )}
                         </button>
                     </div>
                 )}
