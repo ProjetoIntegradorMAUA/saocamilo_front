@@ -6,9 +6,37 @@ import Topbar from "../components/Topbar";
 import { Users } from "../mock/users";
 import CardDashboard from "../components/CardDashboard";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getAthletes, type AthleteResponse } from "../services/api";
+import { getRole } from "../services/auth";
 
 export default function Atletas() {
     const navigate = useNavigate();
+    const [atletas, setAtletas] = useState<AthleteResponse[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [search, setSearch] = useState("");
+
+    useEffect(() => {
+        const role = getRole();
+        if (role !== "NUTRITIONIST") {
+            navigate("/homepage");
+            return;
+        }
+
+        const fetchAtletas = async () => {
+            setLoading(true);
+            const response = await getAthletes();
+            if (response.data) {
+                setAtletas(response.data);
+            }
+            setLoading(false);
+        };
+        fetchAtletas();
+    }, [navigate]);
+
+    const atletasFiltrados = atletas.filter(atleta => 
+        atleta.name.toLowerCase().includes(search.toLowerCase())
+    );
     return (
         <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row overflow-hidden">
             <div className="fixed bottom-0 left-0 right-0 z-40 lg:static lg:w-60">
@@ -24,7 +52,7 @@ export default function Atletas() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="md:col-span-1">
-                            <CardDashboard texto="Atletas" quantidade={6} />
+                            <CardDashboard texto="Atletas" quantidade={atletas.length} />
                         </div>
                         
                         <div className="md:col-span-2 flex flex-col md:flex-row items-center gap-4 border border-gray-300 rounded-2xl bg-white p-3 sm:p-4 shadow-sm transition-all focus-within:border-red-400 focus-within:shadow-md">
@@ -34,6 +62,8 @@ export default function Atletas() {
                                 </span>
                                 <input
                                     type="text"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
                                     placeholder="Pesquise por um atleta..."
                                     className="w-full h-12 bg-white border border-gray-200 rounded-xl pl-12 pr-5 text-lg outline-none focus:border-red-300 transition-colors"
                                 />
@@ -54,12 +84,15 @@ export default function Atletas() {
                             Lista de Atletas
                         </h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-8 justify-items-center">
-                            <CardAtleta nome="Lucca Rodrigues" />
-                            <CardAtleta nome="Caique Frassão" />
-                            <CardAtleta nome="Diego Piol" />
-                            <CardAtleta nome="Paulo Perasso" />
-                            <CardAtleta nome="Enzo Chagas" />
-                            <CardAtleta nome="Rafael Maistro" />
+                            {loading ? (
+                                <p className="col-span-full text-gray-500">Carregando atletas...</p>
+                            ) : atletasFiltrados.length > 0 ? (
+                                atletasFiltrados.map((atleta) => (
+                                    <CardAtleta key={atleta.id} nome={atleta.name} />
+                                ))
+                            ) : (
+                                <p className="col-span-full text-gray-500">Nenhum atleta encontrado.</p>
+                            )}
                         </div>
                     </div>
                 </div>
