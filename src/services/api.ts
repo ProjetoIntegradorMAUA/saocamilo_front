@@ -162,3 +162,27 @@ export async function createAvaliacao(data: CreateAvaliacaoDTO) {
   });
 }
 
+export interface AvaliacaoResponse {
+  avaliacaoId: string;
+  atletaId: string;
+  atletaNome: string;
+  taxaSudorese: number;
+  dataAvaliacao: string;
+  currentWeight: number;
+  finalWeight: number;
+  liquidIngested: number;
+  durationSeconds: number;
+  urineColor: number;
+  thirstLevel: number;
+  modality: string;
+  temperature?: number;
+  humidity?: number;
+  preSymptoms?: string[];
+  postSymptoms?: string[];
+  observations?: string;
+}
+
+export async function getAvaliacoes() {
+  return authRequest<AvaliacaoResponse[]>("/api/avaliacoes");
+}
+
