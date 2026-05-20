@@ -3,6 +3,7 @@ import { icons } from "../utils/IconsJson";
 interface ICardHistorico {
     nome: string;
     horarioAtual: string;
+    data: string;
     modalidade: string;
     duracao: string;
     sudorese: number;
@@ -12,6 +13,7 @@ interface ICardHistorico {
 export default function CardHistorico({
     nome,
     horarioAtual,
+    data,
     modalidade,
     duracao,
     sudorese,
@@ -52,7 +54,7 @@ export default function CardHistorico({
                     </span>
 
                     <span className="text-xs text-gray-400">
-                        22/05/2026
+                        {data}
                     </span>
                 </div>
 
@@ -64,7 +66,7 @@ export default function CardHistorico({
                 </span>
 
                 <span className="text-sm text-gray-400">
-                    22/05/2026
+                    {data}
                 </span>
             </div>
 

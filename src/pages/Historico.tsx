@@ -1,9 +1,90 @@
+import { useState, useEffect } from "react";
 import CardHistorico from "../components/CardHistorico";
 import ComboBox from "../components/Combobox";
 import Navbar from "../components/Navbar";
 import { icons } from "../utils/IconsJson";
+import { getAvaliacoes, type AvaliacaoResponse } from "../services/api";
 
 export default function Historico() {
+    const [evaluations, setEvaluations] = useState<AvaliacaoResponse[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
+
+    useEffect(() => {
+        async function loadData() {
+            try {
+                const response = await getAvaliacoes();
+                if (response.error) {
+                    setError(response.error);
+                } else if (response.data) {
+                    setEvaluations(response.data);
+                }
+            } catch (err) {
+                console.error("Erro ao buscar avaliações:", err);
+                setError("Não foi possível conectar ao servidor. Verifique sua conexão.");
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadData();
+    }, []);
+
+    const totalDurationSeconds = evaluations.reduce((acc, curr) => acc + (curr.durationSeconds || 0), 0);
+    const totalHours = Math.round(totalDurationSeconds / 3600);
+
+    const pctVariations = evaluations.map(e => {
+        if (!e.currentWeight || e.currentWeight === 0) return 0;
+        const diff = e.currentWeight - e.finalWeight;
+        return (diff / e.currentWeight) * 100;
+    });
+    const bestMassVariationPct = pctVariations.length > 0 ? Math.max(...pctVariations) : 0;
+
+    const formatPct = (val: number) => {
+        const prefix = val > 0 ? "+" : "";
+        return `${prefix}${val.toFixed(1).replace(".", ",")}%`;
+    };
+
+    const formatDuration = (seconds: number) => {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        if (hours > 0) {
+            return `${hours}h${minutes > 0 ? ` ${minutes}m` : ""}`;
+        }
+        return `${minutes}min`;
+    };
+
+    const formatDateTime = (isoString: string) => {
+        try {
+            const dateObj = new Date(isoString);
+            if (isNaN(dateObj.getTime())) {
+                return { time: "--:--", date: "--/--/----" };
+            }
+            
+            const hours = String(dateObj.getHours()).padStart(2, "0");
+            const minutes = String(dateObj.getMinutes()).padStart(2, "0");
+            
+            const day = String(dateObj.getDate()).padStart(2, "0");
+            const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+            const year = dateObj.getFullYear();
+            
+            return {
+                time: `${hours}:${minutes}`,
+                date: `${day}/${month}/${year}`
+            };
+        } catch {
+            return { time: "--:--", date: "--/--/----" };
+        }
+    };
+
+    const filteredEvaluations = evaluations.filter(av => {
+        const term = searchTerm.toLowerCase();
+        return (
+            (av.atletaNome || "").toLowerCase().includes(term) ||
+            (av.modality || "").toLowerCase().includes(term)
+        );
+    });
+
     return (
         <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row overflow-hidden">
             <div className="fixed bottom-0 left-0 right-0 z-40 lg:static lg:w-60">
@@ -11,7 +92,7 @@ export default function Historico() {
             </div>
 
             <main className="flex-1 px-2 sm:px-4 lg:px-6 py-2 sm:py-4 pb-28 lg:pb-4 overflow-y-auto">
-                <div className="w-full max-w-450 min-h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-2xl p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
+                <div className="w-full max-w-[1800px] min-h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-2xl p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
                     <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
                         <div>
                             <h1 className="text-3xl sm:text-4xl font-semibold text-black">
@@ -42,7 +123,7 @@ export default function Historico() {
                                 </p>
 
                                 <h2 className="text-lg sm:text-2xl lg:text-4xl font-semibold text-black">
-                                    24
+                                    {evaluations.length}
                                 </h2>
 
                                 <span className="text-[9px] sm:text-xs text-gray-400">
@@ -62,7 +143,7 @@ export default function Historico() {
                                 </p>
 
                                 <h2 className="text-lg sm:text-2xl lg:text-4xl font-semibold text-black">
-                                    36h
+                                    {totalHours}h
                                 </h2>
 
                                 <span className="text-[9px] sm:text-xs text-gray-400">
@@ -82,7 +163,7 @@ export default function Historico() {
                                 </p>
 
                                 <h2 className="text-lg sm:text-2xl lg:text-4xl font-semibold text-black">
-                                    +2,4%
+                                    {formatPct(bestMassVariationPct)}
                                 </h2>
 
                                 <span className="text-[9px] sm:text-xs text-gray-400">
@@ -91,7 +172,8 @@ export default function Historico() {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white border border-gray-200 rounded-2xl px-5 py-4 flex items-center gap-3 w-full max-w-125">
+                    
+                    <div className="bg-white border border-gray-200 rounded-2xl px-5 py-4 flex items-center gap-3 w-full max-w-[500px]">
                         <span className="text-gray-400 text-2xl">
                             {icons.lupa}
                         </span>
@@ -99,6 +181,8 @@ export default function Historico() {
                         <input
                             type="text"
                             placeholder="Buscar atleta ou sessão..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full bg-transparent outline-none text-gray-700 placeholder:text-gray-400"
                         />
                     </div>
@@ -131,36 +215,44 @@ export default function Historico() {
                             </button>
                         </div>
 
-                        <CardHistorico
-                            nome="Lucca Frassao"
-                            horarioAtual="14:30"
-                            modalidade="Futebol"
-                            duracao="1h 20min"
-                            sudorese={1.8}
-                            massa={67.7}
-                        />
+                        {loading && (
+                            <div className="flex justify-center items-center py-16">
+                                <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                            </div>
+                        )}
 
-                        <CardHistorico
-                            nome="Caique Frassao"
-                            horarioAtual="16:10"
-                            modalidade="Basquete"
-                            duracao="2h"
-                            sudorese={2.1}
-                            massa={50.3}
-                        />
+                        {error && (
+                            <div className="text-center py-16 text-red-500 font-semibold px-4">
+                                {error}
+                            </div>
+                        )}
 
-                        <CardHistorico
-                            nome="Diego Piol"
-                            horarioAtual="09:45"
-                            modalidade="Jiu-Jitsu"
-                            duracao="1hr"
-                            sudorese={1.2}
-                            massa={90.9}
-                        />
+                        {!loading && !error && filteredEvaluations.length === 0 && (
+                            <div className="text-center py-16 text-gray-500 font-semibold px-4">
+                                {searchTerm ? "Nenhuma sessão corresponde à pesquisa." : "Nenhuma avaliação cadastrada."}
+                            </div>
+                        )}
+
+                        {!loading && !error && filteredEvaluations.map((av) => {
+                            const { time, date } = formatDateTime(av.dataAvaliacao);
+                            const massLoss = (av.currentWeight || 0) - (av.finalWeight || 0);
+                            return (
+                                <CardHistorico
+                                    key={av.avaliacaoId}
+                                    nome={av.atletaNome}
+                                    horarioAtual={time}
+                                    data={date}
+                                    modalidade={av.modality}
+                                    duracao={formatDuration(av.durationSeconds)}
+                                    sudorese={av.taxaSudorese}
+                                    massa={parseFloat(massLoss.toFixed(2))}
+                                />
+                            );
+                        })}
 
                         <div className="bg-[#fafafa] border-t border-gray-200 px-4 lg:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
                             <p className="text-sm text-gray-500 font-medium text-center sm:text-left">
-                                Mostrando 1 a 4 de 10 sessões
+                                Mostrando {filteredEvaluations.length} de {evaluations.length} sessões
                             </p>
 
                             <div className="flex items-center gap-2">
