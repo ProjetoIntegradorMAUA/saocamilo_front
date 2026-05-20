@@ -1,6 +1,8 @@
 export interface WeatherData {
     temperature: number;
     weathercode: number;
+    humidity?: number;
+    windSpeed?: number;
 }
 
 // Fallback to São Caetano do Sul coordinates
@@ -13,14 +15,16 @@ export async function fetchWeather(lat?: number, lon?: number): Promise<WeatherD
 
     try {
         const response = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
+            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m`
         );
         const data = await response.json();
         
-        if (data && data.current_weather) {
+        if (data && data.current) {
             return {
-                temperature: data.current_weather.temperature,
-                weathercode: data.current_weather.weathercode,
+                temperature: data.current.temperature_2m,
+                weathercode: data.current.weather_code,
+                humidity: data.current.relative_humidity_2m,
+                windSpeed: data.current.wind_speed_10m,
             };
         }
         return null;
@@ -29,3 +33,4 @@ export async function fetchWeather(lat?: number, lon?: number): Promise<WeatherD
         return null;
     }
 }
+

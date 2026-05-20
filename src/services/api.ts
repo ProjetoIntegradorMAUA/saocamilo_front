@@ -124,8 +124,35 @@ export interface CreateAvaliacaoDTO {
   durationSeconds: number;
   urineColor: string;
   thirstLevel: string;
-  symptoms: string;
-  observations: string;
+  preSymptoms?: string[];
+  postSymptoms?: string[];
+  observations?: string;
+
+  // Condições ambientais
+  temperature?: string;
+  humidity?: string;
+  thermalSensation?: string;
+  windCondition?: string;
+  solarExposure?: string;
+
+  // Dados da sessão planejada
+  modality: string;
+  plannedDurationMin?: string;
+  perceivedIntensity: string;
+  clothingType: string;
+  recentHydrationHistory?: string;
+
+  // Durante a sessão
+  foodIntakeWater?: string;
+  urineOutputDuringML?: string;
+
+  // Pós-sessão
+  soakedClothing?: boolean;
+  clothingChanged?: boolean;
+  giTolerance?: string;
+
+  // Ambiente
+  isOutdoor: boolean;
 }
 
 export async function createAvaliacao(data: CreateAvaliacaoDTO) {
@@ -134,3 +161,4 @@ export async function createAvaliacao(data: CreateAvaliacaoDTO) {
     body: JSON.stringify(data),
   });
 }
+
