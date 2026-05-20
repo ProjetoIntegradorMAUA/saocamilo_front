@@ -1,6 +1,128 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
+:root {
+    --color-bg: #f4f4f4;
+    --color-surface: #ffffff;
+    --color-surface-alt: #e9e9ed;
+    --color-topbar: #f9fafb;
+    --color-card-muted: #f3f4f6;
+    --color-text: #1f2937;
+    --color-text-muted: #6b7280;
+    --color-text-subtle: #9ca3af;
+    --color-border: #d1d5db;
+    --color-border-subtle: #e5e7eb;
+}
+
+.theme-dark {
+    --color-bg: #0b0e13;
+    --color-surface: #151922;
+    --color-surface-alt: #0f141c;
+    --color-topbar: #101521;
+    --color-card-muted: #1a1f2b;
+    --color-text: #eef2f7;
+    --color-text-muted: #c1c7d2;
+    --color-text-subtle: #9aa3b2;
+    --color-border: #313846;
+    --color-border-subtle: #232a36;
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    transition:
+        background-color 200ms ease,
+        color 200ms ease;
+}
+
+.theme-dark .bg-white {
+    background-color: var(--color-surface);
+}
+
+.theme-dark .bg-gray-50 {
+    background-color: var(--color-topbar);
+}
+
+.theme-dark .bg-gray-100 {
+    background-color: var(--color-card-muted);
+}
+
+.theme-dark .bg-\[\#f4f4f4\] {
+    background-color: var(--color-bg);
+}
+
+.theme-dark .bg-\[\#e9e9ed\] {
+    background-color: var(--color-surface-alt);
+}
+
+.theme-dark .xl\:bg-\[\#e9e9ed\] {
+    background-color: var(--color-surface-alt);
+}
+
+.bg-white,
+.bg-gray-50,
+.bg-gray-100,
+.bg-\[\#f4f4f4\],
+.bg-\[\#e9e9ed\],
+.xl\:bg-\[\#e9e9ed\] {
+    transition: background-color 200ms ease;
+}
+
+.theme-dark .bg-white,
+.theme-dark .bg-gray-50,
+.theme-dark .bg-gray-100,
+.theme-dark .bg-\[\#f4f4f4\],
+.theme-dark .bg-\[\#e9e9ed\],
+.theme-dark .xl\:bg-\[\#e9e9ed\] {
+    transition: background-color 200ms ease;
+}
+
+.text-gray-900,
+.text-gray-800,
+.text-gray-700,
+.text-gray-600,
+.text-gray-500,
+.text-gray-400,
+.text-black {
+    transition: color 200ms ease;
+}
+
+.theme-dark .text-gray-900,
+.theme-dark .text-gray-800,
+.theme-dark .text-gray-700,
+.theme-dark .text-black {
+    color: var(--color-text);
+    transition: color 200ms ease;
+}
+
+.theme-dark .text-gray-600,
+.theme-dark .text-gray-500 {
+    color: var(--color-text-muted);
+    transition: color 200ms ease;
+}
+
+.theme-dark .text-gray-400 {
+    color: var(--color-text-subtle);
+    transition: color 200ms ease;
+}
+
+.border-gray-300,
+.border-gray-400,
+.border-gray-200 {
+    transition: border-color 200ms ease;
+}
+
+.theme-dark .border-gray-300,
+.theme-dark .border-gray-400 {
+    border-color: var(--color-border);
+    transition: border-color 200ms ease;
+}
+
+.theme-dark .border-gray-200 {
+    border-color: var(--color-border-subtle);
+    transition: border-color 200ms ease;
+}
+
 .montserrat {
     font-family: "Montserrat", sans-serif;
     font-optical-sizing: auto;

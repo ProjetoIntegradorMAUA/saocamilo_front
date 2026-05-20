@@ -11,7 +11,7 @@ export default function Historico() {
             </div>
 
             <main className="flex-1 px-2 sm:px-4 lg:px-6 py-2 sm:py-4 pb-28 lg:pb-4 overflow-y-auto">
-                <div className="w-full max-w-[1800px] min-h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-2xl p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
+                <div className="w-full max-w-450 min-h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-2xl p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
                     <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
                         <div>
                             <h1 className="text-3xl sm:text-4xl font-semibold text-black">
@@ -91,7 +91,7 @@ export default function Historico() {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white border border-gray-200 rounded-2xl px-5 py-4 flex items-center gap-3 w-full max-w-[500px]">
+                    <div className="bg-white border border-gray-200 rounded-2xl px-5 py-4 flex items-center gap-3 w-full max-w-125">
                         <span className="text-gray-400 text-2xl">
                             {icons.lupa}
                         </span>
