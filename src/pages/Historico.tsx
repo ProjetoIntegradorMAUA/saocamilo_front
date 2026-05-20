@@ -10,6 +10,7 @@ export default function Historico() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const [timeFilter, setTimeFilter] = useState("Todos");
 
     useEffect(() => {
         async function loadData() {
@@ -79,10 +80,34 @@ export default function Historico() {
 
     const filteredEvaluations = evaluations.filter(av => {
         const term = searchTerm.toLowerCase();
-        return (
+        const matchesSearch = (
             (av.atletaNome || "").toLowerCase().includes(term) ||
             (av.modality || "").toLowerCase().includes(term)
         );
+
+        if (!matchesSearch) return false;
+        if (timeFilter === "Todos" || !timeFilter) return true;
+
+        const dateObj = new Date(av.dataAvaliacao);
+        if (isNaN(dateObj.getTime())) return false;
+
+        const now = new Date();
+        const diffTime = Math.abs(now.getTime() - dateObj.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (timeFilter === "Hoje") {
+            return (
+                dateObj.getDate() === now.getDate() &&
+                dateObj.getMonth() === now.getMonth() &&
+                dateObj.getFullYear() === now.getFullYear()
+            );
+        } else if (timeFilter === "Últimos 7 dias") {
+            return diffDays <= 7;
+        } else if (timeFilter === "Últimos 30 dias") {
+            return diffDays <= 30;
+        }
+
+        return true;
     });
 
     return (
@@ -106,8 +131,10 @@ export default function Historico() {
                         </div>
                         <ComboBox
                             texto="Filtro"
-                            placeholder=""
-                            options={["Hoje", "Últimos 7 dias", "Últimos 30 dias"]}
+                            placeholder="Todos"
+                            options={["Todos", "Hoje", "Últimos 7 dias", "Últimos 30 dias"]}
+                            value={timeFilter}
+                            onChange={setTimeFilter}
                         />
                     </div>
 
@@ -229,7 +256,9 @@ export default function Historico() {
 
                         {!loading && !error && filteredEvaluations.length === 0 && (
                             <div className="text-center py-16 text-gray-500 font-semibold px-4">
-                                {searchTerm ? "Nenhuma sessão corresponde à pesquisa." : "Nenhuma avaliação cadastrada."}
+                                {searchTerm || timeFilter !== "Todos" 
+                                    ? "Nenhuma sessão corresponde aos filtros aplicados." 
+                                    : "Nenhuma avaliação cadastrada."}
                             </div>
                         )}
 
