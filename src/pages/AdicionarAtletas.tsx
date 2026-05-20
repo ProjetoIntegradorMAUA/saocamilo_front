@@ -26,7 +26,7 @@ export default function AdicionarAtletas() {
 
     return (
         <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row">
-            <div className="hidden lg:block lg:w-60 lg:flex-shrink-0">
+            <div className="hidden lg:block lg:w-60 lg:shrink-0">
                 <Navbar index={1} />
             </div>
 
@@ -42,7 +42,7 @@ export default function AdicionarAtletas() {
                         w-full
                         min-h-screen
                         lg:h-[95vh]
-                        lg:max-w-[1550px]
+                        lg:max-w-387.5
                         bg-white
                         lg:rounded-3xl
                         border

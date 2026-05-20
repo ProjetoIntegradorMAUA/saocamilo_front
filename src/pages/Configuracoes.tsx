@@ -18,6 +18,7 @@ export default function Configuracoes() {
         setTimeout(() => {
             setIsNavigating(false)
             navigate("/" + rota)
+            location.reload()
         }, 500)
     }
     return (
@@ -32,7 +33,7 @@ export default function Configuracoes() {
             </div>
 
             <main className="flex-1 px-2 sm:px-4 lg:px-6 py-2 sm:py-4 pb-28 lg:pb-4 overflow-y-auto">
-                <div className="w-full max-w-[1800px] min-h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-2xl p-2 sm:p-4 lg:p-5 flex flex-col gap-6">
+                <div className="w-full max-w-450 min-h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-2xl p-2 sm:p-4 lg:p-5 flex flex-col gap-6">
 
                     <div className="rounded-2xl overflow-hidden shadow-sm bg-white">
                         <Topbar titulo="Configurações" foto={Users.user1.foto} />
@@ -112,8 +113,8 @@ export default function Configuracoes() {
                                             texto="Tem certeza que deseja sair?"
                                             onCancel={() => setShowConfirmacao(false)}
                                             onConfirm={() => {
-                                                setShowConfirmacao(false)
                                                 localStorage.clear()
+                                                setShowConfirmacao(false)
                                                 fnavigate("")
                                             }}
                                         />

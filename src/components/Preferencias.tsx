@@ -1,36 +1,32 @@
 import { useState } from "react";
 import type { ChangeEvent } from "react";
-
-type Tema = "claro" | "escuro";
-type Unidade = "kg" | "lb";
-type Temperatura = "c" | "f";
+import { getStoredConfigs, type Theme, type Unidade, type Temperatura, useTheme } from "../contexts/ThemeContext";
 
 export default function Preferencias() {
-    const configsString = localStorage.getItem("configs")
-    const configs = JSON.parse(configsString ? configsString : '{"tema":"claro","unidade":"kg","temperatura":"c"}')
-    const [tema, setTema] = useState<Tema>(configs.tema);
+    const { theme, setTheme } = useTheme();
+    const configs = getStoredConfigs();
     const [unidade, setUnidade] = useState<Unidade>(configs.unidade);
     const [temperatura, setTemperatura] = useState<Temperatura>(configs.temperatura);
 
     const handleTemaChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const newTema = e.target.value as Tema;
-        setTema(newTema);
+        const newTema = e.target.value as Theme;
+        setTheme(newTema);
         setLocalStorage(newTema, unidade, temperatura);
     };
 
     const handleUnidadeChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newUnidade = e.target.value as Unidade;
         setUnidade(newUnidade);
-        setLocalStorage(tema, newUnidade, temperatura);
+        setLocalStorage(theme, newUnidade, temperatura);
     };
 
     const handleTemperaturaChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newTemperatura = e.target.value as Temperatura;
         setTemperatura(newTemperatura);
-        setLocalStorage(tema, unidade, newTemperatura);
+        setLocalStorage(theme, unidade, newTemperatura);
     };
 
-    const setLocalStorage = (tema: Tema, unidade: Unidade, temperatura: Temperatura) => {
+    const setLocalStorage = (tema: Theme, unidade: Unidade, temperatura: Temperatura) => {
         localStorage.setItem("configs", JSON.stringify({ tema, unidade, temperatura }))
     }
 
@@ -49,7 +45,7 @@ export default function Preferencias() {
                             type="radio"
                             name="tema"
                             value="claro"
-                            checked={tema === "claro"}
+                            checked={theme === "claro"}
                             onChange={handleTemaChange}
                             className="accent-red-600 w-4 h-4"
                         />
@@ -61,7 +57,7 @@ export default function Preferencias() {
                             type="radio"
                             name="tema"
                             value="escuro"
-                            checked={tema === "escuro"}
+                            checked={theme === "escuro"}
                             onChange={handleTemaChange}
                             className="accent-red-600 w-4 h-4"
                         />

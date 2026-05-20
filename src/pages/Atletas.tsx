@@ -34,7 +34,7 @@ export default function Atletas() {
         fetchAtletas();
     }, [navigate]);
 
-    const atletasFiltrados = atletas.filter(atleta => 
+    const atletasFiltrados = atletas.filter(atleta =>
         atleta.name.toLowerCase().includes(search.toLowerCase())
     );
     return (
@@ -44,8 +44,8 @@ export default function Atletas() {
             </div>
 
             <main className="flex-1 px-2 sm:px-4 lg:px-6 py-2 sm:py-4 pb-28 lg:pb-4 overflow-y-auto">
-                <div className="w-full max-w-[1800px] min-h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-2xl p-2 sm:p-4 lg:p-5 flex flex-col gap-6">
-                    
+                <div className="w-full max-w-450 min-h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-2xl p-2 sm:p-4 lg:p-5 flex flex-col gap-6">
+
                     <div className="rounded-2xl overflow-hidden shadow-sm bg-white">
                         <Topbar titulo="Atletas" foto={Users.user1.foto} />
                     </div>
@@ -54,7 +54,7 @@ export default function Atletas() {
                         <div className="md:col-span-1">
                             <CardDashboard texto="Atletas" quantidade={atletas.length} />
                         </div>
-                        
+
                         <div className="md:col-span-2 flex flex-col md:flex-row items-center gap-4 border border-gray-300 rounded-2xl bg-white p-3 sm:p-4 shadow-sm transition-all focus-within:border-red-400 focus-within:shadow-md">
                             <div className="relative w-full">
                                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
