@@ -1,4 +1,4 @@
-import { FaRegUser, FaHistory, FaRegTrashAlt, FaCheck, FaThermometerHalf, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaRegUser, FaHistory, FaRegTrashAlt, FaCheck, FaThermometerHalf, FaEye, FaEyeSlash, FaDownload, FaUsers, FaRegClock, FaChartLine } from "react-icons/fa";
 import { LuLayoutDashboard, LuBookText, LuWeight, LuBriefcaseBusiness } from "react-icons/lu";
 import { GoGear } from "react-icons/go";
 import { IoAddCircleOutline } from "react-icons/io5";
@@ -48,5 +48,9 @@ export const icons = {
     "olhoFechado": <FaEyeSlash />,
     "coracao": <FaHeartbeat /> ,
     "gota": <BsDroplet /> , 
-    "remedio": <GiRemedy />
+    "remedio": <GiRemedy />,
+    "download": <FaDownload />,
+    "pessoas": <FaUsers />,
+    "relogio": <FaRegClock />,
+    "setinhaCrescimento": <FaChartLine />
 }
