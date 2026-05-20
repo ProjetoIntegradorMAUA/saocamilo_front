@@ -8,6 +8,7 @@ import Atletas from "./pages/Atletas";
 import Configuracoes from "./pages/Configuracoes";
 import NovoAtleta from "./pages/NovoAtleta";
 import NewActivity from "./pages/NewActivity";
+import Historico from "./pages/Historico";
 
 export default function App() {
     return (
@@ -22,6 +23,7 @@ export default function App() {
                     <Route path="/novoAtleta" element={<NovoAtleta />} />
                     <Route path="/nova-atividade" element={<NewActivity />} />
                     <Route path="/configuracoes" element={<Configuracoes />} />
+                    <Route path="/historico" element={<Historico />} />
                 </Routes>
             </BrowserRouter>
         </>
