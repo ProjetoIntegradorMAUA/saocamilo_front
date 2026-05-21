@@ -39,7 +39,13 @@ export default function Navbar({ index }: INavbar) {
                     <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
                 </div>
             )}
-            <div id="navbar-mobile" className="lg:hidden flex gap-16 h-30 w-full fixed bottom-0 place-self-center justify-center items-center transition-all bg-white">
+            <div id="navbar-mobile" className="lg:hidden flex gap-8 sm:gap-16 h-30 w-full fixed bottom-0 place-self-center justify-center items-center transition-all bg-white">
+                <div onClick={() => fnavigate("homepage")}
+                    className={`flex flex-col justify-center items-center gap-2 text-xl cursor-pointer hover:opacity-70 transition-colors ${activeIndex === 0 ? 'text-red-500' : ''}`}
+                >
+                    <span>{icons.dashboard}</span>
+                    <span>Início</span>
+                </div>
                 {role === 'NUTRITIONIST' && (
                     <div onClick={() => fnavigate("atletas")}
                         className={`flex flex-col justify-center items-center gap-2 text-xl cursor-pointer hover:opacity-70 transition-colors ${activeIndex === 1 ? 'text-red-500' : ''}`}
@@ -86,6 +92,9 @@ export default function Navbar({ index }: INavbar) {
                     <img src={logoSaoCamilo} alt="Logo São Camilo" className="w-1/2 cursor-pointer" onClick={() => fnavigate("homepage")} />
                 </div>
                 <div id="conteudo" className="h-2/5 w-full px-2 text-[16px]">
+                    <div onClick={() => fnavigate("homepage")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 0 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
+                        {icons.dashboard}- Início
+                    </div>
                     {role === 'NUTRITIONIST' && (
                         <div onClick={() => fnavigate("atletas")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 1 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
                             {icons.usuario}- Atletas
@@ -97,7 +106,7 @@ export default function Navbar({ index }: INavbar) {
                     <div onClick={() => fnavigate("manual")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 3 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
                         {icons.manual}- Manual
                     </div>
-                    <div onClick={() => fnavigate("configuracoes")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 4 ? 'text-red-500 hover:text-red-700 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
+                    <div onClick={() => fnavigate("configuracoes")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 4 ? 'text-red-500 hover:text-red-750 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
                         {icons.configuracoes}- Configurações
                     </div>
                 </div>

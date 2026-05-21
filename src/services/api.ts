@@ -180,6 +180,25 @@ export interface AvaliacaoResponse {
   preSymptoms?: string[];
   postSymptoms?: string[];
   observations?: string;
+
+  // Variáveis extras de clima e ambiente
+  thermalSensation?: string;
+  windCondition?: string;
+  solarExposure?: string;
+  isOutdoor?: boolean;
+
+  // Variáveis extras da sessão planejada e durante
+  plannedDurationMin?: number;
+  perceivedIntensity?: string;
+  clothingType?: string;
+  recentHydrationHistory?: string;
+  foodIntakeWater?: number;
+  urineOutputDuringML?: number;
+
+  // Variáveis extras pós-exercício
+  soakedClothing?: boolean;
+  clothingChanged?: boolean;
+  giTolerance?: string;
 }
 
 export async function getAvaliacoes() {
