@@ -21,6 +21,17 @@ export default function Topbar({ titulo, foto }: ITopbar) {
         }, 500)
     }
 
+    function handleBack() {
+        setIsNavigating(true)
+        setTimeout(() => {
+            setIsNavigating(false)
+            if (local.pathname !== "/homepage") {
+                if (window.history.length > 1) navigate(-1)
+                else navigate('/nova-atividade')
+            }
+        }, 500)
+    }
+
     return (
         <div className="w-full bg-gray-50 flex gap-3  items-center ps-5 pe-5">
             {isNavigating && (
@@ -28,9 +39,7 @@ export default function Topbar({ titulo, foto }: ITopbar) {
                     <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
                 </div>
             )}
-            <button className="cursor-pointer text-2xl  p-2" onClick={() => {
-                if (local.pathname != "/homepage") fnavigate("homepage")
-            }}>{icons.seta_esquerda}</button>
+            <button className="cursor-pointer text-2xl  p-2" onClick={handleBack}>{icons.seta_esquerda}</button>
             <div className="w-11/12 ps-15 font-semibold">
                 {titulo}
             </div>
