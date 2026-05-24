@@ -301,6 +301,8 @@ export default function NewActivity() {
                         onClick={() => {
                             if (status === 'running') {
                                 setStatus('pre');
+                            } else if (status === 'post') {
+                                setStatus('running');
                             } else {
                                 navigate('/homepage');
                             }
