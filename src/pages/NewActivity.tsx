@@ -296,9 +296,19 @@ export default function NewActivity() {
             {/* Header com Clima em Tempo Real */}
             <header className="absolute top-0 left-0 right-0 w-full px-6 py-4 flex justify-between items-center bg-white border-b border-gray-150 shadow-sm z-20">
                 <div className="flex items-center gap-4">
-                    <Link to="/homepage" className="text-gray-500 hover:text-red-500 transition-colors">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            if (status === 'running') {
+                                setStatus('pre');
+                            } else {
+                                navigate('/homepage');
+                            }
+                        }}
+                        className="text-gray-500 hover:text-red-500 transition-colors"
+                    >
                         <FiArrowLeft className="w-6 h-6" />
-                    </Link>
+                    </button>
                     <div className="flex items-center gap-3">
                         {weather ? getWeatherIcon(weather.weathercode) : <WiCloudy className="w-10 h-10 text-gray-300 animate-pulse" />}
                         <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider hidden sm:inline">São Caetano do Sul</span>
