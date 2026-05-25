@@ -1,14 +1,13 @@
 import { icons } from "../utils/IconsJson";
 
-
 export default function Padronizacao() {
     return (
         <div>
-            <div className="flex items-center gap-2 text-3xl  text-black mb-4">
-                <span className="border rounded-3xl p-1 ">{icons.check}</span>
-                <p> Padronização de pesagem</p>
+            <div className="flex items-center gap-2 text-3xl text-black mb-4">
+                <span className="border border-gray-300 rounded-3xl p-1">{icons.check}</span>
+                <p>Padronização de pesagem</p>
             </div>
-            <div className="border rounded-3xl p-4 sm:p-8 bg-white w-full min-h-37.5 sm:min-h-55 flex flex-col gap-3 sm:gap-4">
+            <div className="border border-gray-300 rounded-3xl p-4 sm:p-8 bg-white w-full min-h-37.5 sm:min-h-55 flex flex-col gap-3 sm:gap-4">
                 <div className="flex items-center gap-4">
                     <p className="flex items-center justify-center rounded-full bg-red-700 text-white font-semibold w-8 h-8 sm:w-7 sm:h-7 shrink-0 text-sm sm:text-xl leading-none">1</p>
                     <p className="text-sm sm:text-base">Esvaziamento vesical obrigatório antes de ambas as pesagens.</p>
@@ -32,12 +31,3 @@ export default function Padronizacao() {
         </div>
     );
 }
-
-
-
-
-
-
-
-
-
