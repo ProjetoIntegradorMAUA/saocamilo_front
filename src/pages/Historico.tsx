@@ -215,15 +215,15 @@ export default function Historico() {
                     </div>
 
                     <div className="w-full rounded-2xl border border-gray-200 overflow-hidden bg-white">
-                        <div className="hidden lg:grid grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1fr_1.2fr] items-center px-6 py-4 bg-[#fafafa] border-b border-gray-200 text-sm font-semibold text-gray-500 gap-4">
-                            <p>Atleta</p>
-                            <p>Horário</p>
-                            <p>Modalidade</p>
-                            <p>Duração</p>
-                            <p>Sudorese</p>
-                            <p>Var. Massa</p>
-                            <p>Status</p>
-                            <p>Ações</p>
+                        <div className="hidden lg:grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)] items-center px-6 py-4 bg-[#fafafa] border-b border-gray-200 text-sm font-semibold text-gray-500 gap-4">
+                            <p className="min-w-0 truncate">Atleta</p>
+                            <p className="min-w-0 truncate">Horário</p>
+                            <p className="min-w-0 truncate">Modalidade</p>
+                            <p className="min-w-0 truncate">Duração</p>
+                            <p className="min-w-0 truncate">Sudorese</p>
+                            <p className="min-w-0 truncate">Var. Massa</p>
+                            <p className="min-w-0 truncate">Status</p>
+                            <p className="min-w-0 truncate">Ações</p>
                         </div>
 
                         <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#fafafa] border-b border-gray-200">

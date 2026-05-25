@@ -26,9 +26,9 @@ export default function CardHistorico({
         .substring(0, 2);
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1fr_1.2fr] gap-4 lg:gap-3 px-4 lg:px-6 py-4 bg-white border-b border-gray-200">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)] gap-4 px-4 lg:px-6 py-4 bg-white border-b border-gray-200 lg:items-center">
 
-            <div className="flex items-center justify-between lg:justify-start gap-4">
+            <div className="flex items-center justify-between lg:justify-start gap-4 min-w-0 w-full">
 
                 <div className="flex items-center gap-3 min-w-0">
                     <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center shrink-0">
@@ -60,7 +60,7 @@ export default function CardHistorico({
 
             </div>
 
-            <div className="hidden lg:block">
+            <div className="hidden lg:block min-w-0 w-full">
                 <span className="block text-[15px] text-[#2b2b2b]">
                     {horarioAtual}
                 </span>
@@ -84,65 +84,65 @@ export default function CardHistorico({
                     </div>
                 </div>
 
-                <div className="hidden lg:flex">
-                    <div className="border border-gray-200 rounded-xl px-4 py-2 flex items-center justify-center w-fit">
-                        <span className="text-[15px] text-gray-700 whitespace-nowrap">
+                <div className="hidden lg:flex min-w-0 w-full">
+                    <div className="border border-gray-200 rounded-xl px-4 py-2 flex items-center justify-center w-fit max-w-full">
+                        <span className="text-[15px] text-gray-700 whitespace-nowrap truncate">
                             {modalidade}
                         </span>
                     </div>
                 </div>
 
-                <div>
+                <div className="min-w-0 w-full">
                     <p className="text-xs text-gray-400 mb-1 lg:hidden">
                         Duração
                     </p>
 
-                    <div className="text-[15px] text-[#2b2b2b]">
+                    <div className="text-[15px] text-[#2b2b2b] truncate">
                         {duracao}
                     </div>
                 </div>
 
-                <div>
+                <div className="min-w-0 w-full">
                     <p className="text-xs text-gray-400 mb-1 lg:hidden">
                         Sudorese
                     </p>
 
-                    <div className="text-[15px] text-[#2b2b2b]">
+                    <div className="text-[15px] text-[#2b2b2b] truncate">
                         {sudorese}%
                     </div>
                 </div>
 
-                <div>
+                <div className="min-w-0 w-full">
                     <p className="text-xs text-gray-400 mb-1 lg:hidden">
                         Var. Massa
                     </p>
 
-                    <div className="text-red-500 font-medium text-[15px]">
+                    <div className="text-red-500 font-medium text-[15px] truncate">
                         {massa}-x
                     </div>
                 </div>
 
-                <div>
+                <div className="min-w-0 w-full">
                     <p className="text-xs text-gray-400 mb-1 lg:hidden">
                         Status
                     </p>
 
-                    <div className="bg-green-100 text-green-700 px-3 py-2 rounded-xl text-sm font-medium w-fit">
+                    <div className="bg-green-100 text-green-700 px-3 py-2 rounded-xl text-sm font-medium w-fit truncate">
                         Concluída
                     </div>
                 </div>
 
-                <div className="sm:col-span-2 lg:col-span-1">
+                <div className="sm:col-span-2 lg:col-span-1 min-w-0 w-full">
                     <p className="text-xs text-gray-400 mb-1 lg:hidden">
                         Ações
                     </p>
 
-                    <button className="border border-gray-200 rounded-xl px-4 py-2 flex items-center justify-center gap-2 hover:bg-gray-50 transition w-full lg:w-fit">
+                    <button className="border border-gray-200 rounded-xl px-4 py-2 flex items-center justify-center gap-2 hover:bg-gray-50 transition w-full lg:w-fit min-w-0">
                         <span className="text-gray-500">
                             {icons.download}
                         </span>
 
-                        <span className="text-sm text-gray-700 whitespace-nowrap">
+                        <span className="text-sm text-gray-700 whitespace-nowrap truncate">
                             Exportar PDF
                         </span>
                     </button>
