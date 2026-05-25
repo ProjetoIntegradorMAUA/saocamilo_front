@@ -2,7 +2,8 @@ import Navbar from "../components/Navbar";
 import Botao from "../components/Botao";
 import CardAtleta from "../components/CardAtleta";
 import Confirmacao from "../components/Confirmacao";
-import { IoAddOutline, IoSearchOutline } from "react-icons/io5";
+import { IoAddOutline, IoSearchOutline, IoPeopleOutline } from "react-icons/io5";
+import { getAllAthletes, updateNutritionistTeam } from "../services/api";
 import Topbar from "../components/Topbar";
 import { Users } from "../mock/users";
 import CardDashboard from "../components/CardDashboard";
@@ -17,6 +18,11 @@ export default function Atletas() {
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
     const [athleteToDelete, setAthleteToDelete] = useState<{ id: string; name: string } | null>(null);
+    const [showManageTeamModal, setShowManageTeamModal] = useState(false);
+    const [allAthletesForTeam, setAllAthletesForTeam] = useState<AthleteResponse[]>([]);
+    const [selectedTeamIds, setSelectedTeamIds] = useState<string[]>([]);
+    const [loadingAllAthletes, setLoadingAllAthletes] = useState(false);
+    const [isSavingTeam, setIsSavingTeam] = useState(false);
 
     useEffect(() => {
         const role = getRole();
@@ -42,6 +48,45 @@ export default function Atletas() {
 
     const handleDeleteAthlete = (athleteId: string, athleteName: string) => {
         setAthleteToDelete({ id: athleteId, name: athleteName });
+    };
+
+    const handleOpenManageTeam = async () => {
+        setShowManageTeamModal(true);
+        setLoadingAllAthletes(true);
+        try {
+            const res = await getAllAthletes();
+            if (res.data) {
+                setAllAthletesForTeam(res.data);
+            }
+            setSelectedTeamIds(atletas.map(a => a.id));
+        } catch (error) {
+            console.error("Erro ao carregar atletas para equipe:", error);
+        } finally {
+            setLoadingAllAthletes(false);
+        }
+    };
+
+    const handleSaveTeam = async () => {
+        setIsSavingTeam(true);
+        try {
+            const response = await updateNutritionistTeam(selectedTeamIds);
+            if (response.error) {
+                alert(`Erro ao salvar equipe: ${response.error}`);
+            } else {
+                alert("Equipe atualizada com sucesso!");
+                setShowManageTeamModal(false);
+                // Refresh the active athletes list
+                const refreshed = await getAthletes();
+                if (refreshed.data) {
+                    setAtletas(refreshed.data);
+                }
+            }
+        } catch (error) {
+            console.error("Erro ao salvar equipe:", error);
+            alert("Ocorreu um erro ao salvar equipe.");
+        } finally {
+            setIsSavingTeam(false);
+        }
     };
     return (
         <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row overflow-hidden">
@@ -75,12 +120,20 @@ export default function Atletas() {
                                 />
                             </div>
 
-                            <div className="shrink-0 w-full md:w-auto" onClick={() => navigate("/novoAtleta")}>
-                                <Botao
-                                    texto="Adicionar Atleta"
-                                    icone={<IoAddOutline />}
-                                    tela="/novoAtleta"
-                                />
+                            <div className="flex flex-col sm:flex-row gap-3 shrink-0 w-full md:w-auto">
+                                <div onClick={() => navigate("/adicionar-atleta")} className="cursor-pointer">
+                                    <Botao
+                                        texto="Adicionar Atleta"
+                                        icone={<IoAddOutline />}
+                                        tela="/adicionar-atleta"
+                                    />
+                                </div>
+                                <div onClick={handleOpenManageTeam} className="cursor-pointer">
+                                    <Botao
+                                        texto="Gerenciar Equipe"
+                                        icone={<IoPeopleOutline />}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -131,6 +184,66 @@ export default function Atletas() {
                             }
                         }}
                     />
+                </div>
+            )}
+
+            {showManageTeamModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
+                    <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl p-6 border border-gray-100 flex flex-col gap-5">
+                        <div>
+                            <h2 className="text-2xl font-bold text-gray-800 mb-1">Gerenciar Equipe</h2>
+                            <p className="text-sm text-gray-500">Selecione quais atletas pertencem à sua equipe de monitoramento.</p>
+                        </div>
+
+                        {loadingAllAthletes ? (
+                            <div className="flex items-center justify-center p-8">
+                                <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                            </div>
+                        ) : (
+                            <div className="max-h-64 overflow-y-auto border border-gray-200 rounded-2xl p-4 bg-gray-50 space-y-2">
+                                {allAthletesForTeam.length > 0 ? (
+                                    allAthletesForTeam.map(ath => {
+                                        const isInTeam = selectedTeamIds.includes(ath.id);
+                                        return (
+                                            <label key={ath.id} className="flex items-center gap-3 cursor-pointer p-1.5 hover:bg-white rounded-xl transition-colors font-semibold">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isInTeam}
+                                                    onChange={() => {
+                                                        setSelectedTeamIds(prev =>
+                                                            prev.includes(ath.id)
+                                                                ? prev.filter(id => id !== ath.id)
+                                                                : [...prev, ath.id]
+                                                        );
+                                                    }}
+                                                    className="w-4 h-4 text-red-500 focus:ring-red-500 border-gray-300 rounded cursor-pointer"
+                                                />
+                                                <span className="text-sm text-gray-700">{ath.name} ({ath.email})</span>
+                                            </label>
+                                        );
+                                    })
+                                ) : (
+                                    <p className="text-xs text-gray-500 italic p-1">Nenhum atleta disponível no sistema.</p>
+                                )}
+                            </div>
+                        )}
+
+                        <div className="flex gap-3 pt-2">
+                            <button
+                                onClick={() => setShowManageTeamModal(false)}
+                                className="flex-1 border border-gray-300 text-gray-600 font-semibold py-3 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleSaveTeam}
+                                disabled={isSavingTeam}
+                                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-xl transition-colors disabled:opacity-50 cursor-pointer"
+                            >
+                                {isSavingTeam ? "Salvando..." : "Salvar Equipe"}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

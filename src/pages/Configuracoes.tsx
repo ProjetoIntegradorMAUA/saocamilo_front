@@ -102,9 +102,12 @@ export default function Configuracoes() {
                                     Gerencie o acesso da sua conta e encerramento de sessão.
                                 </p>
 
-                                <div className="flex gap-4">
-                                    <div onClick={() => setShowConfirmacao(true)}>
+                                <div className="flex flex-col sm:flex-row gap-4">
+                                    <div onClick={() => setShowConfirmacao(true)} className="cursor-pointer">
                                         <Botao texto="Sair da Conta" />
+                                    </div>
+                                    <div onClick={() => navigate("/novo-nutricionista")} className="cursor-pointer">
+                                        <Botao texto="Cadastrar Nutricionista" />
                                     </div>
                                 </div>
                                 {showConfirmacao && (
