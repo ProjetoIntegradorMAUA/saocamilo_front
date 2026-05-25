@@ -1,13 +1,14 @@
 import Navbar from "../components/Navbar";
 import Botao from "../components/Botao";
 import CardAtleta from "../components/CardAtleta";
+import Confirmacao from "../components/Confirmacao";
 import { IoAddOutline, IoSearchOutline } from "react-icons/io5";
 import Topbar from "../components/Topbar";
 import { Users } from "../mock/users";
 import CardDashboard from "../components/CardDashboard";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getAthletes, type AthleteResponse } from "../services/api";
+import { getAthletes, deleteAthlete, type AthleteResponse } from "../services/api";
 import { getRole } from "../services/auth";
 
 export default function Atletas() {
@@ -15,6 +16,7 @@ export default function Atletas() {
     const [atletas, setAtletas] = useState<AthleteResponse[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
+    const [athleteToDelete, setAthleteToDelete] = useState<{ id: string; name: string } | null>(null);
 
     useEffect(() => {
         const role = getRole();
@@ -37,6 +39,10 @@ export default function Atletas() {
     const atletasFiltrados = atletas.filter(atleta =>
         atleta.name.toLowerCase().includes(search.toLowerCase())
     );
+
+    const handleDeleteAthlete = (athleteId: string, athleteName: string) => {
+        setAthleteToDelete({ id: athleteId, name: athleteName });
+    };
     return (
         <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row overflow-hidden">
             <div className="fixed bottom-0 left-0 right-0 z-40 lg:static lg:w-60">
@@ -88,7 +94,11 @@ export default function Atletas() {
                                 <p className="col-span-full text-gray-500">Carregando atletas...</p>
                             ) : atletasFiltrados.length > 0 ? (
                                 atletasFiltrados.map((atleta) => (
-                                    <CardAtleta key={atleta.id} nome={atleta.name} />
+                                    <CardAtleta 
+                                        key={atleta.id} 
+                                        nome={atleta.name} 
+                                        onDelete={() => handleDeleteAthlete(atleta.id, atleta.name)}
+                                    />
                                 ))
                             ) : (
                                 <p className="col-span-full text-gray-500">Nenhum atleta encontrado.</p>
@@ -97,6 +107,32 @@ export default function Atletas() {
                     </div>
                 </div>
             </main>
+
+            {athleteToDelete && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
+                    <Confirmacao
+                        texto={`Tem certeza que deseja excluir o atleta "${athleteToDelete.name}"?`}
+                        onCancel={() => setAthleteToDelete(null)}
+                        onConfirm={async () => {
+                            const athleteId = athleteToDelete.id;
+                            const athleteName = athleteToDelete.name;
+                            setAthleteToDelete(null);
+                            try {
+                                const response = await deleteAthlete(athleteId);
+                                if (response.error) {
+                                    alert(`Erro ao excluir atleta: ${response.error}`);
+                                } else {
+                                    alert(`Atleta "${athleteName}" excluído com sucesso!`);
+                                    setAtletas(prev => prev.filter(a => a.id !== athleteId));
+                                }
+                            } catch (error) {
+                                console.error("Erro ao deletar atleta:", error);
+                                alert("Ocorreu um erro inesperado ao excluir o atleta.");
+                            }
+                        }}
+                    />
+                </div>
+            )}
         </div>
     );
 }
