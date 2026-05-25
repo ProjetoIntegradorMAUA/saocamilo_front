@@ -205,3 +205,9 @@ export async function getAvaliacoes() {
   return authRequest<AvaliacaoResponse[]>("/api/avaliacoes");
 }
 
+export async function deleteAthlete(athleteId: string) {
+  return authRequest<{ message: string }>(`/api/athletes/${athleteId}`, {
+    method: "DELETE",
+  });
+}
+
