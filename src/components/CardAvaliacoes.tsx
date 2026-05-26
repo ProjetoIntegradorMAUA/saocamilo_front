@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { icons } from "../utils/IconsJson";
 import { type AvaliacaoResponse } from "../services/api";
 
@@ -21,7 +22,14 @@ const meses = [
     "Dezembro",
 ];
 
+const PAGE_SIZE = 5;
+
 export default function CardAvaliacoes({ avaliacoes, onView }: ICardAvaliacoes) {
+    const [page, setPage] = useState(0);
+
+    const totalPages = Math.ceil(avaliacoes.length / PAGE_SIZE);
+    const paginated = avaliacoes.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
+
     return (
         <div className="flex flex-col gap-4 border border-gray-200/80 rounded-2xl bg-white p-4 sm:p-5 w-full overflow-hidden shadow-sm font-sans">
             

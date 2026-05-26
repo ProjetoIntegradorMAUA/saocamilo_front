@@ -211,3 +211,15 @@ export async function deleteAthlete(athleteId: string) {
   });
 }
 
+export async function getAllAthletes() {
+  return authRequest<AthleteResponse[]>("/api/athletes/all");
+}
+
+export async function updateNutritionistTeam(athleteIds: string[]) {
+  return authRequest<{ message: string }>("/api/athletes/team", {
+    method: "PUT",
+    body: JSON.stringify({ athleteIds }),
+  });
+}
+
+

@@ -88,6 +88,7 @@ export default function Homepage() {
         fetchDashboardAndEvaluations();
     }, []);
 
+
     const modalityMap: Record<string, { count: number; totalSweatRate: number }> = {};
     evaluations.forEach((evalItem) => {
         const mod = evalItem.modality || "Outro";
@@ -110,6 +111,7 @@ export default function Homepage() {
     const colors = ["bg-blue-500", "bg-green-500", "bg-yellow-400", "bg-purple-500", "bg-pink-500", "bg-indigo-500", "bg-orange-500"];
     const hexColors = ["#3b82f6", "#22c55e", "#eab308", "#a855f7", "#ec4899", "#6366f1", "#f97316"];
 
+
     const maxAverage = modalityMetrics.length > 0 ? Math.max(...modalityMetrics.map(m => m.averageSweatRate)) : 0;
     const maxScale = Math.max(maxAverage, 3.0);
 
@@ -121,6 +123,7 @@ export default function Homepage() {
         maxScale * 1 / 5,
         0
     ];
+
 
     let accumulatedDegrees = 0;
     const gradientParts = modalityMetrics.map((m, idx) => {
@@ -168,6 +171,7 @@ export default function Homepage() {
                             </div>
                         </button>
                     </div>
+
 
                     {loading ? (
                         <div className="border border-gray-200/80 rounded-2xl bg-white p-8 sm:p-12 flex flex-col items-center justify-center text-center min-h-[300px] shadow-sm">
@@ -277,7 +281,6 @@ export default function Homepage() {
                                                 );
                                             })}
                                         </div>
-
                                         {/* LEGENDAS DO EIXO X */}
                                         <div className="flex justify-around pl-2 sm:pl-4 mt-2 gap-2 sm:gap-3">
                                             {modalityMetrics.slice(0, 5).map((m) => (
@@ -289,7 +292,6 @@ export default function Homepage() {
                                     </div>
                                 </div>
                             </div>
-
                             {/* GRÁFICO 2: DISTRIBUIÇÃO DAS AVALIAÇÕES POR MODALIDADE */}
                             <div className="border border-gray-200/80 rounded-2xl bg-white p-4 flex flex-col min-w-0 shadow-sm">
                                 <div className="flex items-center gap-2.5 justify-center mb-5 border-b border-gray-100 pb-3">
@@ -343,7 +345,6 @@ export default function Homepage() {
                                             )}
                                         </div>
                                     </div>
-
                                     {/* BADGES / LIST OF MODALITIES */}
                                     <div className="flex flex-col gap-1 sm:gap-1.5 min-w-0 flex-1">
                                         {modalityMetrics.slice(0, 5).map((m, idx) => {
@@ -557,12 +558,9 @@ export default function Homepage() {
 
                 </div>
             </main>
-
-            {/* OVERLAY MODAL DE DETALHES DA AVALIAÇÃO */}
             {selectedAvaliacao && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300">
                     <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-100 flex flex-col transition-all duration-300 transform scale-100">
-                        {/* Header */}
                         <div className="flex justify-between items-start border-b border-gray-200 px-6 py-5 sticky top-0 bg-white z-10">
                             <div className="flex items-center gap-4">
                                 <div className="w-14 h-14 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-red-500 shrink-0">
@@ -585,13 +583,8 @@ export default function Homepage() {
                                 {icons.fechar}
                             </button>
                         </div>
-
-                        {/* Modal Body */}
                         <div className="p-6 flex flex-col gap-6">
-                            
-                            {/* Grid 1: Principais Métricas em Destaque */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                {/* Taxa de Sudorese */}
                                 <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4 flex flex-col justify-between shadow-sm">
                                     <span className="text-xs font-semibold text-green-700 uppercase tracking-wide">Taxa de Sudorese</span>
                                     <div className="mt-2 flex items-baseline gap-1">
@@ -602,8 +595,6 @@ export default function Homepage() {
                                     </div>
                                     <p className="text-[11px] text-green-600 mt-2 font-medium">Volumetria de suor perdida por hora de atividade</p>
                                 </div>
-
-                                {/* Peso e Perda Hídrica */}
                                 <div className="bg-gradient-to-br from-blue-50 to-sky-50 border border-blue-200 rounded-2xl p-4 flex flex-col justify-between shadow-sm">
                                     <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Variação de Peso</span>
                                     <div className="mt-2">
@@ -625,8 +616,6 @@ export default function Homepage() {
                                     </div>
                                     <p className="text-[11px] text-blue-600 mt-2 font-medium">Percentual de desidratação (limite recomendado: 2%)</p>
                                 </div>
-
-                                {/* Duração do Treino */}
                                 <div className="bg-gradient-to-br from-red-50 to-orange-50 border border-red-200 rounded-2xl p-4 flex flex-col justify-between shadow-sm">
                                     <span className="text-xs font-semibold text-red-700 uppercase tracking-wide">Tempo de Sessão</span>
                                     <div className="mt-2 flex items-baseline gap-1">
@@ -642,10 +631,7 @@ export default function Homepage() {
                                     <p className="text-[11px] text-red-600 mt-2 font-medium">Modalidade praticada: <span className="font-bold">{selectedAvaliacao.modality}</span></p>
                                 </div>
                             </div>
-
-                            {/* Grid 2: Detalhes do Treino & Ambiente */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {/* Informações do Exercício */}
                                 <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50 flex flex-col gap-3 shadow-sm">
                                     <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide border-b border-gray-200 pb-2 flex items-center gap-2">
                                         🏃‍♂️ Informações do Exercício
@@ -671,8 +657,6 @@ export default function Homepage() {
                                         </div>
                                     </div>
                                 </div>
-
-                                {/* Condições Ambientais */}
                                 <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50 flex flex-col gap-3 shadow-sm">
                                     <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide border-b border-gray-200 pb-2 flex items-center gap-2">
                                         ☀️ Clima & Ambiente
@@ -701,10 +685,7 @@ export default function Homepage() {
                                     </div>
                                 </div>
                             </div>
-
-                            {/* Grid 3: Hidratação e Parâmetros Fisiológicos */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {/* Ingestão de Fluidos e Perdas */}
                                 <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50 flex flex-col gap-3 shadow-sm">
                                     <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide border-b border-gray-200 pb-2 flex items-center gap-2">
                                         💧 Registro de Hidratação
@@ -734,8 +715,6 @@ export default function Homepage() {
                                         </div>
                                     </div>
                                 </div>
-
-                                {/* Fisiologia & Urina */}
                                 <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50 flex flex-col gap-3 shadow-sm">
                                     <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide border-b border-gray-200 pb-2 flex items-center gap-2">
                                         🧪 Marcadores Fisiológicos
@@ -768,8 +747,6 @@ export default function Homepage() {
                                                     title={`Urina cor escala ${selectedAvaliacao.urineColor}`}
                                                 ></div>
                                             </div>
-                                            
-                                            {/* Visualizador de Escala de Urina Completo */}
                                             <div className="flex justify-between gap-1 mt-3">
                                                 {[1, 2, 3, 4, 5, 6, 7, 8].map((score) => (
                                                     <div 
@@ -784,8 +761,6 @@ export default function Homepage() {
                                     </div>
                                 </div>
                             </div>
-
-                            {/* Sintomas e Pós-Exercício */}
                             <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50 flex flex-col gap-4 shadow-sm">
                                 <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide border-b border-gray-200 pb-2 flex items-center gap-2">
                                     ⚠️ Sintomas & Pós-Exercício
@@ -840,8 +815,6 @@ export default function Homepage() {
                                     </div>
                                 </div>
                             </div>
-
-                            {/* Observações / Anotações */}
                             <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50 flex flex-col gap-2 shadow-sm">
                                 <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide border-b border-gray-200 pb-2">
                                     📝 Observações Adicionais
@@ -852,8 +825,6 @@ export default function Homepage() {
                             </div>
 
                         </div>
-
-                        {/* Footer */}
                         <div className="border-t border-gray-200 px-6 py-4 bg-gray-50 rounded-b-3xl flex justify-end">
                             <button
                                 onClick={() => setSelectedAvaliacao(null)}

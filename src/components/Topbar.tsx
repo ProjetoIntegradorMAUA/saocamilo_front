@@ -13,13 +13,6 @@ export default function Topbar({ titulo }: ITopbar) {
     const local = useLocation()
     const [isNavigating, setIsNavigating] = useState(false)
 
-    function fnavigate(rota: string) {
-        setIsNavigating(true)
-        setTimeout(() => {
-            setIsNavigating(false)
-            navigate("/" + rota)
-        }, 500)
-    }
 
     function handleBack() {
         setIsNavigating(true)

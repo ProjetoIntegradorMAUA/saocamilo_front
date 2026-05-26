@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { WiDaySunny, WiCloudy, WiRain, WiSnow, WiThunderstorm, WiFog } from "react-icons/wi";
 import { fetchWeather, type WeatherData } from "../services/weather";
 import { FiPlay, FiSquare, FiCheck, FiArrowLeft, FiTrash, FiPlus, FiInfo } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { createAvaliacao } from "../services/api";
 
 const getWeatherIcon = (code: number) => {
