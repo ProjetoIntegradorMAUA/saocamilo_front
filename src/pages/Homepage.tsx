@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import CardAvaliacoes from "../components/CardAvaliacoes";
 import CardDashboard from "../components/CardDashboard";
+import RecentSweatTrendChart from "../components/RecentSweatTrendChart";
 import { icons } from "../utils/IconsJson";
 import Topbar from "../components/Topbar";
 import { useNavigate } from "react-router-dom";
@@ -59,7 +60,6 @@ export default function Homepage() {
     // Interactive states
     const [hoveredBar, setHoveredBar] = useState<string | null>(null);
     const [hoveredLegend, setHoveredLegend] = useState<string | null>(null);
-    const [hoveredTrendPoint, setHoveredTrendPoint] = useState<number | null>(null);
     const [sortBy, setSortBy] = useState<'rate' | 'count'>('count');
 
     const role = getRole();
@@ -394,152 +394,7 @@ export default function Homepage() {
                             </div>
 
                             <div className="flex-1 flex flex-col justify-center relative min-h-[160px] pb-2">
-                                {/* SVG Line/Area Trend Chart */}
-                                {(() => {
-                                    const chronologicalEvals = [...evaluations]
-                                        .sort((a, b) => new Date(a.dataAvaliacao).getTime() - new Date(b.dataAvaliacao).getTime())
-                                        .slice(-6);
-
-                                    if (chronologicalEvals.length === 0) {
-                                        return <p className="text-gray-400 text-xs text-center py-8">Nenhum dado de tendência.</p>;
-                                    }
-
-                                    const width = 500;
-                                    const height = 160;
-                                    const paddingX = 40;
-                                    const paddingY = 20;
-
-                                    const stepX = (width - paddingX * 2) / Math.max(1, chronologicalEvals.length - 1);
-                                    
-                                    const sweatRates = chronologicalEvals.map(e => e.taxaSudorese);
-                                    const maxSweat = Math.max(...sweatRates, 2.0);
-                                    const minSweat = Math.min(...sweatRates, 0.5);
-                                    const deltaSweat = maxSweat - minSweat || 1.0;
-
-                                    const points = chronologicalEvals.map((e, idx) => {
-                                        const x = paddingX + idx * stepX;
-                                        const y = height - paddingY - ((e.taxaSudorese - minSweat) / deltaSweat) * (height - paddingY * 2);
-                                        return { x, y, data: e };
-                                    });
-
-                                    const lineD = points.map((p, idx) => `${idx === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
-                                    const areaD = points.length > 0 ? `${lineD} L ${points[points.length - 1].x} ${height - paddingY} L ${points[0].x} ${height - paddingY} Z` : '';
-
-                                    const gridLines = [
-                                        { y: paddingY, value: maxSweat },
-                                        { y: height / 2, value: (minSweat + maxSweat) / 2 },
-                                        { y: height - paddingY, value: minSweat }
-                                    ];
-
-                                    return (
-                                        <div className="relative w-full h-full min-h-[140px]">
-                                            <svg className="w-full h-full min-h-[140px]" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
-                                                <defs>
-                                                    <linearGradient id="trendAreaGradient" x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="0%" stopColor="#ef4444" stopOpacity="0.15" />
-                                                        <stop offset="100%" stopColor="#ef4444" stopOpacity="0.0" />
-                                                    </linearGradient>
-                                                    <linearGradient id="trendLineGradient" x1="0" y1="0" x2="1" y2="0">
-                                                        <stop offset="0%" stopColor="#ef4444" />
-                                                        <stop offset="100%" stopColor="#f97316" />
-                                                    </linearGradient>
-                                                </defs>
-
-                                                {/* Grid Horizontal Reference Lines */}
-                                                {gridLines.map((line, idx) => (
-                                                    <g key={idx}>
-                                                        <line 
-                                                            x1={paddingX} 
-                                                            y1={line.y} 
-                                                            x2={width - paddingX} 
-                                                            y2={line.y} 
-                                                            stroke="#f1f5f9" 
-                                                            strokeWidth={1} 
-                                                            strokeDasharray="4 4"
-                                                        />
-                                                        <text 
-                                                            x={paddingX - 8} 
-                                                            y={line.y + 3} 
-                                                            fill="#94a3b8" 
-                                                            fontSize="8" 
-                                                            textAnchor="end"
-                                                            className="font-mono font-semibold"
-                                                        >
-                                                            {line.value.toFixed(1).replace(".", ",")}
-                                                        </text>
-                                                    </g>
-                                                ))}
-
-                                                {/* Area Path */}
-                                                {points.length > 1 && (
-                                                    <path d={areaD} fill="url(#trendAreaGradient)" className="transition-all duration-500" />
-                                                )}
-
-                                                {/* Line Path */}
-                                                {points.length > 1 && (
-                                                    <path 
-                                                        d={lineD} 
-                                                        fill="none" 
-                                                        stroke="url(#trendLineGradient)" 
-                                                        strokeWidth={2.5} 
-                                                        strokeLinecap="round" 
-                                                        strokeLinejoin="round"
-                                                        className="transition-all duration-500"
-                                                    />
-                                                )}
-
-                                                {/* Data Points */}
-                                                {points.map((p, idx) => {
-                                                    const isHovered = hoveredTrendPoint === idx;
-                                                    return (
-                                                        <g key={idx} className="cursor-pointer">
-                                                            {/* Hittarget circle */}
-                                                            <circle 
-                                                                cx={p.x} 
-                                                                cy={p.y} 
-                                                                r={12} 
-                                                                fill="transparent" 
-                                                                onMouseEnter={() => setHoveredTrendPoint(idx)}
-                                                                onMouseLeave={() => setHoveredTrendPoint(null)}
-                                                            />
-                                                            {/* Small dot inside */}
-                                                            <circle 
-                                                                cx={p.x} 
-                                                                cy={p.y} 
-                                                                r={isHovered ? 6 : 4.5} 
-                                                                fill={isHovered ? "#ef4444" : "#ffffff"} 
-                                                                stroke="#ef4444" 
-                                                                strokeWidth={isHovered ? 2.5 : 2}
-                                                                className="transition-all duration-200"
-                                                            />
-                                                        </g>
-                                                    );
-                                                })}
-                                            </svg>
-
-                                            {/* Interactive Custom Floating Tooltip */}
-                                            {hoveredTrendPoint !== null && points[hoveredTrendPoint] && (() => {
-                                                const p = points[hoveredTrendPoint];
-                                                const dateObj = new Date(p.data.dataAvaliacao);
-                                                return (
-                                                    <div 
-                                                        style={{ 
-                                                            left: `${(p.x / width) * 100}%`,
-                                                            top: `${(p.y / height) * 100 - 15}%` 
-                                                        }}
-                                                        className="absolute -translate-x-1/2 -translate-y-full bg-gray-900/95 backdrop-blur-sm text-white px-2.5 py-1.5 rounded-xl text-[10px] sm:text-xs shadow-xl border border-gray-700 pointer-events-none z-30 flex flex-col items-center gap-0.5 transition-all duration-150 animate-fadeIn"
-                                                    >
-                                                        <span className="font-bold text-red-400">{p.data.atletaNome}</span>
-                                                        <span className="font-semibold text-white">{p.data.taxaSudorese.toFixed(2).replace(".", ",")} L/h</span>
-                                                        <span className="text-[9px] text-gray-400 font-medium">
-                                                            {dateObj.getDate()}/{dateObj.getMonth() + 1} - {p.data.modality}
-                                                        </span>
-                                                    </div>
-                                                );
-                                            })()}
-                                        </div>
-                                    );
-                                })()}
+                                <RecentSweatTrendChart evaluations={evaluations} />
                             </div>
                         </div>
 
