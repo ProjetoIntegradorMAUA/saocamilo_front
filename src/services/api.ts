@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://52.91.54.170:3000";
 
 interface ApiResponse<T = unknown> {
   data: T | null;
