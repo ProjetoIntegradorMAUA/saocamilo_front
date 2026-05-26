@@ -80,8 +80,10 @@ export function authRequest<T>(endpoint: string, options: RequestInit = {}) {
 }
 
 export interface MeResponse {
-  message: string;
-  loggedUserId: number;
+  id: string;
+  name: string;
+  email: string;
+  role: string;
 }
 
 export async function getMe() {

@@ -2,13 +2,9 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 export type Theme = "claro" | "escuro";
-export type Unidade = "kg" | "lb";
-export type Temperatura = "c" | "f";
 
 type Configs = {
     tema: Theme;
-    unidade: Unidade;
-    temperatura: Temperatura;
 };
 
 type ThemeContextValue = {
@@ -18,8 +14,6 @@ type ThemeContextValue = {
 
 const DEFAULT_CONFIGS: Configs = {
     tema: "claro",
-    unidade: "kg",
-    temperatura: "c",
 };
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
@@ -33,8 +27,6 @@ export function getStoredConfigs(): Configs {
         const parsed = JSON.parse(raw) as Partial<Configs>;
         return {
             tema: parsed.tema === "escuro" ? "escuro" : "claro",
-            unidade: parsed.unidade === "lb" ? "lb" : "kg",
-            temperatura: parsed.temperatura === "f" ? "f" : "c",
         };
     } catch {
         return DEFAULT_CONFIGS;
@@ -46,11 +38,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     const setTheme = (nextTheme: Theme) => {
         setThemeState(nextTheme);
-        const stored = getStoredConfigs();
-        localStorage.setItem(
-            "configs",
-            JSON.stringify({ ...stored, tema: nextTheme })
-        );
+        localStorage.setItem("configs", JSON.stringify({ tema: nextTheme }));
     };
 
     useEffect(() => {
