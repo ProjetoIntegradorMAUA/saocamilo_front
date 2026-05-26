@@ -23,77 +23,87 @@ const meses = [
 
 export default function CardAvaliacoes({ avaliacoes, onView }: ICardAvaliacoes) {
     return (
-        <div className="flex flex-col gap-3 sm:gap-4 border border-gray-300 rounded-3xl bg-white px-3 sm:px-5 lg:px-6 py-4 sm:py-5 w-full overflow-hidden shadow-sm">
-
-            <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                    <div className="text-xl sm:text-2xl lg:text-3xl text-red-500 shrink-0">
+        <div className="flex flex-col gap-4 border border-gray-200/80 rounded-2xl bg-white p-4 sm:p-5 w-full overflow-hidden shadow-sm font-sans">
+            
+            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+                <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="text-red-500 text-lg sm:text-xl shrink-0 flex items-center">
                         {icons.calendario}
-                    </div>
-
-                    <p className="text-base sm:text-xl lg:text-2xl text-black truncate">
+                    </span>
+                    <h3 className="text-sm sm:text-base font-bold text-gray-800 tracking-tight">
                         Avaliações Recentes
-                    </p>
+                    </h3>
                 </div>
+                <span className="text-[10px] sm:text-xs font-semibold text-gray-500 bg-gray-100/85 px-2.5 py-0.5 rounded-full">
+                    Últimas {avaliacoes.length}
+                </span>
             </div>
 
-            {avaliacoes.map((avaliacao) => {
-                const dateObj = new Date(avaliacao.dataAvaliacao);
-                return (
-                    <div
-                        key={avaliacao.avaliacaoId}
-                        className="flex items-center justify-between border border-gray-300 rounded-2xl bg-white px-3 sm:px-5 py-3 sm:py-4 w-full gap-3 sm:gap-5 shadow-sm hover:shadow-md transition"
-                    >
-
-                        <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-
-                            <div className="w-11 h-11 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-full border border-gray-400 flex items-center justify-center shrink-0">
-                                <span className="text-lg sm:text-2xl lg:text-3xl text-gray-700 font-medium">
-                                    {avaliacao.atletaNome[0]}
-                                </span>
-                            </div>
-
-                            <div className="min-w-0">
-                                <p className="text-sm sm:text-lg lg:text-2xl text-black truncate font-medium">
-                                    {avaliacao.atletaNome}
-                                </p>
-
-                                <p className="text-[11px] sm:text-sm lg:text-lg text-gray-400 truncate">
-                                    {dateObj.getDate()} de{" "}
-                                    {meses[dateObj.getMonth()]}
-                                </p>
-                            </div>
-
-                        </div>
-
-                        <div className="flex flex-col items-end lg:items-start leading-tight shrink-0 lg:min-w-[180px]">
-
-                            <span className="hidden lg:block text-xl text-gray-400">
-                                Sudorese:
-                            </span>
-
-                            <span className="text-sm sm:text-lg lg:text-2xl text-green-500 font-bold">
-                                {avaliacao.taxaSudorese.toFixed(2).replace(".", ",")} L/h
-                            </span>
-
-                            <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wide lg:hidden">
-                                Sudorese
-                            </span>
-
-                        </div>
-
-                        <div className="shrink-0">
-                            <button 
-                                onClick={() => onView(avaliacao)}
-                                className="bg-white text-red-400 px-3 sm:px-5 lg:px-10 py-1.5 sm:py-2.5 lg:py-4 rounded-xl border border-red-400 hover:bg-red-500 hover:text-white transition text-[10px] sm:text-sm lg:text-xl cursor-pointer font-medium"
-                            >
-                                Visualizar
-                            </button>
-                        </div>
-
+            <div className="flex flex-col divide-y divide-gray-100 max-h-[380px] overflow-y-auto pr-1 select-none scrollbar-thin">
+                {avaliacoes.length === 0 ? (
+                    <div className="py-8 text-center text-gray-400 text-xs sm:text-sm">
+                        Nenhuma avaliação recente encontrada.
                     </div>
-                );
-            })}
+                ) : (
+                    avaliacoes.map((avaliacao) => {
+                        const dateObj = new Date(avaliacao.dataAvaliacao);
+                        
+                        // Determinar as iniciais (ex: João Silva -> JS ou apenas J)
+                        const nameParts = avaliacao.atletaNome.trim().split(/\s+/);
+                        const initials = nameParts.length > 1 
+                            ? `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`.toUpperCase()
+                            : nameParts[0][0].toUpperCase();
+
+                        return (
+                            <div
+                                key={avaliacao.avaliacaoId}
+                                className="flex items-center justify-between py-2.5 sm:py-3 px-1 sm:px-2 w-full gap-3 hover:bg-gray-50/60 rounded-xl transition duration-150"
+                            >
+                                <div className="flex items-center gap-3 min-w-0 flex-1">
+                                    {/* Avatar com gradiente suave */}
+                                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-red-50 to-orange-50 border border-red-100 flex items-center justify-center shrink-0 shadow-sm">
+                                        <span className="text-xs sm:text-sm text-red-500 font-bold tracking-wider">
+                                            {initials}
+                                        </span>
+                                    </div>
+
+                                    {/* Informações do Atleta */}
+                                    <div className="min-w-0 flex flex-col justify-center">
+                                        <p className="text-xs sm:text-sm font-semibold text-gray-800 truncate leading-tight hover:text-red-500 transition-colors">
+                                            {avaliacao.atletaNome}
+                                        </p>
+                                        <p className="text-[10px] sm:text-xs text-gray-400 truncate mt-0.5 font-medium">
+                                            {dateObj.getDate()} de {meses[dateObj.getMonth()]}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Valor de Sudorese styled as a modern badge */}
+                                <div className="flex items-center gap-2 shrink-0">
+                                    <div className="flex flex-col items-end sm:items-start justify-center">
+                                        <span className="bg-emerald-50 text-emerald-600 border border-emerald-100/60 px-2 sm:px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm">
+                                            <span className="text-emerald-500 text-[10px] sm:text-xs shrink-0 flex items-center">
+                                                {icons.gota}
+                                            </span>
+                                            {avaliacao.taxaSudorese.toFixed(2).replace(".", ",")} L/h
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Botão compact e moderno */}
+                                <div className="shrink-0">
+                                    <button 
+                                        onClick={() => onView(avaliacao)}
+                                        className="bg-white text-red-500 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded-lg border border-red-200 hover:border-red-500 transition text-[11px] sm:text-xs font-semibold cursor-pointer shadow-sm active:scale-95"
+                                    >
+                                        Visualizar
+                                    </button>
+                                </div>
+                            </div>
+                        );
+                    })
+                )}
+            </div>
         </div>
     );
 }

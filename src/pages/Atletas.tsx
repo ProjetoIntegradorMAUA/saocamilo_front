@@ -4,7 +4,6 @@ import CardAtleta from "../components/CardAtleta";
 import Confirmacao from "../components/Confirmacao";
 import { IoAddOutline, IoSearchOutline } from "react-icons/io5";
 import Topbar from "../components/Topbar";
-import { Users } from "../mock/users";
 import CardDashboard from "../components/CardDashboard";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -53,7 +52,7 @@ export default function Atletas() {
                 <div className="w-full max-w-450 min-h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-2xl p-2 sm:p-4 lg:p-5 flex flex-col gap-6">
 
                     <div className="rounded-2xl overflow-hidden shadow-sm bg-white">
-                        <Topbar titulo="Atletas" foto={Users.user1.foto} />
+                        <Topbar titulo="Atletas" />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

@@ -2,8 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Topbar from "../components/Topbar";
+<<<<<<< Updated upstream
 import { Users } from "../mock/users";
 import { authRequest } from "../services/api";
+=======
+import { authRequest, getAllAthletes, type AthleteResponse } from "../services/api";
+>>>>>>> Stashed changes
 import { FiCheckCircle } from "react-icons/fi";
 
 export default function NovoAtleta() {
@@ -68,7 +72,11 @@ export default function NovoAtleta() {
                 <div className="w-full max-w-450 min-h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-2xl p-2 sm:p-4 lg:p-5 flex flex-col gap-6">
 
                     <div className="rounded-2xl overflow-hidden shadow-sm bg-white">
+<<<<<<< Updated upstream
                         <Topbar titulo="Novo Atleta" foto={Users.user1.foto} />
+=======
+                        <Topbar titulo="Novo Nutricionista" />
+>>>>>>> Stashed changes
                     </div>
 
                     <div className="flex items-center justify-center flex-1">

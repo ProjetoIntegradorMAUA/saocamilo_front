@@ -25,3 +25,33 @@ export function saveRole(role: string): void {
 export function getRole(): string | null {
   return localStorage.getItem(ROLE_KEY);
 }
+
+export interface UserPayload {
+  userId: string;
+  email: string;
+  role: string;
+}
+
+export function decodeToken(token: string): UserPayload | null {
+  try {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      window
+        .atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
+    );
+    return JSON.parse(jsonPayload) as UserPayload;
+  } catch {
+    return null;
+  }
+}
+
+export function getUserEmail(): string | null {
+  const token = getToken();
+  if (!token) return null;
+  const decoded = decodeToken(token);
+  return decoded ? decoded.email : null;
+}

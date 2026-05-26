@@ -4,7 +4,6 @@ import CardAvaliacoes from "../components/CardAvaliacoes";
 import CardDashboard from "../components/CardDashboard";
 import { icons } from "../utils/IconsJson";
 import Topbar from "../components/Topbar";
-import { Users } from "../mock/users";
 import { useNavigate } from "react-router-dom";
 import { getDashboard, getAvaliacoes, type DashboardResponse, type AvaliacaoResponse } from "../services/api";
 import { getRole } from "../services/auth";
@@ -56,6 +55,13 @@ export default function Homepage() {
     const [evaluations, setEvaluations] = useState<AvaliacaoResponse[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedAvaliacao, setSelectedAvaliacao] = useState<AvaliacaoResponse | null>(null);
+    
+    // Interactive states
+    const [hoveredBar, setHoveredBar] = useState<string | null>(null);
+    const [hoveredLegend, setHoveredLegend] = useState<string | null>(null);
+    const [hoveredTrendPoint, setHoveredTrendPoint] = useState<number | null>(null);
+    const [sortBy, setSortBy] = useState<'rate' | 'count'>('count');
+
     const role = getRole();
 
     useEffect(() => {
@@ -82,7 +88,6 @@ export default function Homepage() {
         fetchDashboardAndEvaluations();
     }, []);
 
-    // ─── DYNAMIC CHARTS COMPUTATIONS ───────────────────────────────────────
     const modalityMap: Record<string, { count: number; totalSweatRate: number }> = {};
     evaluations.forEach((evalItem) => {
         const mod = evalItem.modality || "Outro";
@@ -100,26 +105,23 @@ export default function Homepage() {
         totalSweatRate: data.totalSweatRate,
         averageSweatRate: data.count > 0 ? Number((data.totalSweatRate / data.count).toFixed(2)) : 0,
         percentage: totalEvals > 0 ? Number(((data.count / totalEvals) * 100).toFixed(1)) : 0,
-    })).sort((a, b) => b.count - a.count);
+    })).sort((a, b) => sortBy === 'rate' ? b.averageSweatRate - a.averageSweatRate : b.count - a.count);
 
     const colors = ["bg-blue-500", "bg-green-500", "bg-yellow-400", "bg-purple-500", "bg-pink-500", "bg-indigo-500", "bg-orange-500"];
     const hexColors = ["#3b82f6", "#22c55e", "#eab308", "#a855f7", "#ec4899", "#6366f1", "#f97316"];
 
-    // Determina a escala vertical (eixo Y) do gráfico de barras de sudorese
     const maxAverage = modalityMetrics.length > 0 ? Math.max(...modalityMetrics.map(m => m.averageSweatRate)) : 0;
     const maxScale = Math.max(maxAverage, 3.0);
 
     const scaleSteps = [
         maxScale,
-        maxScale * 5 / 6,
-        maxScale * 4 / 6,
-        maxScale * 3 / 6,
-        maxScale * 2 / 6,
-        maxScale * 1 / 6,
+        maxScale * 4 / 5,
+        maxScale * 3 / 5,
+        maxScale * 2 / 5,
+        maxScale * 1 / 5,
         0
     ];
 
-    // Conic gradient dinâmico em CSS puro para o gráfico donut
     let accumulatedDegrees = 0;
     const gradientParts = modalityMetrics.map((m, idx) => {
         const startDeg = accumulatedDegrees;
@@ -130,17 +132,18 @@ export default function Homepage() {
     const conicGradientString = gradientParts.length > 0 ? `conic-gradient(${gradientParts.join(', ')})` : '';
 
     return (
-        <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row overflow-hidden">
+        <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row overflow-hidden font-sans">
             <div className="fixed bottom-0 left-0 right-0 z-40 lg:static lg:w-60">
                 <Navbar index={0} />
             </div>
 
-            <main className="flex-1 px-2 sm:px-4 lg:px-6 py-2 sm:py-4 pb-28 lg:pb-4 overflow-hidden">
-                <div className="w-full max-w-[1800px] h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-2xl p-2 sm:p-4 lg:p-5 flex flex-col gap-4">
+            <main className="flex-1 px-2 sm:px-4 lg:px-6 py-2 sm:py-3 pb-28 lg:pb-3 overflow-hidden">
+                <div className="w-full max-w-[1800px] h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-2xl p-2 sm:p-4 lg:p-4 flex flex-col gap-3">
                     <div className="rounded-2xl overflow-hidden shadow-sm bg-white">
-                        <Topbar titulo="Início" foto={Users.user1.foto} />
+                        <Topbar titulo="Início" />
                     </div>
-                    <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                    
+                    <div className={`grid ${role === 'NUTRITIONIST' ? 'grid-cols-3' : 'grid-cols-2'} gap-2.5 sm:gap-3.5`}>
                         {role === 'NUTRITIONIST' && (
                             <CardDashboard texto="Atletas" quantidade={dashboardData?.totalAtletas || 0} />
                         )}
@@ -149,29 +152,34 @@ export default function Homepage() {
 
                         <button 
                             onClick={() => navigate('/nova-atividade')}
-                            className="border border-gray-300 rounded-2xl sm:rounded-3xl bg-white flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 px-2 sm:px-4 py-2 sm:py-4 hover:bg-gray-100 transition cursor-pointer min-h-[75px] sm:min-h-[110px]">
-                            <div className="w-8 h-8 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full border border-red-200 flex items-center justify-center text-red-500 text-xl sm:text-3xl shrink-0">
+                            className="border border-gray-200 rounded-2xl bg-white flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-4 px-3 sm:px-4.5 py-2 sm:py-3 w-full min-h-[60px] sm:min-h-[85px] hover:bg-red-50/50 hover:border-red-200 text-red-500 hover:text-red-600 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md active:scale-[0.98]"
+                        >
+                            <div className="w-8 h-8 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-full border border-red-100 bg-red-100/30 flex items-center justify-center text-red-500 text-base sm:text-2xl shrink-0 transition-transform duration-300 hover:scale-105">
                                 +
                             </div>
 
-                            <p className="text-[10px] sm:text-lg lg:text-2xl text-red-500 font-medium leading-tight text-center">
-                                Nova Avaliação
-                            </p>
+                            <div className="flex flex-col leading-none text-center sm:text-left min-w-0">
+                                <span className="text-gray-400 text-[9px] sm:text-xs font-semibold uppercase tracking-wider mb-0.5 truncate">
+                                    Nova Avaliação
+                                </span>
+                                <span className="text-sm sm:text-xl lg:text-[20px] font-bold mt-0.5 truncate">
+                                    Registrar Sessão
+                                </span>
+                            </div>
                         </button>
                     </div>
 
-                    {/* SEÇÃO DE GRÁFICOS DINÂMICOS E ESTADO DE ERRO/VAZIO */}
                     {loading ? (
-                        <div className="border border-gray-300 rounded-3xl bg-white p-8 sm:p-12 flex flex-col items-center justify-center text-center min-h-[300px]">
-                            <div className="w-12 h-12 rounded-full border-4 border-red-500 border-t-transparent animate-spin mb-4"></div>
-                            <p className="text-gray-500 text-sm">Carregando painel de métricas...</p>
+                        <div className="border border-gray-200/80 rounded-2xl bg-white p-8 sm:p-12 flex flex-col items-center justify-center text-center min-h-[300px] shadow-sm">
+                            <div className="w-10 h-10 rounded-full border-3 border-red-500 border-t-transparent animate-spin mb-4"></div>
+                            <p className="text-gray-500 text-xs sm:text-sm font-semibold">Carregando painel de métricas...</p>
                         </div>
                     ) : evaluations.length === 0 ? (
-                        <div className="border border-gray-300 rounded-3xl bg-white p-6 sm:p-10 flex flex-col items-center justify-center text-center min-h-[340px] shadow-sm">
+                        <div className="border border-gray-200/80 rounded-2xl bg-white p-6 sm:p-10 flex flex-col items-center justify-center text-center min-h-[340px] shadow-sm">
                             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-red-50 flex items-center justify-center text-red-500 text-3xl sm:text-4xl mb-4 animate-pulse">
                                 📊
                             </div>
-                            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Dados gráficos indisponíveis</h3>
+                            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 font-sans">Dados gráficos indisponíveis</h3>
                             <p className="text-gray-500 text-sm sm:text-base max-w-lg mb-6 leading-relaxed">
                                 {role === 'NUTRITIONIST' 
                                     ? "Os gráficos de taxa de sudorese média da equipe e distribuição por modalidade serão gerados assim que os atletas vinculados registrarem avaliações." 
@@ -181,33 +189,51 @@ export default function Homepage() {
                             {role === 'ATHLETE' && (
                                 <button 
                                     onClick={() => navigate('/nova-atividade')}
-                                    className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-2xl shadow-md transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5"
+                                    className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-2xl shadow-md transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5 text-sm"
                                 >
                                     + Registrar Primeira Atividade
                                 </button>
                             )}
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 2xl:grid-cols-[1.5fr_1fr] gap-4">
+                        <div className="grid grid-cols-1 xl:grid-cols-[1.2fr_1fr] gap-3">
                             {/* GRÁFICO 1: TAXA DE SUDORESE MÉDIA POR MODALIDADE */}
-                            <div className="border border-gray-300 rounded-3xl bg-white px-3 sm:px-5 py-4 flex flex-col min-w-0 shadow-sm">
-                                <div className="flex items-center gap-3 mb-5">
-                                    <div className="text-red-500 text-2xl sm:text-3xl shrink-0">
-                                        {icons.grafico}
+                            <div className="border border-gray-200/80 rounded-2xl bg-white p-4 flex flex-col min-w-0 shadow-sm relative">
+                                <div className="flex items-center justify-between gap-3 mb-4 border-b border-gray-100 pb-3 flex-wrap">
+                                    <div className="flex items-center gap-2.5 min-w-0">
+                                        <div className="text-red-500 text-lg sm:text-xl shrink-0 flex items-center">
+                                            {icons.grafico}
+                                        </div>
+
+                                        <p className="text-sm sm:text-base font-bold text-gray-800 tracking-tight leading-none">
+                                            {role === 'NUTRITIONIST'
+                                                ? "Sudorese Média por Modalidade"
+                                                : "Minha Sudorese Média por Modalidade"
+                                            }
+                                        </p>
                                     </div>
 
-                                    <p className="text-sm sm:text-lg lg:text-[20px] text-gray-800 font-medium leading-5 sm:leading-6">
-                                        {role === 'NUTRITIONIST'
-                                            ? "Taxa de Sudorese Média da Equipe Por Modalidade"
-                                            : "Minha Taxa de Sudorese Média Por Modalidade"
-                                        }
-                                    </p>
+                                    {/* Sort tabs */}
+                                    <div className="flex gap-1 bg-gray-100 p-0.5 rounded-lg text-[9px] sm:text-[10px] font-semibold shrink-0">
+                                        <button 
+                                            onClick={() => setSortBy('count')} 
+                                            className={`px-2 py-0.5 sm:py-1 rounded-md transition-all cursor-pointer ${sortBy === 'count' ? 'bg-white text-gray-800 shadow-sm font-bold' : 'text-gray-400 hover:text-gray-600'}`}
+                                        >
+                                            Frequência
+                                        </button>
+                                        <button 
+                                            onClick={() => setSortBy('rate')} 
+                                            className={`px-2 py-0.5 sm:py-1 rounded-md transition-all cursor-pointer ${sortBy === 'rate' ? 'bg-white text-gray-800 shadow-sm font-bold' : 'text-gray-400 hover:text-gray-600'}`}
+                                        >
+                                            Média
+                                        </button>
+                                    </div>
                                 </div>
 
-                                <div className="flex flex-1">
+                                <div className="flex flex-1 relative">
                                     {/* EIXO Y (L/h) */}
-                                    <div className="flex flex-col justify-between h-40 sm:h-52 lg:h-60 mr-2 text-gray-500 text-[10px] sm:text-xs lg:text-sm pb-6 sm:pb-8 shrink-0 select-none">
-                                        <span className="font-semibold text-gray-400">L/h</span>
+                                    <div className="flex flex-col justify-between h-36 sm:h-44 lg:h-48 mr-2.5 text-gray-400 text-[9px] sm:text-xs pb-5 shrink-0 select-none font-mono">
+                                        <span className="font-semibold text-gray-300">L/h</span>
                                         {scaleSteps.map((step, idx) => (
                                             <span key={idx}>{step === 0 ? "0" : step.toFixed(1).replace(".", ",")}</span>
                                         ))}
@@ -215,23 +241,37 @@ export default function Homepage() {
 
                                     <div className="relative flex-1 min-w-0">
                                         {/* BORDAS DE GRID */}
-                                        <div className="absolute left-0 top-0 h-40 sm:h-52 lg:h-60 border-l border-gray-200"></div>
-                                        <div className="absolute left-0 top-40 sm:top-52 lg:top-60 w-full border-b border-gray-200"></div>
+                                        <div className="absolute left-0 top-0 h-36 sm:h-44 lg:h-48 border-l border-gray-100"></div>
+                                        <div className="absolute left-0 top-36 sm:top-44 lg:top-48 w-full border-b border-gray-100"></div>
 
                                         {/* BARRAS DE DADOS */}
-                                        <div className="flex items-end justify-around h-40 sm:h-52 lg:h-60 pl-2 sm:pl-4 gap-2">
+                                        <div className="flex items-end justify-around h-36 sm:h-44 lg:h-48 pl-2 sm:pl-4 gap-2 sm:gap-3 relative">
                                             {modalityMetrics.slice(0, 5).map((m, idx) => {
                                                 const heightPct = maxScale > 0 ? (m.averageSweatRate / maxScale) * 100 : 0;
+                                                const isHovered = hoveredBar === m.modality;
                                                 return (
-                                                    <div key={m.modality} className="flex flex-col items-center justify-end h-full flex-1 min-w-0">
-                                                        <span className="text-[10px] sm:text-sm lg:text-base text-gray-700 font-bold mb-1 sm:mb-2 whitespace-nowrap">
+                                                    <div 
+                                                        key={m.modality} 
+                                                        className="flex flex-col items-center justify-end h-full flex-1 min-w-0 relative"
+                                                        onMouseEnter={() => setHoveredBar(m.modality)}
+                                                        onMouseLeave={() => setHoveredBar(null)}
+                                                    >
+                                                        {/* Floating interactive tooltip */}
+                                                        {isHovered && (
+                                                            <div className="absolute bottom-[98%] mb-1 bg-gray-900/95 backdrop-blur-sm text-white text-[9px] sm:text-[10px] px-2.5 py-1.5 rounded-xl shadow-xl z-20 flex flex-col pointer-events-none min-w-[125px] border border-gray-700 animate-fadeIn transition-all duration-150">
+                                                                <span className="font-bold text-red-400">{m.modality}</span>
+                                                                <span className="font-semibold mt-0.5">Média: {m.averageSweatRate.toFixed(2).replace(".", ",")} L/h</span>
+                                                                <span className="text-gray-400 text-[9px] mt-0.5">{m.count} {m.count === 1 ? "avaliação" : "avaliações"}</span>
+                                                            </div>
+                                                        )}
+
+                                                        <span className={`text-[9px] sm:text-xs font-bold text-gray-700 mb-1 transition-all duration-200 ${isHovered ? 'scale-110 text-red-500' : ''}`}>
                                                             {m.averageSweatRate.toFixed(2).replace(".", ",")}
                                                         </span>
 
                                                         <div 
                                                             style={{ height: `${Math.max(3, heightPct)}%` }}
-                                                            className={`w-full max-w-[60px] ${colors[idx % colors.length]} rounded-t-md transition-all duration-700 shadow-sm`}
-                                                            title={`${m.modality}: ${m.averageSweatRate} L/h`}
+                                                            className={`w-full max-w-[40px] ${colors[idx % colors.length]} rounded-t-md transition-all duration-300 shadow-sm cursor-pointer hover:brightness-105 active:scale-x-95 ${isHovered ? 'ring-2 ring-white shadow-md scale-x-105 filter saturate-120' : 'opacity-90'}`}
                                                         ></div>
                                                     </div>
                                                 );
@@ -239,9 +279,9 @@ export default function Homepage() {
                                         </div>
 
                                         {/* LEGENDAS DO EIXO X */}
-                                        <div className="flex justify-around pl-2 sm:pl-4 mt-2 sm:mt-3 gap-2">
+                                        <div className="flex justify-around pl-2 sm:pl-4 mt-2 gap-2 sm:gap-3">
                                             {modalityMetrics.slice(0, 5).map((m) => (
-                                                <p key={m.modality} className="text-[10px] sm:text-xs lg:text-sm text-gray-600 text-center flex-1 font-medium truncate" title={m.modality}>
+                                                <p key={m.modality} className="text-[9px] sm:text-xs text-gray-500 text-center flex-1 font-semibold truncate" title={m.modality}>
                                                     {m.modality}
                                                 </p>
                                             ))}
@@ -251,13 +291,13 @@ export default function Homepage() {
                             </div>
 
                             {/* GRÁFICO 2: DISTRIBUIÇÃO DAS AVALIAÇÕES POR MODALIDADE */}
-                            <div className="border border-gray-300 rounded-3xl bg-white px-3 sm:px-5 py-4 flex flex-col min-w-0 shadow-sm">
-                                <div className="flex items-center gap-2 sm:gap-3 justify-center mb-4">
-                                    <div className="text-red-500 text-xl sm:text-2xl lg:text-3xl shrink-0">
+                            <div className="border border-gray-200/80 rounded-2xl bg-white p-4 flex flex-col min-w-0 shadow-sm">
+                                <div className="flex items-center gap-2.5 justify-center mb-5 border-b border-gray-100 pb-3">
+                                    <div className="text-red-500 text-lg sm:text-xl shrink-0 flex items-center">
                                         {icons.grafico2}
                                     </div>
 
-                                    <p className="text-sm sm:text-base lg:text-[20px] text-gray-800 font-medium leading-5 text-center">
+                                    <p className="text-sm sm:text-base font-bold text-gray-800 tracking-tight text-center leading-none">
                                         {role === 'NUTRITIONIST'
                                             ? "Distribuição das Avaliações por Modalidade"
                                             : "Minhas Avaliações por Modalidade"
@@ -265,55 +305,254 @@ export default function Homepage() {
                                     </p>
                                 </div>
 
-                                <div className="flex items-center justify-center gap-3 sm:gap-5 lg:gap-8 flex-1 min-w-0">
+                                <div className="flex items-center justify-center gap-3 sm:gap-6 flex-1 min-w-0">
                                     {/* DONUT CHART */}
                                     <div 
                                         style={{ background: conicGradientString }}
-                                        className="relative w-24 h-24 sm:w-36 sm:h-36 lg:w-48 lg:h-48 rounded-full shrink-0 shadow-inner transition-all duration-700"
+                                        className="relative w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full shrink-0 shadow-inner transition-all duration-700 hover:scale-[1.02]"
                                     >
-                                        <div className="absolute inset-4 sm:inset-6 lg:inset-8 bg-white rounded-full flex flex-col items-center justify-center shadow-sm">
-                                            <span className="text-gray-400 text-[10px] sm:text-xs font-semibold uppercase tracking-wider">
-                                                Total
-                                            </span>
-
-                                            <span className="text-xl sm:text-3xl lg:text-4xl font-extrabold text-gray-800 leading-none">
-                                                {totalEvals}
-                                            </span>
+                                        <div className="absolute inset-3 sm:inset-4 bg-white rounded-full flex flex-col items-center justify-center shadow-sm p-1">
+                                            {hoveredLegend ? (() => {
+                                                const m = modalityMetrics.find(metric => metric.modality === hoveredLegend);
+                                                if (!m) return null;
+                                                return (
+                                                    <div className="flex flex-col items-center justify-center leading-none text-center">
+                                                        <span className="text-red-500 text-[8px] sm:text-[9px] font-bold uppercase tracking-wider truncate max-w-[50px] sm:max-w-[75px] mb-0.5">
+                                                            {m.modality}
+                                                        </span>
+                                                        <span className="text-xs sm:text-lg lg:text-xl font-black text-gray-800 my-0.5">
+                                                            {m.percentage.toFixed(1).replace(".", ",")}%
+                                                        </span>
+                                                        <span className="text-gray-400 text-[7px] sm:text-[8px] font-semibold uppercase tracking-tight truncate max-w-[50px] sm:max-w-[70px]">
+                                                            {m.count} {m.count === 1 ? "sessão" : "sessões"}
+                                                        </span>
+                                                    </div>
+                                                );
+                                            })() : (
+                                                <div className="flex flex-col items-center justify-center leading-none text-center">
+                                                    <span className="text-gray-400 text-[8px] sm:text-[9px] font-semibold uppercase tracking-wider mb-0.5">
+                                                        Total
+                                                    </span>
+                                                    <span className="text-sm sm:text-2xl lg:text-3xl font-extrabold text-gray-800 leading-none">
+                                                        {totalEvals}
+                                                    </span>
+                                                    <span className="text-[7px] sm:text-[8px] text-gray-400 font-semibold uppercase tracking-wider mt-0.5">
+                                                        Avaliações
+                                                    </span>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
                                     {/* BADGES / LIST OF MODALITIES */}
-                                    <div className="flex flex-col gap-2 sm:gap-3 lg:gap-4 min-w-0 flex-1">
-                                        {modalityMetrics.slice(0, 5).map((m, idx) => (
-                                            <div key={m.modality} className="flex items-center justify-between gap-3 min-w-0">
-                                                <div className="flex items-center gap-2 min-w-0">
-                                                    <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${colors[idx % colors.length]} shrink-0 shadow-sm`}></div>
+                                    <div className="flex flex-col gap-1 sm:gap-1.5 min-w-0 flex-1">
+                                        {modalityMetrics.slice(0, 5).map((m, idx) => {
+                                            const isHovered = hoveredLegend === m.modality;
+                                            return (
+                                                <div 
+                                                    key={m.modality} 
+                                                    className={`flex items-center justify-between gap-3 min-w-0 py-1 px-2 rounded-lg transition-all duration-150 cursor-pointer ${isHovered ? 'bg-red-50/50 scale-[1.02] border-l-2 border-l-red-500 shadow-sm' : 'hover:bg-gray-50/40'}`}
+                                                    onMouseEnter={() => setHoveredLegend(m.modality)}
+                                                    onMouseLeave={() => setHoveredLegend(null)}
+                                                >
+                                                    <div className="flex items-center gap-2 min-w-0">
+                                                        <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full ${colors[idx % colors.length]} shrink-0 shadow-sm transition-transform duration-200 ${isHovered ? 'scale-110' : ''}`}></div>
 
-                                                    <p className="text-[10px] sm:text-sm lg:text-base text-gray-700 font-medium truncate">
-                                                        {m.modality} ({m.count})
+                                                        <p className={`text-[10px] sm:text-xs lg:text-[13px] font-semibold truncate transition-colors duration-150 ${isHovered ? 'text-red-500 font-bold' : 'text-gray-600'}`}>
+                                                            {m.modality} ({m.count})
+                                                        </p>
+                                                    </div>
+
+                                                    <p className={`text-[10px] sm:text-xs lg:text-[13px] font-bold shrink-0 font-mono transition-colors duration-150 ${isHovered ? 'text-red-500 font-black' : 'text-gray-400'}`}>
+                                                        {m.percentage.toFixed(1).replace(".", ",")}%
                                                     </p>
                                                 </div>
-
-                                                <p className="text-[10px] sm:text-sm lg:text-base font-bold text-gray-500 shrink-0 font-mono">
-                                                    {m.percentage.toFixed(1).replace(".", ",")}%
-                                                </p>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     )}
 
-                    <div className="min-h-0 overflow-hidden">
-                        {loading ? (
-                            <p className="text-gray-500 p-4">Carregando avaliações...</p>
-                        ) : (
-                            <CardAvaliacoes
-                                avaliacoes={evaluations.slice(0, 10)}
-                                onView={(av) => setSelectedAvaliacao(av)}
-                            />
-                        )}
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 min-h-0">
+                        {/* CHART 3: TENDÊNCIA DE SUDORESE (SVG LINE CHART) */}
+                        <div className="border border-gray-200/80 rounded-2xl bg-white p-4 sm:p-5 flex flex-col relative shadow-sm font-sans min-w-0">
+                            <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
+                                <div className="flex items-center gap-2.5 min-w-0">
+                                    <span className="text-red-500 text-lg sm:text-xl shrink-0 flex items-center">
+                                        {icons.setinhaCrescimento}
+                                    </span>
+                                    <h3 className="text-sm sm:text-base font-bold text-gray-800 tracking-tight leading-none">
+                                        Tendência de Sudorese Recente
+                                    </h3>
+                                </div>
+                                <span className="text-[10px] sm:text-xs font-semibold text-gray-500 bg-gray-100 px-2.5 py-0.5 rounded-full">
+                                    Histórico de Registros
+                                </span>
+                            </div>
+
+                            <div className="flex-1 flex flex-col justify-center relative min-h-[160px] pb-2">
+                                {/* SVG Line/Area Trend Chart */}
+                                {(() => {
+                                    const chronologicalEvals = [...evaluations]
+                                        .sort((a, b) => new Date(a.dataAvaliacao).getTime() - new Date(b.dataAvaliacao).getTime())
+                                        .slice(-6);
+
+                                    if (chronologicalEvals.length === 0) {
+                                        return <p className="text-gray-400 text-xs text-center py-8">Nenhum dado de tendência.</p>;
+                                    }
+
+                                    const width = 500;
+                                    const height = 160;
+                                    const paddingX = 40;
+                                    const paddingY = 20;
+
+                                    const stepX = (width - paddingX * 2) / Math.max(1, chronologicalEvals.length - 1);
+                                    
+                                    const sweatRates = chronologicalEvals.map(e => e.taxaSudorese);
+                                    const maxSweat = Math.max(...sweatRates, 2.0);
+                                    const minSweat = Math.min(...sweatRates, 0.5);
+                                    const deltaSweat = maxSweat - minSweat || 1.0;
+
+                                    const points = chronologicalEvals.map((e, idx) => {
+                                        const x = paddingX + idx * stepX;
+                                        const y = height - paddingY - ((e.taxaSudorese - minSweat) / deltaSweat) * (height - paddingY * 2);
+                                        return { x, y, data: e };
+                                    });
+
+                                    const lineD = points.map((p, idx) => `${idx === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+                                    const areaD = points.length > 0 ? `${lineD} L ${points[points.length - 1].x} ${height - paddingY} L ${points[0].x} ${height - paddingY} Z` : '';
+
+                                    const gridLines = [
+                                        { y: paddingY, value: maxSweat },
+                                        { y: height / 2, value: (minSweat + maxSweat) / 2 },
+                                        { y: height - paddingY, value: minSweat }
+                                    ];
+
+                                    return (
+                                        <div className="relative w-full h-full min-h-[140px]">
+                                            <svg className="w-full h-full min-h-[140px]" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
+                                                <defs>
+                                                    <linearGradient id="trendAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="0%" stopColor="#ef4444" stopOpacity="0.15" />
+                                                        <stop offset="100%" stopColor="#ef4444" stopOpacity="0.0" />
+                                                    </linearGradient>
+                                                    <linearGradient id="trendLineGradient" x1="0" y1="0" x2="1" y2="0">
+                                                        <stop offset="0%" stopColor="#ef4444" />
+                                                        <stop offset="100%" stopColor="#f97316" />
+                                                    </linearGradient>
+                                                </defs>
+
+                                                {/* Grid Horizontal Reference Lines */}
+                                                {gridLines.map((line, idx) => (
+                                                    <g key={idx}>
+                                                        <line 
+                                                            x1={paddingX} 
+                                                            y1={line.y} 
+                                                            x2={width - paddingX} 
+                                                            y2={line.y} 
+                                                            stroke="#f1f5f9" 
+                                                            strokeWidth={1} 
+                                                            strokeDasharray="4 4"
+                                                        />
+                                                        <text 
+                                                            x={paddingX - 8} 
+                                                            y={line.y + 3} 
+                                                            fill="#94a3b8" 
+                                                            fontSize="8" 
+                                                            textAnchor="end"
+                                                            className="font-mono font-semibold"
+                                                        >
+                                                            {line.value.toFixed(1).replace(".", ",")}
+                                                        </text>
+                                                    </g>
+                                                ))}
+
+                                                {/* Area Path */}
+                                                {points.length > 1 && (
+                                                    <path d={areaD} fill="url(#trendAreaGradient)" className="transition-all duration-500" />
+                                                )}
+
+                                                {/* Line Path */}
+                                                {points.length > 1 && (
+                                                    <path 
+                                                        d={lineD} 
+                                                        fill="none" 
+                                                        stroke="url(#trendLineGradient)" 
+                                                        strokeWidth={2.5} 
+                                                        strokeLinecap="round" 
+                                                        strokeLinejoin="round"
+                                                        className="transition-all duration-500"
+                                                    />
+                                                )}
+
+                                                {/* Data Points */}
+                                                {points.map((p, idx) => {
+                                                    const isHovered = hoveredTrendPoint === idx;
+                                                    return (
+                                                        <g key={idx} className="cursor-pointer">
+                                                            {/* Hittarget circle */}
+                                                            <circle 
+                                                                cx={p.x} 
+                                                                cy={p.y} 
+                                                                r={12} 
+                                                                fill="transparent" 
+                                                                onMouseEnter={() => setHoveredTrendPoint(idx)}
+                                                                onMouseLeave={() => setHoveredTrendPoint(null)}
+                                                            />
+                                                            {/* Small dot inside */}
+                                                            <circle 
+                                                                cx={p.x} 
+                                                                cy={p.y} 
+                                                                r={isHovered ? 6 : 4.5} 
+                                                                fill={isHovered ? "#ef4444" : "#ffffff"} 
+                                                                stroke="#ef4444" 
+                                                                strokeWidth={isHovered ? 2.5 : 2}
+                                                                className="transition-all duration-200"
+                                                            />
+                                                        </g>
+                                                    );
+                                                })}
+                                            </svg>
+
+                                            {/* Interactive Custom Floating Tooltip */}
+                                            {hoveredTrendPoint !== null && points[hoveredTrendPoint] && (() => {
+                                                const p = points[hoveredTrendPoint];
+                                                const dateObj = new Date(p.data.dataAvaliacao);
+                                                return (
+                                                    <div 
+                                                        style={{ 
+                                                            left: `${(p.x / width) * 100}%`,
+                                                            top: `${(p.y / height) * 100 - 15}%` 
+                                                        }}
+                                                        className="absolute -translate-x-1/2 -translate-y-full bg-gray-900/95 backdrop-blur-sm text-white px-2.5 py-1.5 rounded-xl text-[10px] sm:text-xs shadow-xl border border-gray-700 pointer-events-none z-30 flex flex-col items-center gap-0.5 transition-all duration-150 animate-fadeIn"
+                                                    >
+                                                        <span className="font-bold text-red-400">{p.data.atletaNome}</span>
+                                                        <span className="font-semibold text-white">{p.data.taxaSudorese.toFixed(2).replace(".", ",")} L/h</span>
+                                                        <span className="text-[9px] text-gray-400 font-medium">
+                                                            {dateObj.getDate()}/{dateObj.getMonth() + 1} - {p.data.modality}
+                                                        </span>
+                                                    </div>
+                                                );
+                                            })()}
+                                        </div>
+                                    );
+                                })()}
+                            </div>
+                        </div>
+
+                        {/* COLUMN 2: RECENT EVALUATIONS */}
+                        <div className="min-h-0 overflow-hidden">
+                            {loading ? (
+                                <p className="text-gray-500 p-4">Carregando avaliações...</p>
+                            ) : (
+                                <CardAvaliacoes
+                                    avaliacoes={evaluations.slice(0, 10)}
+                                    onView={(av) => setSelectedAvaliacao(av)}
+                                />
+                            )}
+                        </div>
                     </div>
 
                 </div>

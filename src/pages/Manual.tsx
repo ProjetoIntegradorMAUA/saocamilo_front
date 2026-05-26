@@ -3,7 +3,6 @@ import EscalaUrina from "../components/Escala";
 import Navbar from "../components/Navbar";
 import Padronizacao from "../components/Padronizacao";
 import Topbar from "../components/Topbar";
-import { Users } from "../mock/users";
 
 export default function Manual() {
     return (
@@ -16,7 +15,7 @@ export default function Manual() {
                 <div className="w-full max-w-[1800px] min-h-full mx-auto bg-transparent xl:bg-[#e9e9ed] rounded-2xl p-2 sm:p-4 lg:p-5 flex flex-col gap-6">
 
                     <div className="rounded-2xl overflow-hidden shadow-sm bg-white">
-                        <Topbar titulo="Manual" foto={Users.user1.foto} />
+                        <Topbar titulo="Manual" />
                     </div>
 
                     <div className="flex flex-col gap-6 mt-2 justify-center items-center xl:items-stretch">
