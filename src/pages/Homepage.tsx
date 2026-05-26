@@ -422,7 +422,17 @@ export default function Homepage() {
                                         return { x, y, data: e };
                                     });
 
-                                    const lineD = points.map((p, idx) => `${idx === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+                                    // A cubic bezier curve generator for a smooth aesthetic spline between coordinates:
+                                    const lineD = points.reduce((acc, p, idx, arr) => {
+                                        if (idx === 0) return `M ${p.x} ${p.y}`;
+                                        const prev = arr[idx - 1];
+                                        const cpX1 = prev.x + (p.x - prev.x) / 3;
+                                        const cpY1 = prev.y;
+                                        const cpX2 = prev.x + 2 * (p.x - prev.x) / 3;
+                                        const cpY2 = p.y;
+                                        return `${acc} C ${cpX1} ${cpY1}, ${cpX2} ${cpY2}, ${p.x} ${p.y}`;
+                                    }, "");
+
                                     const areaD = points.length > 0 ? `${lineD} L ${points[points.length - 1].x} ${height - paddingY} L ${points[0].x} ${height - paddingY} Z` : '';
 
                                     const gridLines = [
@@ -436,7 +446,7 @@ export default function Homepage() {
                                             <svg className="w-full h-full min-h-[140px]" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
                                                 <defs>
                                                     <linearGradient id="trendAreaGradient" x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="0%" stopColor="#ef4444" stopOpacity="0.15" />
+                                                        <stop offset="0%" stopColor="#ef4444" stopOpacity="0.18" />
                                                         <stop offset="100%" stopColor="#ef4444" stopOpacity="0.0" />
                                                     </linearGradient>
                                                     <linearGradient id="trendLineGradient" x1="0" y1="0" x2="1" y2="0">
@@ -470,9 +480,42 @@ export default function Homepage() {
                                                     </g>
                                                 ))}
 
+                                                {/* Vertical Guidelines for Data Points */}
+                                                {points.map((p, idx) => {
+                                                    const isHovered = hoveredTrendPoint === idx;
+                                                    return (
+                                                        <line
+                                                            key={`v-line-${idx}`}
+                                                            x1={p.x}
+                                                            y1={paddingY}
+                                                            x2={p.x}
+                                                            y2={height - paddingY}
+                                                            stroke={isHovered ? "#ef4444" : "#f1f5f9"}
+                                                            strokeWidth={isHovered ? 1.2 : 1}
+                                                            strokeDasharray={isHovered ? "none" : "3 3"}
+                                                            opacity={isHovered ? 0.4 : 0.6}
+                                                            className="transition-all duration-200"
+                                                        />
+                                                    );
+                                                })}
+
                                                 {/* Area Path */}
                                                 {points.length > 1 && (
                                                     <path d={areaD} fill="url(#trendAreaGradient)" className="transition-all duration-500" />
+                                                )}
+
+                                                {/* Glowing line shadow (lightweight blurry stroke underneath) */}
+                                                {points.length > 1 && (
+                                                    <path 
+                                                        d={lineD} 
+                                                        fill="none" 
+                                                        stroke="#ef4444" 
+                                                        strokeWidth={6} 
+                                                        strokeLinecap="round" 
+                                                        strokeLinejoin="round"
+                                                        opacity={0.18}
+                                                        className="transition-all duration-500 filter blur-[2px]"
+                                                    />
                                                 )}
 
                                                 {/* Line Path */}
@@ -502,11 +545,33 @@ export default function Homepage() {
                                                                 onMouseEnter={() => setHoveredTrendPoint(idx)}
                                                                 onMouseLeave={() => setHoveredTrendPoint(null)}
                                                             />
-                                                            {/* Small dot inside */}
+                                                            {/* Pulsing ring for hovered dot */}
+                                                            {isHovered && (
+                                                                <circle
+                                                                    cx={p.x}
+                                                                    cy={p.y}
+                                                                    r={10}
+                                                                    fill="#ef4444"
+                                                                    opacity={0.25}
+                                                                    className="animate-ping"
+                                                                />
+                                                            )}
+                                                            {/* Translucent outer aura */}
+                                                            {isHovered && (
+                                                                <circle
+                                                                    cx={p.x}
+                                                                    cy={p.y}
+                                                                    r={8}
+                                                                    fill="#ef4444"
+                                                                    opacity={0.2}
+                                                                    className="transition-all duration-150"
+                                                                />
+                                                            )}
+                                                            {/* Solid inner dot */}
                                                             <circle 
                                                                 cx={p.x} 
                                                                 cy={p.y} 
-                                                                r={isHovered ? 6 : 4.5} 
+                                                                r={isHovered ? 5.5 : 3.5} 
                                                                 fill={isHovered ? "#ef4444" : "#ffffff"} 
                                                                 stroke="#ef4444" 
                                                                 strokeWidth={isHovered ? 2.5 : 2}
@@ -517,7 +582,7 @@ export default function Homepage() {
                                                 })}
                                             </svg>
 
-                                            {/* Interactive Custom Floating Tooltip */}
+                                            {/* Interactive Custom Floating Tooltip with premium glassmorphism */}
                                             {hoveredTrendPoint !== null && points[hoveredTrendPoint] && (() => {
                                                 const p = points[hoveredTrendPoint];
                                                 const dateObj = new Date(p.data.dataAvaliacao);
@@ -525,15 +590,25 @@ export default function Homepage() {
                                                     <div 
                                                         style={{ 
                                                             left: `${(p.x / width) * 100}%`,
-                                                            top: `${(p.y / height) * 100 - 15}%` 
+                                                            top: `${(p.y / height) * 100 - 16}%` 
                                                         }}
-                                                        className="absolute -translate-x-1/2 -translate-y-full bg-gray-900/95 backdrop-blur-sm text-white px-2.5 py-1.5 rounded-xl text-[10px] sm:text-xs shadow-xl border border-gray-700 pointer-events-none z-30 flex flex-col items-center gap-0.5 transition-all duration-150 animate-fadeIn"
+                                                        className="absolute -translate-x-1/2 -translate-y-full bg-slate-900/95 backdrop-blur-md text-white px-3 py-2 rounded-xl text-xs shadow-2xl border border-slate-700/40 pointer-events-none z-30 flex flex-col items-center gap-1 transition-all duration-150 animate-fadeIn min-w-[140px] font-sans"
                                                     >
-                                                        <span className="font-bold text-red-400">{p.data.atletaNome}</span>
-                                                        <span className="font-semibold text-white">{p.data.taxaSudorese.toFixed(2).replace(".", ",")} L/h</span>
-                                                        <span className="text-[9px] text-gray-400 font-medium">
-                                                            {dateObj.getDate()}/{dateObj.getMonth() + 1} - {p.data.modality}
+                                                        <div className="w-full flex items-center justify-between gap-2 border-b border-white/10 pb-1 mb-0.5">
+                                                            <span className="font-bold text-gray-100 text-[10px] truncate max-w-[80px]">{p.data.atletaNome}</span>
+                                                            <span className="text-[8px] text-red-400 font-bold bg-red-500/10 px-1.5 py-0.5 rounded shrink-0">{p.data.modality}</span>
+                                                        </div>
+                                                        <div className="flex items-baseline gap-1">
+                                                            <span className="text-sm font-extrabold text-emerald-400">
+                                                                {p.data.taxaSudorese.toFixed(2).replace(".", ",")}
+                                                            </span>
+                                                            <span className="text-[9px] font-bold text-emerald-500 uppercase">L/h</span>
+                                                        </div>
+                                                        <span className="text-[8px] text-gray-400 font-semibold uppercase tracking-wider flex items-center gap-1 mt-0.5">
+                                                            📅 {dateObj.getDate()}/{dateObj.getMonth() + 1}/{dateObj.getFullYear()}
                                                         </span>
+                                                        {/* Tooltip pointer triangle */}
+                                                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900/95"></div>
                                                     </div>
                                                 );
                                             })()}
