@@ -207,6 +207,18 @@ export async function getAvaliacoes() {
   return authRequest<AvaliacaoResponse[]>("/api/avaliacoes");
 }
 
+export interface AvaliacaoInsightsResponse {
+  insights: string;
+  generatedAt: string;
+  disclaimer: string;
+}
+
+export async function generateAvaliacaoInsights(avaliacaoId: string) {
+  return authRequest<AvaliacaoInsightsResponse>(`/api/avaliacoes/${avaliacaoId}/insights`, {
+    method: "POST",
+  });
+}
+
 export async function deleteAthlete(athleteId: string) {
   return authRequest<{ message: string }>(`/api/athletes/${athleteId}`, {
     method: "DELETE",
