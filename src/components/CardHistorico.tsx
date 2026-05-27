@@ -8,6 +8,7 @@ interface ICardHistorico {
     duracao: string;
     sudorese: number;
     massa: number;
+    onExportPdf?: () => void;
 }
 
 export default function CardHistorico({
@@ -18,6 +19,7 @@ export default function CardHistorico({
     duracao,
     sudorese,
     massa,
+    onExportPdf,
 }: ICardHistorico) {
     // Determinar as iniciais (ex: João Silva -> JS)
     const nameParts = nome.trim().split(/\s+/);
@@ -143,7 +145,11 @@ export default function CardHistorico({
                         Ações
                     </p>
 
-                    <button className="border border-red-200 text-red-500 hover:bg-red-500 hover:text-white rounded-lg px-3 py-1.5 flex items-center justify-center gap-1.5 transition text-xs font-semibold cursor-pointer w-full lg:w-fit shadow-sm active:scale-95 duration-150">
+                    <button
+                        type="button"
+                        onClick={onExportPdf}
+                        className="border border-red-200 text-red-500 hover:bg-red-500 hover:text-white rounded-lg px-3 py-1.5 flex items-center justify-center gap-1.5 transition text-xs font-semibold cursor-pointer w-full lg:w-fit shadow-sm active:scale-95 duration-150"
+                    >
                         <span className="text-[10px] sm:text-xs shrink-0">
                             {icons.download}
                         </span>
