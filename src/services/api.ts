@@ -80,8 +80,10 @@ export function authRequest<T>(endpoint: string, options: RequestInit = {}) {
 }
 
 export interface MeResponse {
-  message: string;
-  loggedUserId: number;
+  id: string;
+  name: string;
+  email: string;
+  role: string;
 }
 
 export async function getMe() {
@@ -203,6 +205,18 @@ export interface AvaliacaoResponse {
 
 export async function getAvaliacoes() {
   return authRequest<AvaliacaoResponse[]>("/api/avaliacoes");
+}
+
+export interface AvaliacaoInsightsResponse {
+  insights: string;
+  generatedAt: string;
+  disclaimer: string;
+}
+
+export async function generateAvaliacaoInsights(avaliacaoId: string) {
+  return authRequest<AvaliacaoInsightsResponse>(`/api/avaliacoes/${avaliacaoId}/insights`, {
+    method: "POST",
+  });
 }
 
 export async function deleteAthlete(athleteId: string) {

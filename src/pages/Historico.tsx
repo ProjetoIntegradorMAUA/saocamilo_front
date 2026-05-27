@@ -4,6 +4,7 @@ import ComboBox from "../components/Combobox";
 import Navbar from "../components/Navbar";
 import { icons } from "../utils/IconsJson";
 import { getAvaliacoes, type AvaliacaoResponse } from "../services/api";
+import { openAvaliacaoPdf } from "../utils/reportPdf";
 
 export default function Historico() {
     const [evaluations, setEvaluations] = useState<AvaliacaoResponse[]>([]);
@@ -277,6 +278,7 @@ export default function Historico() {
                                     duracao={formatDuration(av.durationSeconds)}
                                     sudorese={av.taxaSudorese}
                                     massa={parseFloat(massLoss.toFixed(2))}
+                                    onExportPdf={() => openAvaliacaoPdf(av)}
                                 />
                             );
                         })}

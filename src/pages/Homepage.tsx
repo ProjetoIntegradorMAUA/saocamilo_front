@@ -6,7 +6,7 @@ import RecentSweatTrendChart from "../components/RecentSweatTrendChart";
 import { icons } from "../utils/IconsJson";
 import Topbar from "../components/Topbar";
 import { useNavigate } from "react-router-dom";
-import { getDashboard, getAvaliacoes, type DashboardResponse, type AvaliacaoResponse } from "../services/api";
+import { generateAvaliacaoInsights, getDashboard, getAvaliacoes, type DashboardResponse, type AvaliacaoResponse } from "../services/api";
 import { getRole } from "../services/auth";
 
 const formatFullDate = (dateStr: string) => {
@@ -56,6 +56,9 @@ export default function Homepage() {
     const [evaluations, setEvaluations] = useState<AvaliacaoResponse[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedAvaliacao, setSelectedAvaliacao] = useState<AvaliacaoResponse | null>(null);
+    const [aiInsightsByEvaluation, setAiInsightsByEvaluation] = useState<Record<string, string>>({});
+    const [aiInsightError, setAiInsightError] = useState("");
+    const [isGeneratingInsight, setIsGeneratingInsight] = useState(false);
     
     // Interactive states
     const [hoveredBar, setHoveredBar] = useState<string | null>(null);
@@ -63,6 +66,27 @@ export default function Homepage() {
     const [sortBy, setSortBy] = useState<'rate' | 'count'>('count');
 
     const role = getRole();
+
+    const handleGenerateInsights = async () => {
+        if (!selectedAvaliacao || isGeneratingInsight) return;
+
+        setIsGeneratingInsight(true);
+        setAiInsightError("");
+
+        const response = await generateAvaliacaoInsights(selectedAvaliacao.avaliacaoId);
+
+        if (response.error) {
+            setAiInsightError(response.error);
+        } else if (response.data) {
+            const insights = response.data.insights;
+            setAiInsightsByEvaluation((current) => ({
+                ...current,
+                [selectedAvaliacao.avaliacaoId]: insights,
+            }));
+        }
+
+        setIsGeneratingInsight(false);
+    };
 
     useEffect(() => {
         const fetchDashboardAndEvaluations = async () => {
@@ -87,6 +111,10 @@ export default function Homepage() {
         };
         fetchDashboardAndEvaluations();
     }, []);
+
+    useEffect(() => {
+        setAiInsightError("");
+    }, [selectedAvaliacao?.avaliacaoId]);
 
 
     const modalityMap: Record<string, { count: number; totalSweatRate: number }> = {};
@@ -670,12 +698,33 @@ export default function Homepage() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50 flex flex-col gap-2 shadow-sm">
-                                <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide border-b border-gray-200 pb-2">
-                                    📝 Observações Adicionais
-                                </h3>
+                            <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50 flex flex-col gap-4 shadow-sm">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-gray-200 pb-3">
+                                    <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide">
+                                        Insights de Inteligência Artificial
+                                    </h3>
+                                    <button
+                                        type="button"
+                                        onClick={handleGenerateInsights}
+                                        disabled={isGeneratingInsight}
+                                        className="bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white font-semibold px-4 py-2 rounded-xl shadow-sm transition-all cursor-pointer disabled:cursor-not-allowed text-xs sm:text-sm"
+                                    >
+                                        {isGeneratingInsight ? "Gerando insights..." : "Gerar insights com a Inteligência artificial"}
+                                    </button>
+                                </div>
+
+                                {aiInsightError && (
+                                    <p className="text-xs sm:text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-3 py-2 font-semibold">
+                                        {aiInsightError}
+                                    </p>
+                                )}
+
                                 <p className="text-xs sm:text-sm text-gray-600 whitespace-pre-wrap leading-relaxed">
-                                    {selectedAvaliacao.observations || "Nenhuma observação registrada para esta avaliação."}
+                                    {aiInsightsByEvaluation[selectedAvaliacao.avaliacaoId] || "Clique no botão para gerar insights personalizados com base nos dados desta avaliação."}
+                                </p>
+
+                                <p className="text-[11px] sm:text-xs text-gray-400 leading-relaxed border-t border-gray-200 pt-3">
+                                    Este insight foi gerado com inteligência artificial, pode cometer erros e não substitui avaliação profissional.
                                 </p>
                             </div>
 
