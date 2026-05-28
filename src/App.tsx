@@ -10,6 +10,7 @@ import NovoAtleta from "./pages/NovoAtleta";
 import AdicionarAtletas from "./pages/AdicionarAtletas";
 import NewActivity from "./pages/NewActivity";
 import Historico from "./pages/Historico";
+import EditarAtletas from "./pages/EditarAtletas";
 
 export default function App() {
     return (
@@ -23,6 +24,7 @@ export default function App() {
                     <Route path="/atletas" element={<Atletas />} />
                     <Route path="/novo-nutricionista" element={<NovoAtleta />} />
                     <Route path="/adicionar-atleta" element={<AdicionarAtletas />} />
+                    <Route path="/editar-atleta" element={<EditarAtletas />} />
                     <Route path="/nova-atividade" element={<NewActivity />} />
                     <Route path="/configuracoes" element={<Configuracoes />} />
                     <Route path="/historico" element={<Historico />} />
