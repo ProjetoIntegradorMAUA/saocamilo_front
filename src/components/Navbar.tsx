@@ -4,6 +4,7 @@ import Botao from "./Botao";
 import { useNavigate } from "react-router";
 import logoSaoCamilo from "../assets/logo_saocamilo_completo.svg";
 import { getRole } from "../services/auth";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface INavbar {
     index: number;
@@ -15,6 +16,8 @@ export default function Navbar({ index }: INavbar) {
     const [isNavigating, setIsNavigating] = useState(false)
     const [role, setRole] = useState<string | null>(null)
     const navigate = useNavigate()
+    const { theme } = useTheme()
+    const dark = theme === 'escuro'
 
     useEffect(() => {
         setRole(getRole())
@@ -39,7 +42,7 @@ export default function Navbar({ index }: INavbar) {
                     <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
                 </div>
             )}
-            <div id="navbar-mobile" className="lg:hidden flex gap-8 sm:gap-16 h-30 w-full fixed bottom-0 place-self-center justify-center items-center transition-all bg-white">
+            <div id="navbar-mobile" className={`lg:hidden flex gap-8 sm:gap-16 h-30 w-full fixed bottom-0 place-self-center justify-center items-center transition-all ${dark ? 'bg-gray-900 text-gray-200 border-t border-gray-700' : 'bg-white'}`}>
                 <div onClick={() => fnavigate("homepage")}
                     className={`flex flex-col justify-center items-center gap-2 text-xl cursor-pointer hover:opacity-70 transition-colors ${activeIndex === 0 ? 'text-red-500' : ''}`}
                 >
@@ -48,14 +51,14 @@ export default function Navbar({ index }: INavbar) {
                 </div>
                 {role === 'NUTRITIONIST' && (
                     <div onClick={() => fnavigate("atletas")}
-                        className={`flex flex-col justify-center items-center gap-2 text-xl cursor-pointer hover:opacity-70 transition-colors ${activeIndex === 1 ? 'text-red-500' : ''}`}
+                        className={`flex flex-col justify-center items-center gap-2 text-xl cursor-pointer hover:opacity-70 transition-colors ${activeIndex === 1 ? 'text-red-500' : (dark ? 'text-gray-300' : '')}`}
                     >
                         <span className="text-2xl flex items-center justify-center w-8 h-8">{icons.usuario}</span>
                         <span>Atletas</span>
                     </div>
                 )}
                 <div onClick={() => fnavigate("historico")}
-                    className={`flex flex-col justify-center items-center gap-2 text-xl cursor-pointer hover:opacity-70 transition-colors ${activeIndex === 2 ? 'text-red-500' : ''}`}
+                    className={`flex flex-col justify-center items-center gap-2 text-xl cursor-pointer hover:opacity-70 transition-colors ${activeIndex === 2 ? 'text-red-500' : (dark ? 'text-gray-300' : '')}`}
                 >
                     <span className="text-2xl flex items-center justify-center w-8 h-8">{icons.historico}</span>
                     <span>Histórico</span>
@@ -70,15 +73,15 @@ export default function Navbar({ index }: INavbar) {
                     </button>
 
                     {isDropdownOpen && (
-                        <div className="absolute bottom-full transform -translate-x-1/2 mb-6 bg-white rounded-xl shadow-lg p-2 flex flex-col gap-4">
+                        <div className={`absolute bottom-full transform -translate-x-1/2 mb-6 rounded-xl p-2 flex flex-col gap-4 ${dark ? 'bg-gray-800 shadow-gray-800' : 'bg-white shadow-lg'}`}>
                             <button onClick={() => fnavigate("manual")}
-                                className={`flex flex-col items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer rounded transition-colors ${activeIndex === 3 ? 'text-red-500' : ''} hover:opacity-70`}
+                                className={`flex flex-col items-center gap-2 px-4 py-2 cursor-pointer rounded transition-colors ${activeIndex === 3 ? 'text-red-500' : (dark ? 'text-gray-300' : '')} ${dark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} hover:opacity-70`}
                             >
                                 <span className="text-xl flex items-center justify-center w-6 h-6">{icons.manual}</span>
                                 <span>Manual</span>
                             </button>
                             <button onClick={() => fnavigate("configuracoes")}
-                                className={`flex hover:opacity-70 flex-col items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded transition-colors cursor-pointer ${activeIndex === 4 ? 'text-red-500' : ''}`}
+                                className={`flex flex-col items-center gap-2 px-4 py-2 rounded transition-colors cursor-pointer ${activeIndex === 4 ? 'text-red-500' : (dark ? 'text-gray-300' : '')} ${dark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} hover:opacity-70`}
                             >
                                 <span className="text-xl flex items-center justify-center w-6 h-6">{icons.configuracoes}</span>
                                 <span>Configurações</span>
@@ -87,26 +90,26 @@ export default function Navbar({ index }: INavbar) {
                     )}
                 </div>
             </div>
-            <div id="navbar-desktop" className="hidden lg:w-60 lg:h-dvh lg:fixed border-r border-r-gray-300 bg-gray-50 lg:flex lg:flex-col lg:items-center text-lg">
+            <div id="navbar-desktop" className={`hidden lg:w-60 lg:h-dvh lg:fixed lg:flex lg:flex-col lg:items-center text-lg ${dark ? 'bg-gray-900 border-r border-gray-700 text-gray-200' : 'border-r border-r-gray-300 bg-gray-50'}`}>
                 <div id="logo" className="m-10 w-full flex justify-center ">
                     <img src={logoSaoCamilo} alt="Logo São Camilo" className="w-1/2 cursor-pointer" onClick={() => fnavigate("homepage")} />
                 </div>
                 <div id="conteudo" className="h-2/5 w-full px-2 text-[16px]">
-                    <div onClick={() => fnavigate("homepage")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 0 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
+                    <div onClick={() => fnavigate("homepage")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 0 ? (dark ? 'text-red-500 hover:text-red-600 hover:bg-red-900/10 pl-12' : 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12') : (dark ? 'text-gray-300 hover:text-white hover:bg-gray-800 hover:pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12')}`}>
                         <span className="w-6 h-6 flex items-center justify-center text-xl">{icons.dashboard}</span> Início
                     </div>
                     {role === 'NUTRITIONIST' && (
-                        <div onClick={() => fnavigate("atletas")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 1 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
+                        <div onClick={() => fnavigate("atletas")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 1 ? (dark ? 'text-red-500 hover:text-red-600 hover:bg-red-900/10 pl-12' : 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12') : (dark ? 'text-gray-300 hover:text-white hover:bg-gray-800 hover:pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12')}`}>
                             <span className="w-6 h-6 flex items-center justify-center text-xl">{icons.usuario}</span> Atletas
                         </div>
                     )}
-                    <div onClick={() => fnavigate("historico")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 2 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
+                    <div onClick={() => fnavigate("historico")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 2 ? (dark ? 'text-red-500 hover:text-red-600 hover:bg-red-900/10 pl-12' : 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12') : (dark ? 'text-gray-300 hover:text-white hover:bg-gray-800 hover:pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12')}`}>
                         <span className="w-6 h-6 flex items-center justify-center text-xl">{icons.historico}</span> Histórico
                     </div>
-                    <div onClick={() => fnavigate("manual")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 3 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
+                    <div onClick={() => fnavigate("manual")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 3 ? (dark ? 'text-red-500 hover:text-red-600 hover:bg-red-900/10 pl-12' : 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12') : (dark ? 'text-gray-300 hover:text-white hover:bg-gray-800 hover:pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12')}`}>
                         <span className="w-6 h-6 flex items-center justify-center text-xl">{icons.manual}</span> Manual
                     </div>
-                    <div onClick={() => fnavigate("configuracoes")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 4 ? 'text-red-500 hover:text-red-750 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
+                    <div onClick={() => fnavigate("configuracoes")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 4 ? (dark ? 'text-red-500 hover:text-red-600 hover:bg-red-900/10 pl-12' : 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12') : (dark ? 'text-gray-300 hover:text-white hover:bg-gray-800 hover:pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12')}`}>
                         <span className="w-6 h-6 flex items-center justify-center text-xl">{icons.configuracoes}</span> Configurações
                     </div>
                 </div>
