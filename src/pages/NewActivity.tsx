@@ -62,26 +62,22 @@ export default function NewActivity() {
     const [time, setTime] = useState(0);
     const [weather, setWeather] = useState<WeatherData | null>(null);
 
-    // DADOS PRÉ-SESSÃO
     const [modality, setModality] = useState('Corrida de Rua / Corrida');
     const [isOutdoor, setIsOutdoor] = useState(true);
     const [perceivedIntensity, setPerceivedIntensity] = useState<'LEVE' | 'MODERADA' | 'INTENSA'>('MODERADA');
     const [clothingType, setClothingType] = useState('Camiseta e Shorts');
     
-    // Basal
     const [currentWeight, setCurrentWeight] = useState('');
     const [urineColor, setUrineColor] = useState<number>(3);
     const [thirstLevel, setThirstLevel] = useState<number>(2);
     const [preSymptoms, setPreSymptoms] = useState<string[]>([]);
 
-    // Clima (Preenchido pela API)
     const [temperature, setTemperature] = useState('22');
     const [humidity, setHumidity] = useState('60');
     const [thermalSensation, setThermalSensation] = useState<'FRIO' | 'AGRADAVEL' | 'MORNO' | 'QUENTE' | 'MUITO_QUENTE'>('AGRADAVEL');
     const [windCondition, setWindCondition] = useState<'SEM_VENTO' | 'BRISA_LEVE' | 'VENTO_MODERADO' | 'VENTO_FORTE'>('BRISA_LEVE');
     const [solarExposure, setSolarExposure] = useState<'SOL_PLENO' | 'MEIA_SOMBRA' | 'SOMBRA' | 'COBERTO'>('SOL_PLENO');
 
-    // DADOS DURANTE A SESSÃO
     const [fluidLogs, setFluidLogs] = useState<FluidLog[]>([]);
     const [customFluid, setCustomFluid] = useState('');
     const [foodName, setFoodName] = useState('');
@@ -89,7 +85,6 @@ export default function NewActivity() {
     const [foodLogs, setFoodLogs] = useState<FoodLog[]>([]);
     const [urineOutputML, setUrineOutputML] = useState('');
 
-    // DADOS PÓS-SESSÃO
     const [finalWeight, setFinalWeight] = useState('');
     const [soakedClothing, setSoakedClothing] = useState(false);
     const [clothingChanged, setClothingChanged] = useState(false);
@@ -99,7 +94,6 @@ export default function NewActivity() {
 
     const [isSaving, setIsSaving] = useState(false);
 
-    // Classifica automaticamente esporte Aberto vs Fechado
     const handleModalityChange = (selectedSport: string) => {
         setModality(selectedSport);
         const sportObj = SPORTS_LIST.find(s => s.name === selectedSport);
@@ -108,7 +102,6 @@ export default function NewActivity() {
         }
     };
 
-    // Clima automático inteligente
     useEffect(() => {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
@@ -167,7 +160,6 @@ export default function NewActivity() {
         }
     }, []);
 
-    // Cronômetro da sessão
     useEffect(() => {
         let interval: ReturnType<typeof setInterval>;
         if (status === 'running') {
@@ -204,7 +196,6 @@ export default function NewActivity() {
 
     const totalFluids = fluidLogs.reduce((sum, log) => sum + log.amount, 0);
 
-    // Log de Alimentos
     const addFood = () => {
         if (!foodName.trim() || !foodWater) return;
         const newFood: FoodLog = {
@@ -223,7 +214,6 @@ export default function NewActivity() {
 
     const totalFoodWater = foodLogs.reduce((sum, f) => sum + f.water, 0);
 
-    // Sintomas selecionáveis (Pré e Pós)
     const togglePreSymptom = (symptom: string) => {
         setPreSymptoms(prev => 
             prev.includes(symptom) ? prev.filter(s => s !== symptom) : [...prev, symptom]
@@ -255,28 +245,23 @@ export default function NewActivity() {
             postSymptoms,
             observations,
 
-            // Variáveis de clima automáticas / inseridas
             temperature,
             humidity: isOutdoor ? humidity : undefined,
             thermalSensation: isOutdoor ? thermalSensation : undefined,
             windCondition: isOutdoor ? windCondition : undefined,
             solarExposure: isOutdoor ? solarExposure : undefined,
 
-            // Sessão planejada
             modality,
             perceivedIntensity,
             clothingType,
 
-            // Durante a sessão
             foodIntakeWater: String(totalFoodWater),
             urineOutputDuringML: urineOutputML || '0',
 
-            // Pós-sessão
             soakedClothing,
             clothingChanged,
             giTolerance,
 
-            // Ambiente
             isOutdoor
         };
 
@@ -293,7 +278,6 @@ export default function NewActivity() {
 
     return (
         <div className="min-h-screen bg-[#f8f9fa] text-gray-800 font-sans flex flex-col items-center justify-center relative overflow-x-hidden">
-            {/* Header com Clima em Tempo Real */}
             <header className="absolute top-0 left-0 right-0 w-full px-6 py-4 flex justify-between items-center bg-white border-b border-gray-150 shadow-sm z-20">
                 <div className="flex items-center gap-4">
                     <button
@@ -336,7 +320,6 @@ export default function NewActivity() {
                             <p className="text-gray-500 text-sm">Preencha o protocolo médico-esportivo basal antes de iniciar.</p>
                         </div>
                         
-                        {/* SEÇÃO 1: INFORMAÇÕES DA ATIVIDADE E AMBIENTE */}
                         <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-5">
                             <h2 className="text-lg font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
                                 <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
@@ -410,7 +393,6 @@ export default function NewActivity() {
                             </div>
                         </div>
 
-                        {/* SEÇÃO CONDICIONAL: CONDIÇÕES AMBIENTAIS */}
                         <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-4">
                             <div className="flex justify-between items-center border-b pb-2">
                                 <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
@@ -501,14 +483,13 @@ export default function NewActivity() {
                                             />
                                         </div>
                                         <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 text-xs text-gray-500">
-                                            💡 <strong>Esporte Fechado:</strong> Informações de umidade externa, vento e exposição solar foram desconsideradas e ocultadas para maior simplicidade e fidelidade clínica do protocolo.
+                                            <strong>Esporte Fechado:</strong> Informações de umidade externa, vento e exposição solar foram desconsideradas e ocultadas para maior simplicidade e fidelidade clínica do protocolo.
                                         </div>
                                     </div>
                                 </div>
                             )}
                         </div>
 
-                        {/* SEÇÃO 3: MEDIDAS CORPORAIS E ESTADO BASAL */}
                         <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-6">
                             <h2 className="text-lg font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
                                 <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
@@ -517,7 +498,7 @@ export default function NewActivity() {
 
                             <div>
                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Massa Corporal Pré-Exercício (kg)</label>
-                                <span className="text-[10px] text-gray-400 block mb-2">⚠️ Realizar pesagem após esvaziamento vesical completo e com vestimenta padronizada.</span>
+                                <span className="text-[10px] text-gray-400 block mb-2">Realizar pesagem após esvaziamento vesical completo e com vestimenta padronizada.</span>
                                 <input 
                                     type="number" 
                                     value={currentWeight}
@@ -527,7 +508,7 @@ export default function NewActivity() {
                                 />
                             </div>
 
-                            {/* PREMIUM INTERACTIVE URINE COLOR SCALE */}
+                           
                             <div>
                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Cor da Urina Basal (Escala Visual)</label>
                                 <span className="text-[10px] text-gray-400 block mb-3">Toque na cor correspondente para selecionar:</span>
@@ -564,15 +545,14 @@ export default function NewActivity() {
                                     </div>
                                     <p className="text-gray-600 hidden sm:block">
                                         {urineColor <= 3 
-                                            ? '✅ Excelente estado para iniciar!' 
+                                            ? 'Excelente estado para iniciar!' 
                                             : urineColor <= 6 
-                                            ? '⚠️ Recomenda-se tomar 350mL de água antes.' 
-                                            : '🚨 Alerta: Ingerir fluidos imediatamente!'}
+                                            ? 'Recomenda-se tomar 350mL de água antes.' 
+                                            : 'Alerta: Ingerir fluidos imediatamente!'}
                                     </p>
                                 </div>
                             </div>
 
-                            {/* NÍVEL DE SEDE INTERATIVO */}
                             <div>
                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Sensação Basal de Sede</label>
                                 <div className="grid grid-cols-5 gap-1.5">
@@ -593,7 +573,6 @@ export default function NewActivity() {
                                 </div>
                             </div>
 
-                            {/* SINTOMAS BASAIS CHECKLIST */}
                             <div>
                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Sintomas Presentes (Basal)</label>
                                 <div className="flex flex-wrap gap-2">
@@ -629,7 +608,6 @@ export default function NewActivity() {
 
                 {status === 'running' && (
                     <div className="flex-1 flex flex-col animate-fade-in space-y-6">
-                        {/* PAINEL DE CRONÔMETRO */}
                         <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl flex flex-col items-center justify-center relative overflow-hidden">
                             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-red-500/10 rounded-full animate-ping pointer-events-none"></div>
                             
@@ -641,7 +619,6 @@ export default function NewActivity() {
                             </div>
                         </div>
 
-                        {/* MÓDULO 1: INGESTÃO DE FLUIDOS (ATALHOS DA SESSÃO) */}
                         <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-5">
                             <div className="flex justify-between items-center border-b pb-2">
                                 <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
@@ -710,7 +687,7 @@ export default function NewActivity() {
                                     <div className="max-h-28 overflow-y-auto space-y-1.5 pr-2 font-mono text-xs">
                                         {fluidLogs.map(log => (
                                             <div key={log.id} className="flex justify-between items-center bg-white border border-gray-200 rounded-lg p-2">
-                                                <span className="text-gray-700 font-semibold font-sans">💧 +{log.amount} mL <span className="text-[10px] text-gray-400 font-mono">às {log.timeStr}</span></span>
+                                                <span className="text-gray-700 font-semibold font-sans">+{log.amount} mL <span className="text-[10px] text-gray-400 font-mono">às {log.timeStr}</span></span>
                                                 <button
                                                     onClick={() => removeFluid(log.id)}
                                                     className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded p-1 transition"
@@ -765,7 +742,7 @@ export default function NewActivity() {
                                     <div className="space-y-1.5">
                                         {foodLogs.map(f => (
                                             <div key={f.id} className="flex justify-between items-center bg-gray-50 border border-gray-200 rounded-lg p-2 text-xs font-mono">
-                                                <span>🍎 {f.name} (água equivalente: {f.water} mL)</span>
+                                                <span>{f.name} (água equivalente: {f.water} mL)</span>
                                                 <button onClick={() => removeFood(f.id)} className="text-red-500 hover:text-red-750 p-1">
                                                     <FiTrash className="w-3.5 h-3.5" />
                                                 </button>
@@ -775,10 +752,9 @@ export default function NewActivity() {
                                 )}
                             </div>
 
-                            {/* PERDA URINÁRIA DURANTE A SESSÃO */}
                             <div className="pt-2">
                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Volume Urinário Durante a Sessão (mL)</label>
-                                <span className="text-[10px] text-gray-400 block mb-2">⚠️ Se o atleta urinou durante o exercício, informe o volume estimado abaixo. Esse volume reduzirá a perda hídrica atribuída apenas ao suor.</span>
+                                <span className="text-[10px] text-gray-400 block mb-2">Se o atleta urinou durante o exercício, informe o volume estimado abaixo. Esse volume reduzirá a perda hídrica atribuída apenas ao suor.</span>
                                 <input
                                     type="number"
                                     value={urineOutputML}
@@ -805,7 +781,7 @@ export default function NewActivity() {
                             <p className="text-gray-500 text-sm">Treino encerrado! Tempo Total: <span className="text-gray-800 font-mono font-black">{formatTime(time)}</span></p>
                         </div>
                         
-                        {/* SEÇÃO 1: PESAGEM FINAL */}
+                      
                         <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-5">
                             <h2 className="text-lg font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
                                 <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
@@ -848,7 +824,7 @@ export default function NewActivity() {
                                 </div>
                             </div>
 
-                            {/* PREMIUM EDUCATIONAL COMPLIANCE BLOCK */}
+                      
                             <div className="p-4 bg-red-50 rounded-2xl border border-red-100 space-y-2 flex gap-3">
                                 <FiInfo className="w-8 h-8 text-red-500 shrink-0 mt-0.5" />
                                 <div className="text-xs text-red-800 leading-relaxed">
@@ -858,7 +834,7 @@ export default function NewActivity() {
                             </div>
                         </div>
 
-                        {/* SEÇÃO 2: ESTADO SINTOMÁTICO PÓS-TREINO E TOLERÂNCIA */}
+                      
                         <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-6">
                             <h2 className="text-lg font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
                                 <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
