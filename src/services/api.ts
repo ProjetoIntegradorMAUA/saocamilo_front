@@ -236,4 +236,14 @@ export async function updateNutritionistTeam(athleteIds: string[]) {
   });
 }
 
+export async function updateAthlete(
+  athleteId: string,
+  data: { name: string; weight: string; dehydrationHistory: string }
+) {
+  return authRequest<{ message: string; athlete: AthleteResponse }>(`/api/athletes/${athleteId}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+}
+
 

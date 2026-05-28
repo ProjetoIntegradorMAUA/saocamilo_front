@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaHistory, FaRegUser } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import Navbar from "../components/Navbar";
@@ -6,15 +6,16 @@ import Botao from "../components/Botao";
 import Input from "../components/Input";
 import Select from "../components/Select";
 import Textarea from "../components/TextArea";
-import { authRequest } from "../services/api";
-import { useNavigate } from "react-router-dom";
+import { updateAthlete } from "../services/api";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function EditarAtletas() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const athlete = location.state?.athlete;
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [birthDate, setBirthDate] = useState("");
     const [gender, setGender] = useState("Masculino");
     const [height, setHeight] = useState("");
@@ -24,43 +25,51 @@ export default function EditarAtletas() {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleRegisterAthlete = async () => {
+    useEffect(() => {
+        if (!athlete) {
+            alert("Nenhum atleta selecionado para edição.");
+            navigate("/atletas");
+            return;
+        }
+
+        setName(athlete.name || "");
+        setEmail(athlete.email || "");
+        setBirthDate(athlete.birthDate || "");
+        setGender(athlete.gender || "Masculino");
+        setHeight(athlete.height ? String(athlete.height) : "");
+        setWeight(athlete.weight ? String(athlete.weight) : "");
+        setDehydrationHistory(athlete.dehydrationHistory || "");
+    }, [athlete, navigate]);
+
+    const handleUpdateAthlete = async () => {
         setError("");
 
-        if (!name || !email || !password) {
-            setError("Nome completo, e-mail e senha são obrigatórios.");
-            alert("Nome completo, e-mail e senha são obrigatórios.");
+        if (!name) {
+            setError("O nome completo do atleta é obrigatório.");
+            alert("O nome completo do atleta é obrigatório.");
             return;
         }
 
         setIsLoading(true);
 
         try {
-            const response = await authRequest("/api/athletes", {
-                method: "POST",
-                body: JSON.stringify({
-                    name,
-                    email,
-                    password,
-                    birthDate,
-                    gender,
-                    height: height || undefined,
-                    weight: weight || undefined,
-                    dehydrationHistory,
-                }),
+            const response = await updateAthlete(athlete.id, {
+                name,
+                weight: weight || undefined,
+                dehydrationHistory,
             });
 
             if (response.error) {
                 setError(response.error);
-                alert(`Erro ao cadastrar atleta: ${response.error}`);
+                alert(`Erro ao salvar alterações: ${response.error}`);
             } else {
-                alert(`Atleta "${name}" cadastrado com sucesso!`);
+                alert(`Atleta "${name}" atualizado com sucesso!`);
                 navigate("/atletas");
             }
         } catch (err) {
             console.error(err);
-            setError("Ocorreu um erro ao cadastrar atleta.");
-            alert("Ocorreu um erro ao cadastrar atleta.");
+            setError("Ocorreu um erro ao atualizar atleta.");
+            alert("Ocorreu um erro ao atualizar atleta.");
         } finally {
             setIsLoading(false);
         }
@@ -76,18 +85,16 @@ export default function EditarAtletas() {
             </div>
             <div className="flex-1 bg-[#f5f5f5] lg:p-3 p-0 flex justify-center overflow-y-auto">
                 <div
-                    className=" w-full min-h-screen lg:h-[95vh] lg:max-w-387.5 bg-white lg:rounded-3xl border border-gray-200 shadow-sm px-5 py-6 pb-32 lg:pb-8 lg:p-8 overflow-y-auto
-                "
+                    className=" w-full min-h-screen lg:h-[95vh] lg:max-w-387.5 bg-white lg:rounded-3xl border border-gray-200 shadow-sm px-5 py-6 pb-32 lg:pb-8 lg:p-8 overflow-y-auto"
                 >
                     {/* titulo */}
                     <div className="mb-8">
                         <h1 className="text-3xl font-bold text-[#1f2a44]">
-                            Cadastrar Novo Atleta
+                            Editar Atleta
                         </h1>
 
                         <p className="text-sm text-gray-500 mt-1">
-                            Insira as informações pessoais e o histórico do
-                            atleta.
+                            Atualize as informações pessoais e o histórico do atleta.
                         </p>
                     </div>
 
@@ -124,14 +131,13 @@ export default function EditarAtletas() {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                disabled
                             />
 
                             <Input
                                 label="Senha de Acesso:"
                                 placeholder="Defina uma senha"
                                 type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
                                 disabled
                             />
 
@@ -150,7 +156,6 @@ export default function EditarAtletas() {
                                 value={gender}
                                 onChange={(e) => setGender(e.target.value)}
                                 disabled
-                                
                             />
 
                             <Input
@@ -199,12 +204,12 @@ export default function EditarAtletas() {
                         />
 
                         <div
-                            onClick={handleRegisterAthlete}
+                            onClick={handleUpdateAthlete}
                             className="cursor-pointer"
                         >
                             <Botao
                                 texto={
-                                    isLoading ? "Criando..." : "Criar Atleta"
+                                    isLoading ? "Salvando..." : "Salvar Alterações"
                                 }
                                 icone={<FaRegUser />}
                             />
@@ -215,4 +220,3 @@ export default function EditarAtletas() {
         </div>
     );
 }
-
