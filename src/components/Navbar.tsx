@@ -43,21 +43,21 @@ export default function Navbar({ index }: INavbar) {
                 <div onClick={() => fnavigate("homepage")}
                     className={`flex flex-col justify-center items-center gap-2 text-xl cursor-pointer hover:opacity-70 transition-colors ${activeIndex === 0 ? 'text-red-500' : ''}`}
                 >
-                    <span>{icons.dashboard}</span>
+                    <span className="text-2xl flex items-center justify-center w-8 h-8">{icons.dashboard}</span>
                     <span>Início</span>
                 </div>
                 {role === 'NUTRITIONIST' && (
                     <div onClick={() => fnavigate("atletas")}
                         className={`flex flex-col justify-center items-center gap-2 text-xl cursor-pointer hover:opacity-70 transition-colors ${activeIndex === 1 ? 'text-red-500' : ''}`}
                     >
-                        <span>{icons.usuario}</span>
+                        <span className="text-2xl flex items-center justify-center w-8 h-8">{icons.usuario}</span>
                         <span>Atletas</span>
                     </div>
                 )}
                 <div onClick={() => fnavigate("historico")}
                     className={`flex flex-col justify-center items-center gap-2 text-xl cursor-pointer hover:opacity-70 transition-colors ${activeIndex === 2 ? 'text-red-500' : ''}`}
                 >
-                    <span>{icons.historico}</span>
+                    <span className="text-2xl flex items-center justify-center w-8 h-8">{icons.historico}</span>
                     <span>Histórico</span>
                 </div>
                 <div className="relative">
@@ -65,7 +65,7 @@ export default function Navbar({ index }: INavbar) {
                         onClick={toggleDropdown}
                         className="flex flex-col cursor-pointer justify-between items-center gap-2 text-xl hover:opacity-70 transition"
                     >
-                        <span className="text-2xl">{icons.menu}</span>
+                        <span className="text-2xl flex items-center justify-center w-8 h-8">{icons.menu}</span>
                         <span>Menu</span>
                     </button>
 
@@ -74,13 +74,13 @@ export default function Navbar({ index }: INavbar) {
                             <button onClick={() => fnavigate("manual")}
                                 className={`flex flex-col items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer rounded transition-colors ${activeIndex === 3 ? 'text-red-500' : ''} hover:opacity-70`}
                             >
-                                <span>{icons.manual}</span>
+                                <span className="text-xl flex items-center justify-center w-6 h-6">{icons.manual}</span>
                                 <span>Manual</span>
                             </button>
                             <button onClick={() => fnavigate("configuracoes")}
                                 className={`flex hover:opacity-70 flex-col items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded transition-colors cursor-pointer ${activeIndex === 4 ? 'text-red-500' : ''}`}
                             >
-                                <span>{icons.configuracoes}</span>
+                                <span className="text-xl flex items-center justify-center w-6 h-6">{icons.configuracoes}</span>
                                 <span>Configurações</span>
                             </button>
                         </div>
@@ -93,21 +93,21 @@ export default function Navbar({ index }: INavbar) {
                 </div>
                 <div id="conteudo" className="h-2/5 w-full px-2 text-[16px]">
                     <div onClick={() => fnavigate("homepage")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 0 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
-                        {icons.dashboard}- Início
+                        <span className="w-6 h-6 flex items-center justify-center text-xl">{icons.dashboard}</span> Início
                     </div>
                     {role === 'NUTRITIONIST' && (
                         <div onClick={() => fnavigate("atletas")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 1 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
-                            {icons.usuario}- Atletas
+                            <span className="w-6 h-6 flex items-center justify-center text-xl">{icons.usuario}</span> Atletas
                         </div>
                     )}
                     <div onClick={() => fnavigate("historico")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 2 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
-                        {icons.historico}- Histórico
+                        <span className="w-6 h-6 flex items-center justify-center text-xl">{icons.historico}</span> Histórico
                     </div>
                     <div onClick={() => fnavigate("manual")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 3 ? 'text-red-500 hover:text-red-600 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
-                        {icons.manual}- Manual
+                        <span className="w-6 h-6 flex items-center justify-center text-xl">{icons.manual}</span> Manual
                     </div>
                     <div onClick={() => fnavigate("configuracoes")} className={`w-full flex gap-3 transition-all rounded-2xl items-center pl-10 p-4 cursor-pointer ${activeIndex === 4 ? 'text-red-500 hover:text-red-750 hover:bg-red-50 pl-12' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 hover:pl-12'}`}>
-                        {icons.configuracoes}- Configurações
+                        <span className="w-6 h-6 flex items-center justify-center text-xl">{icons.configuracoes}</span> Configurações
                     </div>
                 </div>
                 {role === 'ATHLETE' && (

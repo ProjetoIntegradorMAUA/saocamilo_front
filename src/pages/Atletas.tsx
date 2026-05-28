@@ -154,6 +154,7 @@ export default function Atletas() {
                                             key={atleta.id} 
                                             nome={atleta.name} 
                                             onDelete={() => handleDeleteAthlete(atleta.id, atleta.name)}
+                                            onEdit={() => navigate("/editar-atleta", { state: { athlete: atleta } })}
                                         />
                                     ))
                                 ) : (
