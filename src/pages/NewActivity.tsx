@@ -50,12 +50,6 @@ interface FluidLog {
     timeStr: string;
 }
 
-interface FoodLog {
-    id: string;
-    name: string;
-    water: number;
-}
-
 export default function NewActivity() {
     const navigate = useNavigate();
     const [status, setStatus] = useState<'pre' | 'running' | 'post'>('pre');
@@ -80,9 +74,6 @@ export default function NewActivity() {
 
     const [fluidLogs, setFluidLogs] = useState<FluidLog[]>([]);
     const [customFluid, setCustomFluid] = useState('');
-    const [foodName, setFoodName] = useState('');
-    const [foodWater, setFoodWater] = useState('');
-    const [foodLogs, setFoodLogs] = useState<FoodLog[]>([]);
     const [urineOutputML, setUrineOutputML] = useState('');
 
     const [finalWeight, setFinalWeight] = useState('');
@@ -196,24 +187,6 @@ export default function NewActivity() {
 
     const totalFluids = fluidLogs.reduce((sum, log) => sum + log.amount, 0);
 
-    const addFood = () => {
-        if (!foodName.trim() || !foodWater) return;
-        const newFood: FoodLog = {
-            id: Math.random().toString(36).substr(2, 9),
-            name: foodName,
-            water: Number(foodWater) || 0
-        };
-        setFoodLogs(prev => [newFood, ...prev]);
-        setFoodName('');
-        setFoodWater('');
-    };
-
-    const removeFood = (id: string) => {
-        setFoodLogs(prev => prev.filter(f => f.id !== id));
-    };
-
-    const totalFoodWater = foodLogs.reduce((sum, f) => sum + f.water, 0);
-
     const togglePreSymptom = (symptom: string) => {
         setPreSymptoms(prev => 
             prev.includes(symptom) ? prev.filter(s => s !== symptom) : [...prev, symptom]
@@ -255,7 +228,7 @@ export default function NewActivity() {
             perceivedIntensity,
             clothingType,
 
-            foodIntakeWater: String(totalFoodWater),
+            foodIntakeWater: '0',
             urineOutputDuringML: urineOutputML || '0',
 
             soakedClothing,
@@ -297,7 +270,7 @@ export default function NewActivity() {
                     </button>
                     <div className="flex items-center gap-3">
                         {weather ? getWeatherIcon(weather.weathercode) : <WiCloudy className="w-10 h-10 text-gray-300 animate-pulse" />}
-                        <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider hidden sm:inline">São Caetano do Sul</span>
+                        <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider hidden sm:inline">{weather?.cityName || 'São Caetano do Sul'}</span>
                     </div>
                 </div>
                 <div className="text-right">
@@ -702,64 +675,49 @@ export default function NewActivity() {
                             )}
                         </div>
 
-                        {/* MÓDULO 2: ALIMENTOS E PERDA URINÁRIA COMPLEMENTARES */}
+                        {/* MÓDULO 2: EXCREÇÃO OCORRIDA (URINA) */}
                         <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-4">
                             <h2 className="text-lg font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
                                 <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
                                 Nutrição & Excreção Ocorrida
                             </h2>
 
-                            {/* ALIMENTOS COM ÁGUA RELEVANTE */}
-                            <div className="space-y-3">
-                                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider">Ingestão de Alimento com Água Relevante (Opcional)</label>
-                                <span className="text-[9px] text-gray-400 block -mt-2">Exemplos: Frutas suculentas, Géis hidratantes ou Géis de Carboidrato.</span>
-                                
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                                    <input
-                                        type="text"
-                                        value={foodName}
-                                        onChange={(e) => setFoodName(e.target.value)}
-                                        placeholder="Ex: Banana, Gel"
-                                        className="sm:col-span-2 bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-red-500"
-                                    />
-                                    <input
-                                        type="number"
-                                        value={foodWater}
-                                        onChange={(e) => setFoodWater(e.target.value)}
-                                        placeholder="Água equivalente (mL)"
-                                        className="bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 font-mono"
-                                    />
-                                </div>
-                                <button
-                                    type="button"
-                                    onClick={addFood}
-                                    className="w-full bg-gray-800 text-white font-bold py-2 rounded-xl text-xs hover:bg-gray-900 transition flex items-center justify-center gap-1"
-                                >
-                                    <FiPlus /> Registrar Alimento (+{foodWater || '0'} mL)
-                                </button>
-
-                                {foodLogs.length > 0 && (
-                                    <div className="space-y-1.5">
-                                        {foodLogs.map(f => (
-                                            <div key={f.id} className="flex justify-between items-center bg-gray-50 border border-gray-200 rounded-lg p-2 text-xs font-mono">
-                                                <span>{f.name} (água equivalente: {f.water} mL)</span>
-                                                <button onClick={() => removeFood(f.id)} className="text-red-500 hover:text-red-750 p-1">
-                                                    <FiTrash className="w-3.5 h-3.5" />
-                                                </button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-
                             <div className="pt-2">
                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Volume Urinário Durante a Sessão (mL)</label>
                                 <span className="text-[10px] text-gray-400 block mb-2">Se o atleta urinou durante o exercício, informe o volume estimado abaixo. Esse volume reduzirá a perda hídrica atribuída apenas ao suor.</span>
+                                
+                                {/* ATALHOS RÁPIDOS PARA URINA */}
+                                <div className="grid grid-cols-4 gap-2 mb-3">
+                                    {[100, 200, 300, 400].map(vol => {
+                                        const isSelected = Number(urineOutputML) === vol;
+                                        return (
+                                            <button
+                                                type="button"
+                                                key={vol}
+                                                onClick={() => {
+                                                    if (isSelected) {
+                                                        setUrineOutputML('');
+                                                    } else {
+                                                        setUrineOutputML(String(vol));
+                                                    }
+                                                }}
+                                                className={`py-2 text-xs font-extrabold rounded-xl transition-all border ${
+                                                    isSelected 
+                                                    ? 'bg-red-50 border-red-500 text-red-650 ring-2 ring-red-500/20' 
+                                                    : 'bg-gray-50 border-gray-200 text-gray-550 hover:bg-gray-100'
+                                                }`}
+                                            >
+                                                {vol} mL
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+
                                 <input
                                     type="number"
                                     value={urineOutputML}
                                     onChange={(e) => setUrineOutputML(e.target.value)}
-                                    placeholder="Ex: 200"
+                                    placeholder="Ou digite o volume personalizado em mL"
                                     className="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 font-mono"
                                 />
                             </div>
