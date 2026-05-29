@@ -55,7 +55,7 @@ export default function EditarAtletas() {
         try {
             const response = await updateAthlete(athlete.id, {
                 name,
-                weight: weight || undefined,
+                weight: weight || "",
                 dehydrationHistory,
             });
 
