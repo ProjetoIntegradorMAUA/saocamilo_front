@@ -6,7 +6,7 @@ import Navbar from "../components/Navbar";
 import Preferencias from "../components/Preferencias";
 import Topbar from "../components/Topbar";
 import { getMe, type MeResponse } from "../services/api";
-import { getUserEmail } from "../services/auth";
+import { getUserEmail, getRole } from "../services/auth";
 import { icons } from "../utils/IconsJson";
 
 const getRoleLabel = (role?: string) => {
@@ -163,9 +163,11 @@ export default function Configuracoes() {
                                     <div onClick={() => setShowConfirmacao(true)} className="cursor-pointer">
                                         <Botao texto="Sair da Conta" />
                                     </div>
-                                    <div onClick={() => navigate("/novo-nutricionista")} className="cursor-pointer">
-                                        <Botao texto="Cadastrar Nutricionista" />
-                                    </div>
+                                    {(profile?.role === "NUTRITIONIST" || getRole() === "NUTRITIONIST") && (
+                                        <div onClick={() => navigate("/novo-nutricionista")} className="cursor-pointer">
+                                            <Botao texto="Cadastrar Nutricionista" />
+                                        </div>
+                                    )}
                                 </div>
                                 {showConfirmacao && (
                                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">

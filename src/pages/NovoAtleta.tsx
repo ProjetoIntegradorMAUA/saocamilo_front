@@ -4,9 +4,16 @@ import Navbar from "../components/Navbar";
 import Topbar from "../components/Topbar";
 import { authRequest, getAllAthletes, type AthleteResponse } from "../services/api";
 import { FiCheckCircle } from "react-icons/fi";
+import { getRole } from "../services/auth";
 
 export default function NovoAtleta() {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (getRole() !== "NUTRITIONIST") {
+            navigate("/homepage");
+        }
+    }, [navigate]);
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
