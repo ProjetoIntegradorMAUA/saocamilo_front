@@ -60,7 +60,7 @@ export default function Homepage() {
     const [aiInsightError, setAiInsightError] = useState("");
     const [isGeneratingInsight, setIsGeneratingInsight] = useState(false);
     
-    // Interactive states
+
     const [hoveredBar, setHoveredBar] = useState<string | null>(null);
     const [hoveredLegend, setHoveredLegend] = useState<string | null>(null);
     const [sortBy, setSortBy] = useState<'rate' | 'count'>('count');
@@ -209,7 +209,7 @@ export default function Homepage() {
                     ) : evaluations.length === 0 ? (
                         <div className="border border-gray-200/80 rounded-2xl bg-white p-6 sm:p-10 flex flex-col items-center justify-center text-center min-h-[340px] shadow-sm">
                             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-red-50 flex items-center justify-center text-red-500 text-3xl sm:text-4xl mb-4 animate-pulse">
-                                📊
+                                
                             </div>
                             <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 font-sans">Dados gráficos indisponíveis</h3>
                             <p className="text-gray-500 text-sm sm:text-base max-w-lg mb-6 leading-relaxed">
@@ -229,7 +229,7 @@ export default function Homepage() {
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 xl:grid-cols-[1.2fr_1fr] gap-3">
-                            {/* GRÁFICO 1: TAXA DE SUDORESE MÉDIA POR MODALIDADE */}
+            
                             <div className="border border-gray-200/80 rounded-2xl bg-white p-4 flex flex-col min-w-0 shadow-sm relative">
                                 <div className="flex items-center justify-between gap-3 mb-4 border-b border-gray-100 pb-3 flex-wrap">
                                     <div className="flex items-center gap-2.5 min-w-0">
@@ -245,7 +245,7 @@ export default function Homepage() {
                                         </p>
                                     </div>
 
-                                    {/* Sort tabs */}
+                                 
                                     <div className="flex gap-1 bg-gray-100 p-0.5 rounded-lg text-[9px] sm:text-[10px] font-semibold shrink-0">
                                         <button 
                                             onClick={() => setSortBy('count')} 
@@ -263,7 +263,7 @@ export default function Homepage() {
                                 </div>
 
                                 <div className="flex flex-1 relative">
-                                    {/* EIXO Y (L/h) */}
+                       
                                     <div className="flex flex-col justify-between h-36 sm:h-44 lg:h-48 mr-2.5 text-gray-400 text-[9px] sm:text-xs pb-5 shrink-0 select-none font-mono">
                                         <span className="font-semibold text-gray-300">L/h</span>
                                         {scaleSteps.map((step, idx) => (
@@ -272,11 +272,11 @@ export default function Homepage() {
                                     </div>
 
                                     <div className="relative flex-1 min-w-0">
-                                        {/* BORDAS DE GRID */}
+                                 
                                         <div className="absolute left-0 top-0 h-36 sm:h-44 lg:h-48 border-l border-gray-100"></div>
                                         <div className="absolute left-0 top-36 sm:top-44 lg:top-48 w-full border-b border-gray-100"></div>
 
-                                        {/* BARRAS DE DADOS */}
+                                 
                                         <div className="flex items-end justify-around h-36 sm:h-44 lg:h-48 pl-2 sm:pl-4 gap-2 sm:gap-3 relative">
                                             {modalityMetrics.slice(0, 5).map((m, idx) => {
                                                 const heightPct = maxScale > 0 ? (m.averageSweatRate / maxScale) * 100 : 0;
@@ -309,7 +309,7 @@ export default function Homepage() {
                                                 );
                                             })}
                                         </div>
-                                        {/* LEGENDAS DO EIXO X */}
+                                
                                         <div className="flex justify-around pl-2 sm:pl-4 mt-2 gap-2 sm:gap-3">
                                             {modalityMetrics.slice(0, 5).map((m) => (
                                                 <p key={m.modality} className="text-[9px] sm:text-xs text-gray-500 text-center flex-1 font-semibold truncate" title={m.modality}>
@@ -320,7 +320,7 @@ export default function Homepage() {
                                     </div>
                                 </div>
                             </div>
-                            {/* GRÁFICO 2: DISTRIBUIÇÃO DAS AVALIAÇÕES POR MODALIDADE */}
+                      
                             <div className="border border-gray-200/80 rounded-2xl bg-white p-4 flex flex-col min-w-0 shadow-sm">
                                 <div className="flex items-center gap-2.5 justify-center mb-5 border-b border-gray-100 pb-3">
                                     <div className="text-red-500 text-lg sm:text-xl shrink-0 flex items-center">
@@ -336,7 +336,7 @@ export default function Homepage() {
                                 </div>
 
                                 <div className="flex items-center justify-center gap-3 sm:gap-6 flex-1 min-w-0">
-                                    {/* DONUT CHART */}
+                              
                                     <div 
                                         style={{ background: conicGradientString }}
                                         className="relative w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full shrink-0 shadow-inner transition-all duration-700 hover:scale-[1.02]"
@@ -373,7 +373,7 @@ export default function Homepage() {
                                             )}
                                         </div>
                                     </div>
-                                    {/* BADGES / LIST OF MODALITIES */}
+                       
                                     <div className="flex flex-col gap-1 sm:gap-1.5 min-w-0 flex-1">
                                         {modalityMetrics.slice(0, 5).map((m, idx) => {
                                             const isHovered = hoveredLegend === m.modality;
@@ -405,7 +405,7 @@ export default function Homepage() {
                     )}
 
                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 min-h-0">
-                        {/* CHART 3: TENDÊNCIA DE SUDORESE (SVG LINE CHART) */}
+                     
                         <div className="border border-gray-200/80 rounded-2xl bg-white p-4 sm:p-5 flex flex-col relative shadow-sm font-sans min-w-0">
                             <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
                                 <div className="flex items-center gap-2.5 min-w-0">
@@ -426,7 +426,7 @@ export default function Homepage() {
                             </div>
                         </div>
 
-                        {/* COLUMN 2: RECENT EVALUATIONS */}
+     
                         <div className="min-h-0 overflow-hidden">
                             {loading ? (
                                 <p className="text-gray-500 p-4">Carregando avaliações...</p>
@@ -517,7 +517,7 @@ export default function Homepage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50 flex flex-col gap-3 shadow-sm">
                                     <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide border-b border-gray-200 pb-2 flex items-center gap-2">
-                                        🏃‍♂️ Informações do Exercício
+                                         Informações do Exercício
                                     </h3>
                                     <div className="grid grid-cols-2 gap-y-3 gap-x-2 text-xs sm:text-sm">
                                         <div>
@@ -542,7 +542,7 @@ export default function Homepage() {
                                 </div>
                                 <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50 flex flex-col gap-3 shadow-sm">
                                     <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide border-b border-gray-200 pb-2 flex items-center gap-2">
-                                        ☀️ Clima & Ambiente
+                                         Clima & Ambiente
                                     </h3>
                                     <div className="grid grid-cols-2 gap-y-3 gap-x-2 text-xs sm:text-sm">
                                         <div>
@@ -571,7 +571,7 @@ export default function Homepage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50 flex flex-col gap-3 shadow-sm">
                                     <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide border-b border-gray-200 pb-2 flex items-center gap-2">
-                                        💧 Registro de Hidratação
+                                         Registro de Hidratação
                                     </h3>
                                     <div className="grid grid-cols-2 gap-y-3 gap-x-2 text-xs sm:text-sm">
                                         <div>
@@ -600,7 +600,7 @@ export default function Homepage() {
                                 </div>
                                 <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50 flex flex-col gap-3 shadow-sm">
                                     <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide border-b border-gray-200 pb-2 flex items-center gap-2">
-                                        🧪 Marcadores Fisiológicos
+                                         Marcadores Fisiológicos
                                     </h3>
                                     <div className="flex flex-col gap-4 text-xs sm:text-sm">
                                         <div className="flex justify-between items-center">
@@ -646,7 +646,7 @@ export default function Homepage() {
                             </div>
                             <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50 flex flex-col gap-4 shadow-sm">
                                 <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide border-b border-gray-200 pb-2 flex items-center gap-2">
-                                    ⚠️ Sintomas & Pós-Exercício
+                                     Sintomas & Pós-Exercício
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
                                     <div>
