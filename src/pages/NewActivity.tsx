@@ -81,6 +81,7 @@ export default function NewActivity() {
     const [clothingChanged, setClothingChanged] = useState(false);
     const [postSymptoms, setPostSymptoms] = useState<string[]>([]);
     const [giTolerance, setGiTolerance] = useState<'EXCELENTE' | 'BOA' | 'MODERADA' | 'RUIM'>('BOA');
+    const [trainingIntensityScale, setTrainingIntensityScale] = useState<number>(5);
     const [observations, setObservations] = useState('');
 
     const [isSaving, setIsSaving] = useState(false);
@@ -243,6 +244,7 @@ export default function NewActivity() {
             soakedClothing,
             clothingChanged,
             giTolerance,
+            trainingIntensityScale: String(trainingIntensityScale),
 
             isOutdoor
         };
@@ -358,25 +360,6 @@ export default function NewActivity() {
                                 />
                             </div>
 
-                            <div>
-                                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Intensidade Percebida</label>
-                                <div className="grid grid-cols-3 gap-2">
-                                    {(['LEVE', 'MODERADA', 'INTENSA'] as const).map(intensity => (
-                                        <button
-                                            type="button"
-                                            key={intensity}
-                                            onClick={() => setPerceivedIntensity(intensity)}
-                                            className={`py-3 text-xs font-extrabold rounded-xl transition-all border ${
-                                                perceivedIntensity === intensity 
-                                                ? 'bg-red-50 border-red-500 text-red-600 ring-2 ring-red-500/20' 
-                                                : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
-                                            }`}
-                                        >
-                                            {intensity}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
                         </div>
 
                         <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-4">
@@ -926,6 +909,52 @@ export default function NewActivity() {
                                             </button>
                                         );
                                     })}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Intensidade do Treino (Escala de Percepção)</label>
+                                <span className="text-[10px] text-gray-400 block mb-3">Avalie subjetivamente o esforço total do treino de 1 (muito leve) a 10 (máximo esforço):</span>
+                                <div className="flex gap-1.5 flex-wrap">
+                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(level => {
+                                        const isSelected = trainingIntensityScale === level;
+                                        const getColor = (l: number) => {
+                                            if (l <= 3) return isSelected ? 'bg-emerald-500 border-emerald-500 text-white ring-2 ring-emerald-500/20' : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-600';
+                                            if (l <= 6) return isSelected ? 'bg-amber-500 border-amber-500 text-white ring-2 ring-amber-500/20' : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-600';
+                                            if (l <= 8) return isSelected ? 'bg-orange-500 border-orange-500 text-white ring-2 ring-orange-500/20' : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-orange-50 hover:border-orange-300 hover:text-orange-600';
+                                            return isSelected ? 'bg-red-500 border-red-500 text-white ring-2 ring-red-500/20' : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-red-50 hover:border-red-300 hover:text-red-600';
+                                        };
+                                        return (
+                                            <button
+                                                type="button"
+                                                key={level}
+                                                onClick={() => setTrainingIntensityScale(level)}
+                                                className={`flex-1 min-w-[calc(10%-0.375rem)] py-3 text-sm font-extrabold rounded-xl transition-all border ${getColor(level)}`}
+                                            >
+                                                {level}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                <div className="mt-3 p-3 rounded-xl border text-xs font-semibold flex items-center justify-between transition-all duration-300 bg-gray-50 border-gray-200">
+                                    <span className="text-gray-500">Classificação:</span>
+                                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider ${
+                                        trainingIntensityScale <= 3 ? 'bg-emerald-100 text-emerald-700' :
+                                        trainingIntensityScale <= 6 ? 'bg-amber-100 text-amber-700' :
+                                        trainingIntensityScale <= 8 ? 'bg-orange-100 text-orange-700' :
+                                        'bg-red-100 text-red-700'
+                                    }`}>
+                                        {trainingIntensityScale <= 3 ? 'LEVE' :
+                                         trainingIntensityScale <= 6 ? 'MODERADO' :
+                                         trainingIntensityScale <= 8 ? 'INTENSO' :
+                                         'MÁXIMO ESFORÇO'}
+                                    </span>
+                                    <span className="text-gray-400 hidden sm:block">
+                                        {trainingIntensityScale <= 3 ? 'Atividade confortável, respiração normal' :
+                                         trainingIntensityScale <= 6 ? 'Esforço notável, consegue conversar' :
+                                         trainingIntensityScale <= 8 ? 'Alta demanda, fala difícil' :
+                                         'Esforço máximo absoluto'}
+                                    </span>
                                 </div>
                             </div>
 
