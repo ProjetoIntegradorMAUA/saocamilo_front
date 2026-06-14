@@ -50,6 +50,13 @@ interface FluidLog {
     timeStr: string;
 }
 
+const STANDARDIZATION_ITEMS = [
+    "Bexiga esvaziada antes da pesagem pré",
+    "Mesma balança e superfície nivelada",
+    "Vestimenta mínima e consistente",
+    "Horário relativo ao treino registrado",
+];
+
 export default function NewActivity() {
     const navigate = useNavigate();
     const [status, setStatus] = useState<'pre' | 'running' | 'post'>('pre');
@@ -60,11 +67,14 @@ export default function NewActivity() {
     const [isOutdoor, setIsOutdoor] = useState(true);
     const [perceivedIntensity, setPerceivedIntensity] = useState<'LEVE' | 'MODERADA' | 'INTENSA'>('MODERADA');
     const [clothingType, setClothingType] = useState('Camiseta e Shorts');
+    const [plannedDurationMin, setPlannedDurationMin] = useState('60');
     
     const [currentWeight, setCurrentWeight] = useState('');
     const [urineColor, setUrineColor] = useState<number>(3);
     const [thirstLevel, setThirstLevel] = useState<number>(2);
     const [preSymptoms, setPreSymptoms] = useState<string[]>([]);
+    const [recentHydrationHistory, setRecentHydrationHistory] = useState('');
+    const [standardizationChecklist, setStandardizationChecklist] = useState<string[]>([]);
 
     const [temperature, setTemperature] = useState('22');
     const [humidity, setHumidity] = useState('60');
@@ -74,6 +84,7 @@ export default function NewActivity() {
 
     const [fluidLogs, setFluidLogs] = useState<FluidLog[]>([]);
     const [customFluid, setCustomFluid] = useState('');
+    const [foodIntakeWater, setFoodIntakeWater] = useState('');
     const [urineOutputML, setUrineOutputML] = useState('');
 
     const [finalWeight, setFinalWeight] = useState('');
@@ -186,6 +197,7 @@ export default function NewActivity() {
     };
 
     const totalFluids = fluidLogs.reduce((sum, log) => sum + log.amount, 0);
+    const allStandardizationChecked = standardizationChecklist.length === STANDARDIZATION_ITEMS.length;
 
     const togglePreSymptom = (symptom: string) => {
         setPreSymptoms(prev => 
@@ -197,6 +209,31 @@ export default function NewActivity() {
         setPostSymptoms(prev => 
             prev.includes(symptom) ? prev.filter(s => s !== symptom) : [...prev, symptom]
         );
+    };
+
+    const toggleStandardizationItem = (item: string) => {
+        setStandardizationChecklist(prev =>
+            prev.includes(item) ? prev.filter(current => current !== item) : [...prev, item]
+        );
+    };
+
+    const handleStartActivity = () => {
+        if (!currentWeight) {
+            alert("Informe a massa corporal pré-exercício antes de iniciar.");
+            return;
+        }
+
+        if (!plannedDurationMin) {
+            alert("Informe a duração prevista da sessão.");
+            return;
+        }
+
+        if (!allStandardizationChecked) {
+            alert("Confirme todos os itens de padronização antes de iniciar a atividade.");
+            return;
+        }
+
+        setStatus('running');
     };
 
     const handleSave = async () => {
@@ -225,10 +262,12 @@ export default function NewActivity() {
             solarExposure: isOutdoor ? solarExposure : undefined,
 
             modality,
+            plannedDurationMin,
             perceivedIntensity,
             clothingType,
+            recentHydrationHistory,
 
-            foodIntakeWater: '0',
+            foodIntakeWater: foodIntakeWater || '0',
             urineOutputDuringML: urineOutputML || '0',
 
             soakedClothing,
@@ -299,7 +338,7 @@ export default function NewActivity() {
                                 Atividade & Classificação de Ambiente
                             </h2>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Esporte (Modalidade)</label>
                                     <select 
@@ -331,6 +370,18 @@ export default function NewActivity() {
                                             Fechado (Indoor)
                                         </button>
                                     </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Duração Prevista (min)</label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={plannedDurationMin}
+                                        onChange={(e) => setPlannedDurationMin(e.target.value)}
+                                        placeholder="Ex: 60"
+                                        className="w-full bg-gray-50 border border-gray-350 rounded-xl px-3 py-3 text-sm text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                                    />
                                 </div>
                             </div>
 
@@ -568,10 +619,55 @@ export default function NewActivity() {
                                     })}
                                 </div>
                             </div>
+
+                            <div>
+                                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Histórico Recente de Hidratação</label>
+                                <textarea
+                                    value={recentHydrationHistory}
+                                    onChange={(e) => setRecentHydrationHistory(e.target.value)}
+                                    placeholder="Ex: baixa ingestão nas últimas 24h, uso de isotônico, treino anterior intenso..."
+                                    rows={3}
+                                    className="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 transition-all resize-none"
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-4">
+                            <h2 className="text-lg font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
+                                <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                                Checklist de Padronização
+                            </h2>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {STANDARDIZATION_ITEMS.map(item => {
+                                    const checked = standardizationChecklist.includes(item);
+                                    return (
+                                        <label
+                                            key={item}
+                                            className={`flex items-start gap-3 rounded-2xl border p-3 cursor-pointer transition-all ${
+                                                checked
+                                                ? 'border-red-200 bg-red-50 text-red-700'
+                                                : 'border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300'
+                                            }`}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={checked}
+                                                onChange={() => toggleStandardizationItem(item)}
+                                                className="mt-0.5 w-4 h-4 accent-red-500 shrink-0"
+                                            />
+                                            <span className="text-xs font-bold leading-snug">{item}</span>
+                                        </label>
+                                    );
+                                })}
+                            </div>
+                            <p className={`text-xs font-semibold ${allStandardizationChecked ? 'text-emerald-600' : 'text-gray-400'}`}>
+                                {allStandardizationChecked ? 'Protocolo de coleta padronizado confirmado.' : 'Confirme todos os itens antes de iniciar a atividade.'}
+                            </p>
                         </div>
 
                         <button 
-                            onClick={() => setStatus('running')}
+                            onClick={handleStartActivity}
                             className="w-full mt-6 bg-red-500 hover:bg-red-600 text-white font-bold text-lg py-4 rounded-2xl shadow-md transition-all flex justify-center items-center gap-2 transform hover:-translate-y-1 cursor-pointer"
                         >
                             <FiPlay className="w-6 h-6 animate-pulse" /> Iniciar Atividade
@@ -683,6 +779,16 @@ export default function NewActivity() {
                             </h2>
 
                             <div className="pt-2">
+                                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Água Relevante em Alimentos (mL)</label>
+                                <span className="text-[10px] text-gray-400 block mb-2">Opcional. Use quando houver fruta, gel, alimento líquido ou preparação com água relevante durante o exercício.</span>
+                                <input
+                                    type="number"
+                                    value={foodIntakeWater}
+                                    onChange={(e) => setFoodIntakeWater(e.target.value)}
+                                    placeholder="Ex: 150"
+                                    className="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 font-mono mb-5"
+                                />
+
                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Volume Urinário Durante a Sessão (mL)</label>
                                 <span className="text-[10px] text-gray-400 block mb-2">Se o atleta urinou durante o exercício, informe o volume estimado abaixo. Esse volume reduzirá a perda hídrica atribuída apenas ao suor.</span>
                                 

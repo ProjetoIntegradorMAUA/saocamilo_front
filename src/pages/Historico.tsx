@@ -5,6 +5,14 @@ import Navbar from "../components/Navbar";
 import { icons } from "../utils/IconsJson";
 import { getAvaliacoes, type AvaliacaoResponse } from "../services/api";
 import { openAvaliacaoPdf } from "../utils/reportPdf";
+import { exportAvaliacoesCsv } from "../utils/exportAvaliacaoCsv";
+import {
+    getAvaliacaoMetrics,
+    getHydrationRiskProfile,
+    getRiskBadgeClasses,
+    mean,
+    median,
+} from "../utils/hydrationMetrics";
 
 export default function Historico() {
     const [evaluations, setEvaluations] = useState<AvaliacaoResponse[]>([]);
@@ -111,6 +119,32 @@ export default function Historico() {
         return true;
     });
 
+    const longitudinalMetrics = filteredEvaluations.map(getAvaliacaoMetrics);
+    const longitudinalRisks = filteredEvaluations.map(getHydrationRiskProfile);
+    const averageSweatRate = mean(longitudinalMetrics.map(metric => metric.sweatRateLh));
+    const medianSweatRate = median(longitudinalMetrics.map(metric => metric.sweatRateLh));
+    const highRiskCount = longitudinalRisks.filter(risk => risk.level === "HIGH").length;
+    const attentionRiskCount = longitudinalRisks.filter(risk => risk.level === "ATTENTION").length;
+    const mostRelevantRisk = longitudinalRisks
+        .slice()
+        .sort((a, b) => b.score - a.score)[0];
+    const modalityGroups = filteredEvaluations.reduce<Record<string, number[]>>((acc, av) => {
+        const modality = av.modality || "Outro";
+        if (!acc[modality]) acc[modality] = [];
+        acc[modality].push(getAvaliacaoMetrics(av).sweatRateLh);
+        return acc;
+    }, {});
+    const modalityAverages = Object.values(modalityGroups).map(values => mean(values));
+    const modalityVariability = modalityAverages.length > 1
+        ? Math.max(...modalityAverages) - Math.min(...modalityAverages)
+        : 0;
+    const outdoorRates = filteredEvaluations
+        .filter(av => av.isOutdoor === true)
+        .map(av => getAvaliacaoMetrics(av).sweatRateLh);
+    const indoorRates = filteredEvaluations
+        .filter(av => av.isOutdoor === false)
+        .map(av => getAvaliacaoMetrics(av).sweatRateLh);
+
     return (
         <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row overflow-hidden">
             <div className="fixed bottom-0 left-0 right-0 z-40 lg:static lg:w-60">
@@ -201,19 +235,72 @@ export default function Historico() {
                         </div>
                     </div>
                     
-                    {/* Compact Search Bar */}
-                    <div className="bg-white border border-gray-200/80 rounded-xl px-4 py-2 flex items-center gap-2.5 w-full max-w-[420px] shadow-sm focus-within:border-red-300 focus-within:ring-1 focus-within:ring-red-200 transition-all">
-                        <span className="text-gray-400 text-lg sm:text-xl shrink-0 flex items-center">
-                            {icons.lupa}
-                        </span>
+                    <div className="bg-white border border-gray-200/80 rounded-2xl p-4 shadow-sm">
+                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 border-b border-gray-100 pb-3 mb-3">
+                            <div>
+                                <h2 className="text-sm sm:text-base font-bold text-gray-800 tracking-tight">
+                                    Perfil Hídrico Longitudinal
+                                </h2>
+                                <p className="text-xs text-gray-400 font-semibold">
+                                    Métricas calculadas com base nas sessões filtradas.
+                                </p>
+                            </div>
+                            <span className={`border px-3 py-1 rounded-full text-xs font-bold w-fit ${mostRelevantRisk ? getRiskBadgeClasses(mostRelevantRisk.level) : 'bg-gray-50 text-gray-500 border-gray-200'}`}>
+                                Maior triagem: {mostRelevantRisk?.label || "Sem dados"}
+                            </span>
+                        </div>
 
-                        <input
-                            type="text"
-                            placeholder="Buscar atleta ou sessão..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-transparent outline-none text-xs sm:text-sm text-gray-700 placeholder:text-gray-400 font-semibold"
-                        />
+                        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+                            <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
+                                <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Média</span>
+                                <strong className="block text-lg text-gray-800 mt-1">{averageSweatRate.toFixed(2).replace(".", ",")} L/h</strong>
+                            </div>
+                            <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
+                                <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Mediana</span>
+                                <strong className="block text-lg text-gray-800 mt-1">{medianSweatRate.toFixed(2).replace(".", ",")} L/h</strong>
+                            </div>
+                            <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
+                                <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Triagem</span>
+                                <strong className="block text-lg text-gray-800 mt-1">{highRiskCount} alto / {attentionRiskCount} atenção</strong>
+                            </div>
+                            <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
+                                <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Variabilidade</span>
+                                <strong className="block text-lg text-gray-800 mt-1">{modalityVariability.toFixed(2).replace(".", ",")} L/h</strong>
+                            </div>
+                            <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
+                                <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Ambiente</span>
+                                <strong className="block text-sm text-gray-800 mt-1">
+                                    Outdoor {mean(outdoorRates).toFixed(2).replace(".", ",")} · Indoor {mean(indoorRates).toFixed(2).replace(".", ",")}
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Compact Search Bar */}
+                    <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+                        <div className="bg-white border border-gray-200/80 rounded-xl px-4 py-2 flex items-center gap-2.5 w-full max-w-[420px] shadow-sm focus-within:border-red-300 focus-within:ring-1 focus-within:ring-red-200 transition-all">
+                            <span className="text-gray-400 text-lg sm:text-xl shrink-0 flex items-center">
+                                {icons.lupa}
+                            </span>
+
+                            <input
+                                type="text"
+                                placeholder="Buscar atleta ou sessão..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full bg-transparent outline-none text-xs sm:text-sm text-gray-700 placeholder:text-gray-400 font-semibold"
+                            />
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={() => exportAvaliacoesCsv(filteredEvaluations)}
+                            disabled={filteredEvaluations.length === 0}
+                            className="border border-red-200 text-red-600 bg-white hover:bg-red-50 disabled:text-gray-300 disabled:border-gray-200 disabled:hover:bg-white rounded-xl px-4 py-2.5 flex items-center justify-center gap-2 transition text-xs sm:text-sm font-bold shadow-sm cursor-pointer disabled:cursor-not-allowed"
+                        >
+                            <span>{icons.download}</span>
+                            Exportar CSV
+                        </button>
                     </div>
  
                     <div className="w-full rounded-2xl border border-gray-200/85 overflow-hidden bg-white shadow-sm">
@@ -268,6 +355,7 @@ export default function Historico() {
                         {!loading && !error && filteredEvaluations.map((av) => {
                             const { time, date } = formatDateTime(av.dataAvaliacao);
                             const massLoss = (av.currentWeight || 0) - (av.finalWeight || 0);
+                            const risk = getHydrationRiskProfile(av);
                             return (
                                 <CardHistorico
                                     key={av.avaliacaoId}
@@ -278,6 +366,8 @@ export default function Historico() {
                                     duracao={formatDuration(av.durationSeconds)}
                                     sudorese={av.taxaSudorese}
                                     massa={parseFloat(massLoss.toFixed(2))}
+                                    riskLabel={risk.label}
+                                    riskClassName={getRiskBadgeClasses(risk.level)}
                                     onExportPdf={() => openAvaliacaoPdf(av)}
                                 />
                             );

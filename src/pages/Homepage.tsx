@@ -8,6 +8,15 @@ import Topbar from "../components/Topbar";
 import { useNavigate } from "react-router-dom";
 import { generateAvaliacaoInsights, getDashboard, getAvaliacoes, type DashboardResponse, type AvaliacaoResponse } from "../services/api";
 import { getRole } from "../services/auth";
+import {
+    getAvaliacaoMetrics,
+    getHydrationRiskProfile,
+    getRiskBadgeClasses,
+    getUrineColorHex,
+    getUrineColorLabel,
+    mean,
+    median,
+} from "../utils/hydrationMetrics";
 
 const formatFullDate = (dateStr: string) => {
     const d = new Date(dateStr);
@@ -28,26 +37,6 @@ const formatDuration = (seconds: number) => {
         return `${hrs}h ${mins.toString().padStart(2, "0")}m`;
     }
     return `${mins} min`;
-};
-
-const getUrineColorHex = (score: number) => {
-    const colors: Record<number, string> = {
-        1: "#F9F9FB",
-        2: "#FFFDE6",
-        3: "#FFF9B3",
-        4: "#FFF066",
-        5: "#E6D000",
-        6: "#B39C00",
-        7: "#806D00",
-        8: "#4D4100"
-    };
-    return colors[score] || "#FFFDE6";
-};
-
-const getUrineColorLabel = (score: number) => {
-    if (score <= 3) return "Bem Hidratado(a)";
-    if (score <= 5) return "Desidratação Leve/Moderada";
-    return "Desidratação Severa";
 };
 
 export default function Homepage() {
@@ -152,6 +141,19 @@ export default function Homepage() {
         0
     ];
 
+    const hydrationMetrics = evaluations.map(getAvaliacaoMetrics);
+    const hydrationRisks = evaluations.map(getHydrationRiskProfile);
+    const averageSweatRate = mean(hydrationMetrics.map(metric => metric.sweatRateLh));
+    const medianSweatRate = median(hydrationMetrics.map(metric => metric.sweatRateLh));
+    const highRiskCount = hydrationRisks.filter(risk => risk.level === "HIGH").length;
+    const attentionRiskCount = hydrationRisks.filter(risk => risk.level === "ATTENTION").length;
+    const mostRelevantRisk = hydrationRisks
+        .slice()
+        .sort((a, b) => b.score - a.score)[0];
+    const averageMassVariation = mean(hydrationMetrics.map(metric => metric.bodyMassLossPct));
+    const selectedRisk = selectedAvaliacao ? getHydrationRiskProfile(selectedAvaliacao) : null;
+    const selectedMetrics = selectedRisk?.metrics;
+
 
     let accumulatedDegrees = 0;
     const gradientParts = modalityMetrics.map((m, idx) => {
@@ -199,6 +201,49 @@ export default function Homepage() {
                             </div>
                         </button>
                     </div>
+
+                    {!loading && evaluations.length > 0 && (
+                        <div className="border border-gray-200/80 rounded-2xl bg-white p-4 shadow-sm">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-gray-100 pb-3 mb-3">
+                                <div>
+                                    <p className="text-sm sm:text-base font-bold text-gray-800 tracking-tight">
+                                        Perfil Hídrico Longitudinal
+                                    </p>
+                                    <p className="text-xs text-gray-400 font-semibold">
+                                        Média, mediana, variação e triagem de risco das avaliações carregadas.
+                                    </p>
+                                </div>
+                                <span className={`border px-3 py-1 rounded-full text-xs font-bold w-fit ${mostRelevantRisk ? getRiskBadgeClasses(mostRelevantRisk.level) : 'bg-gray-50 text-gray-500 border-gray-200'}`}>
+                                    Maior triagem: {mostRelevantRisk?.label || "Sem dados"}
+                                </span>
+                            </div>
+
+                            <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+                                <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
+                                    <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Média</span>
+                                    <strong className="block text-lg text-gray-800 mt-1">{averageSweatRate.toFixed(2).replace(".", ",")} L/h</strong>
+                                </div>
+                                <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
+                                    <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Mediana</span>
+                                    <strong className="block text-lg text-gray-800 mt-1">{medianSweatRate.toFixed(2).replace(".", ",")} L/h</strong>
+                                </div>
+                                <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
+                                    <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Var. massa média</span>
+                                    <strong className="block text-lg text-gray-800 mt-1">{averageMassVariation.toFixed(2).replace(".", ",")}%</strong>
+                                </div>
+                                <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
+                                    <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Triagem</span>
+                                    <strong className="block text-lg text-gray-800 mt-1">{highRiskCount} alto / {attentionRiskCount} atenção</strong>
+                                </div>
+                                <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
+                                    <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Perfil</span>
+                                    <strong className="block text-sm text-gray-800 mt-1">
+                                        {averageSweatRate >= 1.8 ? "Alta perda hídrica" : averageSweatRate >= 1 ? "Perda moderada" : "Perda controlada"}
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
 
                     {loading ? (
@@ -514,6 +559,41 @@ export default function Homepage() {
                                     <p className="text-[11px] text-red-600 mt-2 font-medium">Modalidade praticada: <span className="font-bold">{selectedAvaliacao.modality}</span></p>
                                 </div>
                             </div>
+                            {selectedRisk && selectedMetrics && (
+                                <div className="border border-gray-200 rounded-2xl p-4 bg-gray-50 shadow-sm">
+                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-gray-200 pb-3 mb-3">
+                                        <div>
+                                            <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide">
+                                                Triagem Hídrica Visual
+                                            </h3>
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                Classificação operacional baseada em urina, sede, massa corporal, clima, sintomas e taxa de sudorese.
+                                            </p>
+                                        </div>
+                                        <span className={`border px-3 py-1 rounded-full text-xs font-bold w-fit ${getRiskBadgeClasses(selectedRisk.level)}`}>
+                                            {selectedRisk.label}
+                                        </span>
+                                    </div>
+                                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs sm:text-sm">
+                                        <div className="bg-white border border-gray-200 rounded-xl p-3">
+                                            <span className="text-gray-400 block font-bold uppercase text-[10px]">Perda ajustada</span>
+                                            <strong className="text-gray-800 text-lg">{selectedMetrics.adjustedFluidLossL.toFixed(3).replace(".", ",")} L</strong>
+                                        </div>
+                                        <div className="bg-white border border-gray-200 rounded-xl p-3">
+                                            <span className="text-gray-400 block font-bold uppercase text-[10px]">Balanço hídrico</span>
+                                            <strong className="text-gray-800 text-lg">{selectedMetrics.hydrationBalance} mL</strong>
+                                        </div>
+                                        <div className="bg-white border border-gray-200 rounded-xl p-3">
+                                            <span className="text-gray-400 block font-bold uppercase text-[10px]">Ingestão alvo</span>
+                                            <strong className="text-gray-800 text-lg">{selectedMetrics.recommendedIntakeMLh} mL/h</strong>
+                                        </div>
+                                        <div className="bg-white border border-gray-200 rounded-xl p-3">
+                                            <span className="text-gray-400 block font-bold uppercase text-[10px]">A cada 15 min</span>
+                                            <strong className="text-gray-800 text-lg">{selectedMetrics.recommendationEvery15Min} mL</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50 flex flex-col gap-3 shadow-sm">
                                     <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide border-b border-gray-200 pb-2 flex items-center gap-2">
