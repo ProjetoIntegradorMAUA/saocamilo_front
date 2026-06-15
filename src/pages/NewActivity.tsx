@@ -92,9 +92,14 @@ export default function NewActivity() {
     const [clothingChanged, setClothingChanged] = useState(false);
     const [postSymptoms, setPostSymptoms] = useState<string[]>([]);
     const [giTolerance, setGiTolerance] = useState<'EXCELENTE' | 'BOA' | 'MODERADA' | 'RUIM'>('BOA');
+    const [trainingIntensityScale, setTrainingIntensityScale] = useState<number>(5);
     const [observations, setObservations] = useState('');
 
     const [isSaving, setIsSaving] = useState(false);
+
+    const [isOfflineSession, setIsOfflineSession] = useState<boolean | null>(null);
+    const [offlineHours, setOfflineHours] = useState<number>(0);
+    const [offlineMinutes, setOfflineMinutes] = useState<number>(0);
 
     const handleModalityChange = (selectedSport: string) => {
         setModality(selectedSport);
@@ -164,13 +169,19 @@ export default function NewActivity() {
 
     useEffect(() => {
         let interval: ReturnType<typeof setInterval>;
-        if (status === 'running') {
+        if (status === 'running' && isOfflineSession === false) {
             interval = setInterval(() => {
                 setTime((prev) => prev + 1);
             }, 1000);
         }
         return () => clearInterval(interval);
-    }, [status]);
+    }, [status, isOfflineSession]);
+
+    useEffect(() => {
+        if (isOfflineSession === true) {
+            setTime((offlineHours * 3600) + (offlineMinutes * 60));
+        }
+    }, [offlineHours, offlineMinutes, isOfflineSession]);
 
     const formatTime = (seconds: number) => {
         const h = Math.floor(seconds / 3600);
@@ -180,7 +191,6 @@ export default function NewActivity() {
         return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     };
 
-    // Log de fluidos durante
     const addFluid = (ml: number) => {
         const timestamp = new Date();
         const timeStr = `${timestamp.getHours().toString().padStart(2, '0')}:${timestamp.getMinutes().toString().padStart(2, '0')}:${timestamp.getSeconds().toString().padStart(2, '0')}`;
@@ -273,6 +283,7 @@ export default function NewActivity() {
             soakedClothing,
             clothingChanged,
             giTolerance,
+            trainingIntensityScale: String(trainingIntensityScale),
 
             isOutdoor
         };
@@ -297,6 +308,10 @@ export default function NewActivity() {
                         onClick={() => {
                             if (status === 'running') {
                                 setStatus('pre');
+                                setIsOfflineSession(null);
+                                setOfflineHours(0);
+                                setOfflineMinutes(0);
+                                setTime(0);
                             } else if (status === 'post') {
                                 setStatus('running');
                             } else {
@@ -396,25 +411,6 @@ export default function NewActivity() {
                                 />
                             </div>
 
-                            <div>
-                                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Intensidade Percebida</label>
-                                <div className="grid grid-cols-3 gap-2">
-                                    {(['LEVE', 'MODERADA', 'INTENSA'] as const).map(intensity => (
-                                        <button
-                                            type="button"
-                                            key={intensity}
-                                            onClick={() => setPerceivedIntensity(intensity)}
-                                            className={`py-3 text-xs font-extrabold rounded-xl transition-all border ${
-                                                perceivedIntensity === intensity 
-                                                ? 'bg-red-50 border-red-500 text-red-600 ring-2 ring-red-500/20' 
-                                                : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
-                                            }`}
-                                        >
-                                            {intensity}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
                         </div>
 
                         <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-4">
@@ -677,166 +673,250 @@ export default function NewActivity() {
 
                 {status === 'running' && (
                     <div className="flex-1 flex flex-col animate-fade-in space-y-6">
-                        <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl flex flex-col items-center justify-center relative overflow-hidden">
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-red-500/10 rounded-full animate-ping pointer-events-none"></div>
-                            
-                            <div className="relative z-10 w-44 h-44 bg-red-50/50 border-2 border-red-100 rounded-full flex flex-col items-center justify-center">
-                                <span className="text-[10px] text-red-500 font-extrabold uppercase tracking-widest mb-1">Decorrendo</span>
-                                <div className="text-4xl font-black text-gray-800 font-mono">
-                                    {formatTime(time)}
+                        {isOfflineSession === null ? (
+                            <div className="bg-white border border-gray-200 shadow-sm p-8 rounded-3xl space-y-6 text-center animate-fade-in">
+                                <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                                    <FiPlay className="w-8 h-8 animate-pulse" />
+                                </div>
+                                <h2 className="text-xl font-bold text-gray-800">A sessão já foi concluída?</h2>
+                                <p className="text-gray-500 text-sm max-w-sm mx-auto">
+                                    Escolha se deseja iniciar o cronômetro em tempo real ou registrar os dados de um treino que já terminou (offline).
+                                </p>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsOfflineSession(false)}
+                                        className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 px-6 rounded-2xl shadow-md transition-all flex justify-center items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
+                                    >
+                                        Não, iniciar agora
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsOfflineSession(true)}
+                                        className="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-3.5 px-6 rounded-2xl shadow-md transition-all flex justify-center items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
+                                    >
+                                        Sim, já terminou
+                                    </button>
                                 </div>
                             </div>
-                        </div>
-
-                        <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-5">
-                            <div className="flex justify-between items-center border-b pb-2">
-                                <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                                    <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-                                    Ingestão de Fluidos (mL)
-                                </h2>
-                                <span className="text-xl font-extrabold text-red-500 font-mono bg-red-50 px-3 py-1 rounded-xl">
-                                    {totalFluids} mL
-                                </span>
-                            </div>
-
-                            {/* ATALHOS RÁPIDOS */}
-                            <div className="grid grid-cols-3 gap-3">
-                                <button
-                                    type="button"
-                                    onClick={() => addFluid(200)}
-                                    className="bg-gray-50 border border-gray-200 hover:bg-red-50 hover:border-red-300 rounded-2xl p-4 flex flex-col items-center justify-center gap-1.5 transition-all group"
-                                >
-                                    <span className="text-[10px] font-bold text-gray-400 group-hover:text-red-500">Copo d'Água</span>
-                                    <span className="text-lg font-extrabold text-gray-700 font-mono group-hover:text-red-600">+200 mL</span>
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => addFluid(250)}
-                                    className="bg-gray-50 border border-gray-200 hover:bg-red-50 hover:border-red-300 rounded-2xl p-4 flex flex-col items-center justify-center gap-1.5 transition-all group"
-                                >
-                                    <span className="text-[10px] font-bold text-gray-400 group-hover:text-red-500">Squeeze / Garrafinha</span>
-                                    <span className="text-lg font-extrabold text-gray-700 font-mono group-hover:text-red-600">+250 mL</span>
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => addFluid(500)}
-                                    className="bg-gray-50 border border-gray-200 hover:bg-red-50 hover:border-red-300 rounded-2xl p-4 flex flex-col items-center justify-center gap-1.5 transition-all group"
-                                >
-                                    <span className="text-[10px] font-bold text-gray-400 group-hover:text-red-500">Garrafa Grande</span>
-                                    <span className="text-lg font-extrabold text-gray-700 font-mono group-hover:text-red-600">+500 mL</span>
-                                </button>
-                            </div>
-
-                            {/* INGESTÃO PERSONALIZADA */}
-                            <div className="flex gap-2">
-                                <input
-                                    type="number"
-                                    value={customFluid}
-                                    onChange={(e) => setCustomFluid(e.target.value)}
-                                    placeholder="Volume personalizado em mL"
-                                    className="flex-1 bg-gray-50 border border-gray-300 rounded-xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        if (!customFluid) return;
-                                        addFluid(Number(customFluid));
-                                        setCustomFluid('');
-                                    }}
-                                    className="bg-gray-800 text-white font-bold px-5 rounded-xl text-xs hover:bg-gray-900 transition flex items-center gap-1 shrink-0"
-                                >
-                                    <FiPlus /> Registrar
-                                </button>
-                            </div>
-
-                            {/* HISTÓRICO DE CLIQUES DENTRO DA SESSÃO */}
-                            {fluidLogs.length > 0 && (
-                                <div className="bg-gray-50 p-4 rounded-2xl border border-gray-150 space-y-2">
-                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Histórico de Ingestões Deste Treino</p>
-                                    <div className="max-h-28 overflow-y-auto space-y-1.5 pr-2 font-mono text-xs">
-                                        {fluidLogs.map(log => (
-                                            <div key={log.id} className="flex justify-between items-center bg-white border border-gray-200 rounded-lg p-2">
-                                                <span className="text-gray-700 font-semibold font-sans">+{log.amount} mL <span className="text-[10px] text-gray-400 font-mono">às {log.timeStr}</span></span>
-                                                <button
-                                                    onClick={() => removeFluid(log.id)}
-                                                    className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded p-1 transition"
-                                                    title="Excluir entrada"
-                                                >
-                                                    <FiTrash className="w-3.5 h-3.5" />
-                                                </button>
-                                            </div>
-                                        ))}
+                        ) : (
+                            <>
+                                <div className="flex justify-between items-center bg-white border border-gray-200 shadow-sm p-4 rounded-2xl">
+                                    <span className="text-xs font-bold text-gray-600 uppercase tracking-wider">Tipo de Registro:</span>
+                                    <div className="flex gap-2 bg-gray-100 p-1 rounded-xl border border-gray-250">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setIsOfflineSession(false);
+                                            }}
+                                            className={`px-4 py-1.5 text-xs font-extrabold rounded-lg transition-all ${!isOfflineSession ? 'bg-red-500 text-white shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}
+                                        >
+                                            Tempo Real
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setIsOfflineSession(true);
+                                            }}
+                                            className={`px-4 py-1.5 text-xs font-extrabold rounded-lg transition-all ${isOfflineSession ? 'bg-red-500 text-white shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}
+                                        >
+                                            Já Concluída
+                                        </button>
                                     </div>
                                 </div>
-                            )}
-                        </div>
 
-                        {/* MÓDULO 2: EXCREÇÃO OCORRIDA (URINA) */}
-                        <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-4">
-                            <h2 className="text-lg font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
-                                <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-                                Nutrição & Excreção Ocorrida
-                            </h2>
+                                {!isOfflineSession ? (
+                                    <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl flex flex-col items-center justify-center relative overflow-hidden">
+                                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-red-500/10 rounded-full animate-ping pointer-events-none"></div>
+                                        
+                                        <div className="relative z-10 w-44 h-44 bg-red-50/50 border-2 border-red-100 rounded-full flex flex-col items-center justify-center">
+                                            <span className="text-[10px] text-red-500 font-extrabold uppercase tracking-widest mb-1">Decorrendo</span>
+                                            <div className="text-4xl font-black text-gray-800 font-mono">
+                                                {formatTime(time)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-4">
+                                        <h2 className="text-lg font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
+                                            <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                                            Duração Total da Sessão
+                                        </h2>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Horas</label>
+                                                <select
+                                                    value={offlineHours}
+                                                    onChange={(e) => setOfflineHours(Number(e.target.value))}
+                                                    className="w-full bg-gray-50 border border-gray-350 rounded-xl px-3 py-3 text-sm text-gray-800 font-semibold focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                                                >
+                                                    {Array.from({ length: 13 }, (_, i) => (
+                                                        <option key={i} value={i}>{i} {i === 1 ? 'hora' : 'horas'}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Minutos</label>
+                                                <select
+                                                    value={offlineMinutes}
+                                                    onChange={(e) => setOfflineMinutes(Number(e.target.value))}
+                                                    className="w-full bg-gray-50 border border-gray-350 rounded-xl px-3 py-3 text-sm text-gray-800 font-semibold focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                                                >
+                                                    {Array.from({ length: 60 }, (_, i) => (
+                                                        <option key={i} value={i}>{i} {i === 1 ? 'minuto' : 'minutos'}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="text-center pt-2">
+                                            <span className="text-xs text-gray-500">Tempo selecionado: </span>
+                                            <span className="text-sm font-bold text-red-500 font-mono bg-red-50 px-2.5 py-1 rounded-lg">
+                                                {formatTime(time)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
 
-                            <div className="pt-2">
-                                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Água Relevante em Alimentos (mL)</label>
-                                <span className="text-[10px] text-gray-400 block mb-2">Opcional. Use quando houver fruta, gel, alimento líquido ou preparação com água relevante durante o exercício.</span>
-                                <input
-                                    type="number"
-                                    value={foodIntakeWater}
-                                    onChange={(e) => setFoodIntakeWater(e.target.value)}
-                                    placeholder="Ex: 150"
-                                    className="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 font-mono mb-5"
-                                />
+                                <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-5">
+                                    <div className="flex justify-between items-center border-b pb-2">
+                                        <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                            <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                                            Ingestão de Fluidos (mL)
+                                        </h2>
+                                        <span className="text-xl font-extrabold text-red-500 font-mono bg-red-50 px-3 py-1 rounded-xl">
+                                            {totalFluids} mL
+                                        </span>
+                                    </div>
 
-                                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Volume Urinário Durante a Sessão (mL)</label>
-                                <span className="text-[10px] text-gray-400 block mb-2">Se o atleta urinou durante o exercício, informe o volume estimado abaixo. Esse volume reduzirá a perda hídrica atribuída apenas ao suor.</span>
-                                
-                                {/* ATALHOS RÁPIDOS PARA URINA */}
-                                <div className="grid grid-cols-4 gap-2 mb-3">
-                                    {[100, 200, 300, 400].map(vol => {
-                                        const isSelected = Number(urineOutputML) === vol;
-                                        return (
-                                            <button
-                                                type="button"
-                                                key={vol}
-                                                onClick={() => {
-                                                    if (isSelected) {
-                                                        setUrineOutputML('');
-                                                    } else {
-                                                        setUrineOutputML(String(vol));
-                                                    }
-                                                }}
-                                                className={`py-2 text-xs font-extrabold rounded-xl transition-all border ${
-                                                    isSelected 
-                                                    ? 'bg-red-50 border-red-500 text-red-650 ring-2 ring-red-500/20' 
-                                                    : 'bg-gray-50 border-gray-200 text-gray-550 hover:bg-gray-100'
-                                                }`}
-                                            >
-                                                {vol} mL
-                                            </button>
-                                        );
-                                    })}
+                                    {/* ATALHOS RÁPIDOS */}
+                                    <div className="grid grid-cols-3 gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => addFluid(200)}
+                                            className="bg-gray-50 border border-gray-200 hover:bg-red-50 hover:border-red-300 rounded-2xl p-4 flex flex-col items-center justify-center gap-1.5 transition-all group"
+                                        >
+                                            <span className="text-[10px] font-bold text-gray-400 group-hover:text-red-500">Copo d'Água</span>
+                                            <span className="text-lg font-extrabold text-gray-700 font-mono group-hover:text-red-600">+200 mL</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => addFluid(250)}
+                                            className="bg-gray-50 border border-gray-200 hover:bg-red-50 hover:border-red-300 rounded-2xl p-4 flex flex-col items-center justify-center gap-1.5 transition-all group"
+                                        >
+                                            <span className="text-[10px] font-bold text-gray-400 group-hover:text-red-500">Squeeze / Garrafinha</span>
+                                            <span className="text-lg font-extrabold text-gray-700 font-mono group-hover:text-red-600">+250 mL</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => addFluid(500)}
+                                            className="bg-gray-50 border border-gray-200 hover:bg-red-50 hover:border-red-300 rounded-2xl p-4 flex flex-col items-center justify-center gap-1.5 transition-all group"
+                                        >
+                                            <span className="text-[10px] font-bold text-gray-400 group-hover:text-red-500">Garrafa Grande</span>
+                                            <span className="text-lg font-extrabold text-gray-700 font-mono group-hover:text-red-600">+500 mL</span>
+                                        </button>
+                                    </div>
+
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="number"
+                                            value={customFluid}
+                                            onChange={(e) => setCustomFluid(e.target.value)}
+                                            placeholder="Volume personalizado em mL"
+                                            className="flex-1 bg-gray-50 border border-gray-300 rounded-xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                if (!customFluid) return;
+                                                addFluid(Number(customFluid));
+                                                setCustomFluid('');
+                                            }}
+                                            className="bg-gray-800 text-white font-bold px-5 rounded-xl text-xs hover:bg-gray-900 transition flex items-center gap-1 shrink-0"
+                                        >
+                                            <FiPlus /> Registrar
+                                        </button>
+                                    </div>
+
+                                    {fluidLogs.length > 0 && (
+                                        <div className="bg-gray-50 p-4 rounded-2xl border border-gray-150 space-y-2">
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Histórico de Ingestões Deste Treino</p>
+                                            <div className="max-h-28 overflow-y-auto space-y-1.5 pr-2 font-mono text-xs">
+                                                {fluidLogs.map(log => (
+                                                    <div key={log.id} className="flex justify-between items-center bg-white border border-gray-200 rounded-lg p-2">
+                                                        <span className="text-gray-700 font-semibold font-sans">+{log.amount} mL <span className="text-[10px] text-gray-400 font-mono">às {log.timeStr}</span></span>
+                                                        <button
+                                                            onClick={() => removeFluid(log.id)}
+                                                            className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded p-1 transition"
+                                                            title="Excluir entrada"
+                                                        >
+                                                            <FiTrash className="w-3.5 h-3.5" />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
-                                <input
-                                    type="number"
-                                    value={urineOutputML}
-                                    onChange={(e) => setUrineOutputML(e.target.value)}
-                                    placeholder="Ou digite o volume personalizado em mL"
-                                    className="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 font-mono"
-                                />
-                            </div>
-                        </div>
+                    
+                                <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-3xl space-y-4">
+                                    <h2 className="text-lg font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
+                                        <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                                        Nutrição & Excreção Ocorrida
+                                    </h2>
 
-                        <button 
-                            onClick={() => setStatus('post')}
-                            className="w-full mt-6 bg-white border-2 border-red-500 text-red-500 hover:bg-red-50 hover:shadow-sm font-bold text-lg py-4 rounded-2xl transition-all flex justify-center items-center gap-2 cursor-pointer"
-                        >
-                            <FiSquare className="w-5 h-5 animate-pulse" /> Encerrar Atividade
-                        </button>
+                                    <div className="pt-2">
+                                        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Volume Urinário Durante a Sessão (mL)</label>
+                                        <span className="text-[10px] text-gray-400 block mb-2">Se o atleta urinou durante o exercício, informe o volume estimado abaixo. Esse volume reduzirá a perda hídrica atribuída apenas ao suor.</span>
+                                        
+                           
+                                        <div className="grid grid-cols-4 gap-2 mb-3">
+                                            {[100, 200, 300, 400].map(vol => {
+                                                const isSelected = Number(urineOutputML) === vol;
+                                                return (
+                                                    <button
+                                                        type="button"
+                                                        key={vol}
+                                                        onClick={() => {
+                                                            if (isSelected) {
+                                                                setUrineOutputML('');
+                                                            } else {
+                                                                setUrineOutputML(String(vol));
+                                                            }
+                                                        }}
+                                                        className={`py-2 text-xs font-extrabold rounded-xl transition-all border ${
+                                                            isSelected 
+                                                            ? 'bg-red-50 border-red-500 text-red-655 ring-2 ring-red-500/20' 
+                                                            : 'bg-gray-50 border-gray-200 text-gray-550 hover:bg-gray-100'
+                                                        }`}
+                                                    >
+                                                        {vol} mL
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+
+                                        <input
+                                            type="number"
+                                            value={urineOutputML}
+                                            onChange={(e) => setUrineOutputML(e.target.value)}
+                                            placeholder="Ou digite o volume personalizado em mL"
+                                            className="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 font-mono"
+                                        />
+                                    </div>
+                                </div>
+
+                                <button 
+                                    onClick={() => setStatus('post')}
+                                    className="w-full mt-6 bg-white border-2 border-red-500 text-red-500 hover:bg-red-50 hover:shadow-sm font-bold text-lg py-4 rounded-2xl transition-all flex justify-center items-center gap-2 cursor-pointer"
+                                >
+                                    <FiSquare className="w-5 h-5 animate-pulse" /> Encerrar Atividade
+                                </button>
+                            </>
+                        )}
                     </div>
                 )}
+
 
                 {status === 'post' && (
                     <div className="animate-fade-in space-y-6">
@@ -925,6 +1005,52 @@ export default function NewActivity() {
                                             </button>
                                         );
                                     })}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Intensidade do Treino (Escala de Percepção)</label>
+                                <span className="text-[10px] text-gray-400 block mb-3">Avalie subjetivamente o esforço total do treino de 1 (muito leve) a 10 (máximo esforço):</span>
+                                <div className="flex gap-1.5 flex-wrap">
+                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(level => {
+                                        const isSelected = trainingIntensityScale === level;
+                                        const getColor = (l: number) => {
+                                            if (l <= 3) return isSelected ? 'bg-emerald-500 border-emerald-500 text-white ring-2 ring-emerald-500/20' : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-600';
+                                            if (l <= 6) return isSelected ? 'bg-amber-500 border-amber-500 text-white ring-2 ring-amber-500/20' : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-600';
+                                            if (l <= 8) return isSelected ? 'bg-orange-500 border-orange-500 text-white ring-2 ring-orange-500/20' : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-orange-50 hover:border-orange-300 hover:text-orange-600';
+                                            return isSelected ? 'bg-red-500 border-red-500 text-white ring-2 ring-red-500/20' : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-red-50 hover:border-red-300 hover:text-red-600';
+                                        };
+                                        return (
+                                            <button
+                                                type="button"
+                                                key={level}
+                                                onClick={() => setTrainingIntensityScale(level)}
+                                                className={`flex-1 min-w-[calc(10%-0.375rem)] py-3 text-sm font-extrabold rounded-xl transition-all border ${getColor(level)}`}
+                                            >
+                                                {level}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                <div className="mt-3 p-3 rounded-xl border text-xs font-semibold flex items-center justify-between transition-all duration-300 bg-gray-50 border-gray-200">
+                                    <span className="text-gray-500">Classificação:</span>
+                                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider ${
+                                        trainingIntensityScale <= 3 ? 'bg-emerald-100 text-emerald-700' :
+                                        trainingIntensityScale <= 6 ? 'bg-amber-100 text-amber-700' :
+                                        trainingIntensityScale <= 8 ? 'bg-orange-100 text-orange-700' :
+                                        'bg-red-100 text-red-700'
+                                    }`}>
+                                        {trainingIntensityScale <= 3 ? 'LEVE' :
+                                         trainingIntensityScale <= 6 ? 'MODERADO' :
+                                         trainingIntensityScale <= 8 ? 'INTENSO' :
+                                         'MÁXIMO ESFORÇO'}
+                                    </span>
+                                    <span className="text-gray-400 hidden sm:block">
+                                        {trainingIntensityScale <= 3 ? 'Atividade confortável, respiração normal' :
+                                         trainingIntensityScale <= 6 ? 'Esforço notável, consegue conversar' :
+                                         trainingIntensityScale <= 8 ? 'Alta demanda, fala difícil' :
+                                         'Esforço máximo absoluto'}
+                                    </span>
                                 </div>
                             </div>
 
