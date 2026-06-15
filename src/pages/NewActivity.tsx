@@ -65,7 +65,7 @@ export default function NewActivity() {
 
     const [modality, setModality] = useState('Corrida de Rua / Corrida');
     const [isOutdoor, setIsOutdoor] = useState(true);
-    const [perceivedIntensity, setPerceivedIntensity] = useState<'LEVE' | 'MODERADA' | 'INTENSA'>('MODERADA');
+    const [perceivedIntensity] = useState<'LEVE' | 'MODERADA' | 'INTENSA'>('MODERADA');
     const [clothingType, setClothingType] = useState('Camiseta e Shorts');
     const [customPreSymptom, setCustomPreSymptom] = useState('');
     const [customPostSymptom, setCustomPostSymptom] = useState('');
@@ -86,7 +86,7 @@ export default function NewActivity() {
 
     const [fluidLogs, setFluidLogs] = useState<FluidLog[]>([]);
     const [customFluid, setCustomFluid] = useState('');
-    const [foodIntakeWater, setFoodIntakeWater] = useState('');
+    const [foodIntakeWater] = useState('');
     const [urineLogs, setUrineLogs] = useState<FluidLog[]>([]);
     const [customUrine, setCustomUrine] = useState('');
 
