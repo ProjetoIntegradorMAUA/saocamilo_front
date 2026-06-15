@@ -20,6 +20,7 @@ export default function Historico() {
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [timeFilter, setTimeFilter] = useState("Todos");
+    const [categoryFilter, setCategoryFilter] = useState("Todos");
 
     useEffect(() => {
         async function loadData() {
@@ -95,25 +96,40 @@ export default function Historico() {
         );
 
         if (!matchesSearch) return false;
-        if (timeFilter === "Todos" || !timeFilter) return true;
 
-        const dateObj = new Date(av.dataAvaliacao);
-        if (isNaN(dateObj.getTime())) return false;
+        // Time filter
+        if (timeFilter && timeFilter !== "Todos") {
+            const dateObj = new Date(av.dataAvaliacao);
+            if (isNaN(dateObj.getTime())) return false;
 
-        const now = new Date();
-        const diffTime = Math.abs(now.getTime() - dateObj.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const now = new Date();
+            const diffTime = Math.abs(now.getTime() - dateObj.getTime());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        if (timeFilter === "Hoje") {
-            return (
-                dateObj.getDate() === now.getDate() &&
-                dateObj.getMonth() === now.getMonth() &&
-                dateObj.getFullYear() === now.getFullYear()
-            );
-        } else if (timeFilter === "Últimos 7 dias") {
-            return diffDays <= 7;
-        } else if (timeFilter === "Últimos 30 dias") {
-            return diffDays <= 30;
+            if (timeFilter === "Hoje") {
+                const match = (
+                    dateObj.getDate() === now.getDate() &&
+                    dateObj.getMonth() === now.getMonth() &&
+                    dateObj.getFullYear() === now.getFullYear()
+                );
+                if (!match) return false;
+            } else if (timeFilter === "Últimos 7 dias") {
+                if (diffDays > 7) return false;
+            } else if (timeFilter === "Últimos 30 dias") {
+                if (diffDays > 30) return false;
+            }
+        }
+
+        // Category filter
+        if (categoryFilter && categoryFilter !== "Todos") {
+            const risk = getHydrationRiskProfile(av);
+            const massVariation = (av.currentWeight || 0) - (av.finalWeight || 0);
+
+            if (categoryFilter === "Alto risco" && risk.level !== "HIGH") return false;
+            if (categoryFilter === "Atenção" && risk.level !== "ATTENTION") return false;
+            if (categoryFilter === "Baixo risco" && risk.level !== "LOW") return false;
+            if (categoryFilter === "Variação positiva" && massVariation >= 0) return false;
+            if (categoryFilter === "Variação negativa" && massVariation <= 0) return false;
         }
 
         return true;
@@ -163,13 +179,22 @@ export default function Historico() {
                                 Acompanhe o desempenho dos atletas em cada sessão realizada.
                             </p>
                         </div>
-                        <ComboBox
-                            texto="Filtro"
-                            placeholder="Todos"
-                            options={["Todos", "Hoje", "Últimos 7 dias", "Últimos 30 dias"]}
-                            value={timeFilter}
-                            onChange={setTimeFilter}
-                        />
+                        <div className="flex items-center gap-3 flex-wrap">
+                            <ComboBox
+                                texto="Período"
+                                placeholder="Todos"
+                                options={["Todos", "Hoje", "Últimos 7 dias", "Últimos 30 dias"]}
+                                value={timeFilter}
+                                onChange={setTimeFilter}
+                            />
+                            <ComboBox
+                                texto="Categoria"
+                                placeholder="Todos"
+                                options={["Todos", "Alto risco", "Atenção", "Baixo risco", "Variação positiva", "Variação negativa"]}
+                                value={categoryFilter}
+                                onChange={setCategoryFilter}
+                            />
+                        </div>
                     </div>
 
                     {/* Compact Stat Cards */}
@@ -346,7 +371,7 @@ export default function Historico() {
 
                         {!loading && !error && filteredEvaluations.length === 0 && (
                             <div className="text-center py-16 text-gray-500 font-semibold px-4">
-                                {searchTerm || timeFilter !== "Todos" 
+                                {searchTerm || timeFilter !== "Todos" || categoryFilter !== "Todos"
                                     ? "Nenhuma sessão corresponde aos filtros aplicados." 
                                     : "Nenhuma avaliação cadastrada."}
                             </div>
