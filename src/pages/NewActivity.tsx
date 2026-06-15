@@ -67,7 +67,9 @@ export default function NewActivity() {
     const [isOutdoor, setIsOutdoor] = useState(true);
     const [perceivedIntensity, setPerceivedIntensity] = useState<'LEVE' | 'MODERADA' | 'INTENSA'>('MODERADA');
     const [clothingType, setClothingType] = useState('Camiseta e Shorts');
-    const [plannedDurationMin, setPlannedDurationMin] = useState('60');
+    const [customPreSymptom, setCustomPreSymptom] = useState('');
+    const [customPostSymptom, setCustomPostSymptom] = useState('');
+    const [giProblems, setGiProblems] = useState<string[]>([]);
     
     const [currentWeight, setCurrentWeight] = useState('');
     const [urineColor, setUrineColor] = useState<number>(3);
@@ -85,7 +87,8 @@ export default function NewActivity() {
     const [fluidLogs, setFluidLogs] = useState<FluidLog[]>([]);
     const [customFluid, setCustomFluid] = useState('');
     const [foodIntakeWater, setFoodIntakeWater] = useState('');
-    const [urineOutputML, setUrineOutputML] = useState('');
+    const [urineLogs, setUrineLogs] = useState<FluidLog[]>([]);
+    const [customUrine, setCustomUrine] = useState('');
 
     const [finalWeight, setFinalWeight] = useState('');
     const [soakedClothing, setSoakedClothing] = useState(false);
@@ -207,6 +210,24 @@ export default function NewActivity() {
     };
 
     const totalFluids = fluidLogs.reduce((sum, log) => sum + log.amount, 0);
+
+    const addUrine = (ml: number) => {
+        const timestamp = new Date();
+        const timeStr = `${timestamp.getHours().toString().padStart(2, '0')}:${timestamp.getMinutes().toString().padStart(2, '0')}:${timestamp.getSeconds().toString().padStart(2, '0')}`;
+        const newLog: FluidLog = {
+            id: Math.random().toString(36).substr(2, 9),
+            amount: ml,
+            timeStr
+        };
+        setUrineLogs(prev => [newLog, ...prev]);
+    };
+
+    const removeUrine = (id: string) => {
+        setUrineLogs(prev => prev.filter(log => log.id !== id));
+    };
+
+    const totalUrine = urineLogs.reduce((sum, log) => sum + log.amount, 0);
+    
     const allStandardizationChecked = standardizationChecklist.length === STANDARDIZATION_ITEMS.length;
 
     const togglePreSymptom = (symptom: string) => {
@@ -227,14 +248,31 @@ export default function NewActivity() {
         );
     };
 
+    const addCustomPreSymptom = () => {
+        const trimmed = customPreSymptom.trim();
+        if (trimmed && !preSymptoms.includes(trimmed)) {
+            setPreSymptoms(prev => [...prev, trimmed]);
+        }
+        setCustomPreSymptom('');
+    };
+
+    const addCustomPostSymptom = () => {
+        const trimmed = customPostSymptom.trim();
+        if (trimmed && !postSymptoms.includes(trimmed)) {
+            setPostSymptoms(prev => [...prev, trimmed]);
+        }
+        setCustomPostSymptom('');
+    };
+
+    const toggleGiProblem = (problem: string) => {
+        setGiProblems(prev =>
+            prev.includes(problem) ? prev.filter(p => p !== problem) : [...prev, problem]
+        );
+    };
+
     const handleStartActivity = () => {
         if (!currentWeight) {
             alert("Informe a massa corporal pré-exercício antes de iniciar.");
-            return;
-        }
-
-        if (!plannedDurationMin) {
-            alert("Informe a duração prevista da sessão.");
             return;
         }
 
@@ -272,17 +310,17 @@ export default function NewActivity() {
             solarExposure: isOutdoor ? solarExposure : undefined,
 
             modality,
-            plannedDurationMin,
             perceivedIntensity,
             clothingType,
             recentHydrationHistory,
 
             foodIntakeWater: foodIntakeWater || '0',
-            urineOutputDuringML: urineOutputML || '0',
+            urineOutputDuringML: String(totalUrine),
 
             soakedClothing,
             clothingChanged,
             giTolerance,
+            giProblems,
             trainingIntensityScale: String(trainingIntensityScale),
 
             isOutdoor
@@ -353,7 +391,7 @@ export default function NewActivity() {
                                 Atividade & Classificação de Ambiente
                             </h2>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Esporte (Modalidade)</label>
                                     <select 
@@ -385,18 +423,6 @@ export default function NewActivity() {
                                             Fechado (Indoor)
                                         </button>
                                     </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Duração Prevista (min)</label>
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        value={plannedDurationMin}
-                                        onChange={(e) => setPlannedDurationMin(e.target.value)}
-                                        placeholder="Ex: 60"
-                                        className="w-full bg-gray-50 border border-gray-350 rounded-xl px-3 py-3 text-sm text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
-                                    />
                                 </div>
                             </div>
 
@@ -613,6 +639,34 @@ export default function NewActivity() {
                                             </button>
                                         );
                                     })}
+                                    {preSymptoms.filter(s => !['Dor de Cabeça', 'Tontura', 'Cansaço / Fadiga', 'Náusea', 'Cãibra muscular', 'Boca Seca'].includes(s)).map(symptom => (
+                                        <button
+                                            type="button"
+                                            key={symptom}
+                                            onClick={() => togglePreSymptom(symptom)}
+                                            className="px-3 py-2 text-xs font-medium rounded-full transition-all border bg-red-500 border-transparent text-white shadow-sm"
+                                        >
+                                            {symptom} ✕
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="flex gap-2 mt-3">
+                                    <input
+                                        type="text"
+                                        value={customPreSymptom}
+                                        onChange={(e) => setCustomPreSymptom(e.target.value)}
+                                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomPreSymptom(); } }}
+                                        placeholder="Digitar outro sintoma..."
+                                        className="flex-1 bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={addCustomPreSymptom}
+                                        disabled={!customPreSymptom.trim()}
+                                        className="bg-gray-800 text-white font-bold px-4 py-2 rounded-xl text-xs hover:bg-gray-900 transition flex items-center gap-1 shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+                                    >
+                                        <FiPlus /> Adicionar
+                                    </button>
                                 </div>
                             </div>
 
@@ -867,42 +921,65 @@ export default function NewActivity() {
 
                                     <div className="pt-2">
                                         <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Volume Urinário Durante a Sessão (mL)</label>
-                                        <span className="text-[10px] text-gray-400 block mb-2">Se o atleta urinou durante o exercício, informe o volume estimado abaixo. Esse volume reduzirá a perda hídrica atribuída apenas ao suor.</span>
+                                        <span className="text-[10px] text-gray-400 block mb-2">Se o atleta urinou durante o exercício, registre cada ida ao banheiro abaixo. O volume total será somado automaticamente.</span>
                                         
-                           
-                                        <div className="grid grid-cols-4 gap-2 mb-3">
-                                            {[100, 200, 300, 400].map(vol => {
-                                                const isSelected = Number(urineOutputML) === vol;
-                                                return (
-                                                    <button
-                                                        type="button"
-                                                        key={vol}
-                                                        onClick={() => {
-                                                            if (isSelected) {
-                                                                setUrineOutputML('');
-                                                            } else {
-                                                                setUrineOutputML(String(vol));
-                                                            }
-                                                        }}
-                                                        className={`py-2 text-xs font-extrabold rounded-xl transition-all border ${
-                                                            isSelected 
-                                                            ? 'bg-red-50 border-red-500 text-red-655 ring-2 ring-red-500/20' 
-                                                            : 'bg-gray-50 border-gray-200 text-gray-550 hover:bg-gray-100'
-                                                        }`}
-                                                    >
-                                                        {vol} mL
-                                                    </button>
-                                                );
-                                            })}
+                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+                                            {[100, 200, 300, 400].map(vol => (
+                                                <button
+                                                    type="button"
+                                                    key={vol}
+                                                    onClick={() => addUrine(vol)}
+                                                    className="bg-gray-50 border border-gray-200 hover:bg-red-50 hover:border-red-300 rounded-2xl p-3 flex flex-col items-center justify-center gap-1 transition-all group"
+                                                >
+                                                    <span className="text-[10px] font-bold text-gray-400 group-hover:text-red-500">Estimado</span>
+                                                    <span className="text-base font-extrabold text-gray-700 font-mono group-hover:text-red-600">+{vol} mL</span>
+                                                </button>
+                                            ))}
                                         </div>
 
-                                        <input
-                                            type="number"
-                                            value={urineOutputML}
-                                            onChange={(e) => setUrineOutputML(e.target.value)}
-                                            placeholder="Ou digite o volume personalizado em mL"
-                                            className="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 font-mono"
-                                        />
+                                        <div className="flex gap-2 mb-4">
+                                            <input
+                                                type="number"
+                                                value={customUrine}
+                                                onChange={(e) => setCustomUrine(e.target.value)}
+                                                placeholder="Volume personalizado em mL"
+                                                className="flex-1 bg-gray-50 border border-gray-300 rounded-xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    if (!customUrine) return;
+                                                    addUrine(Number(customUrine));
+                                                    setCustomUrine('');
+                                                }}
+                                                className="bg-gray-800 text-white font-bold px-5 rounded-xl text-xs hover:bg-gray-900 transition flex items-center gap-1 shrink-0"
+                                            >
+                                                <FiPlus /> Registrar
+                                            </button>
+                                        </div>
+
+                                        {urineLogs.length > 0 && (
+                                            <div className="bg-gray-50 p-4 rounded-2xl border border-gray-150 space-y-2">
+                                                <div className="flex justify-between items-center">
+                                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Histórico de Excreções</p>
+                                                    <p className="text-xs font-bold text-gray-500">Total: <span className="text-red-600 font-mono">{totalUrine} mL</span></p>
+                                                </div>
+                                                <div className="max-h-28 overflow-y-auto space-y-1.5 pr-2 font-mono text-xs">
+                                                    {urineLogs.map(log => (
+                                                        <div key={log.id} className="flex justify-between items-center bg-white border border-gray-200 rounded-lg p-2">
+                                                            <span className="text-gray-700 font-semibold font-sans">+{log.amount} mL <span className="text-[10px] text-gray-400 font-mono">às {log.timeStr}</span></span>
+                                                            <button
+                                                                onClick={() => removeUrine(log.id)}
+                                                                className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded p-1 transition"
+                                                                title="Excluir entrada"
+                                                            >
+                                                                <FiTrash className="w-3.5 h-3.5" />
+                                                            </button>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
@@ -1005,7 +1082,62 @@ export default function NewActivity() {
                                             </button>
                                         );
                                     })}
+                                    {postSymptoms.filter(s => !['Náusea', 'Cãibra Gastrointestinal', 'Fadiga Extrema', 'Cefaleia', 'Enjoos / Vômito', 'Tontura', 'Desconforto Gástrico'].includes(s)).map(symptom => (
+                                        <button
+                                            type="button"
+                                            key={symptom}
+                                            onClick={() => togglePostSymptom(symptom)}
+                                            className="px-3 py-2 text-xs font-medium rounded-full transition-all border bg-red-500 border-transparent text-white shadow-sm"
+                                        >
+                                            {symptom} ✕
+                                        </button>
+                                    ))}
                                 </div>
+                                <div className="flex gap-2 mt-3">
+                                    <input
+                                        type="text"
+                                        value={customPostSymptom}
+                                        onChange={(e) => setCustomPostSymptom(e.target.value)}
+                                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomPostSymptom(); } }}
+                                        placeholder="Digitar outro sintoma..."
+                                        className="flex-1 bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={addCustomPostSymptom}
+                                        disabled={!customPostSymptom.trim()}
+                                        className="bg-gray-800 text-white font-bold px-4 py-2 rounded-xl text-xs hover:bg-gray-900 transition flex items-center gap-1 shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+                                    >
+                                        <FiPlus /> Adicionar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Problemas Gastrointestinais Específicos</label>
+                                <span className="text-[10px] text-gray-400 block -mt-2 mb-3">Selecione quaisquer problemas GI ocorridos durante ou logo após a sessão:</span>
+                                <div className="flex flex-wrap gap-2">
+                                    {['Diarreia', 'Refluxo / Azia', 'Inchaço abdominal', 'Flatulência excessiva', 'Cólica intestinal', 'Urgência fecal', 'Sangue nas fezes'].map(problem => {
+                                        const active = giProblems.includes(problem);
+                                        return (
+                                            <button
+                                                type="button"
+                                                key={problem}
+                                                onClick={() => toggleGiProblem(problem)}
+                                                className={`px-3 py-2 text-xs font-medium rounded-full transition-all border ${
+                                                    active 
+                                                    ? 'bg-amber-500 border-transparent text-white shadow-sm' 
+                                                    : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                                                }`}
+                                            >
+                                                {problem}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                {giProblems.length > 0 && (
+                                    <p className="text-xs font-bold text-amber-600 mt-2">⚠ {giProblems.length} problema(s) GI registrado(s)</p>
+                                )}
                             </div>
 
                             <div>
