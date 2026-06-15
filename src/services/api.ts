@@ -169,6 +169,11 @@ export interface AvaliacaoResponse {
   atletaId: string;
   atletaNome: string;
   taxaSudorese: number;
+  adjustedFluidLossL?: number;
+  bodyMassLossPct?: number;
+  hydrationBalance?: number;
+  recommendedIntakeMLh?: number;
+  alerts?: string[];
   dataAvaliacao: string;
   currentWeight: number;
   finalWeight: number;

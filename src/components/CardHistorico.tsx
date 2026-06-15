@@ -8,6 +8,8 @@ interface ICardHistorico {
     duracao: string;
     sudorese: number;
     massa: number;
+    riskLabel?: string;
+    riskClassName?: string;
     onExportPdf?: () => void;
 }
 
@@ -19,6 +21,8 @@ export default function CardHistorico({
     duracao,
     sudorese,
     massa,
+    riskLabel = "Baixo risco",
+    riskClassName = "bg-emerald-50 text-emerald-700 border-emerald-100/60",
     onExportPdf,
 }: ICardHistorico) {
     // Determinar as iniciais (ex: João Silva -> JS)
@@ -133,9 +137,9 @@ export default function CardHistorico({
                         Status
                     </p>
 
-                    <div className="bg-emerald-50 text-emerald-700 border border-emerald-100/60 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold w-fit flex items-center gap-1 shadow-sm">
-                        <span className="text-[9px] sm:text-[10px] text-emerald-500">{icons.check}</span>
-                        Concluída
+                    <div className={`${riskClassName} border px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold w-fit flex items-center gap-1 shadow-sm`}>
+                        <span className="text-[9px] sm:text-[10px]">{icons.check}</span>
+                        {riskLabel}
                     </div>
                 </div>
 
