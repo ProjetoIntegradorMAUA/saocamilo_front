@@ -137,8 +137,11 @@ export default function Historico() {
 
     const longitudinalMetrics = filteredEvaluations.map(getAvaliacaoMetrics);
     const longitudinalRisks = filteredEvaluations.map(getHydrationRiskProfile);
-    const averageSweatRate = mean(longitudinalMetrics.map(metric => metric.sweatRateLh));
-    const medianSweatRate = median(longitudinalMetrics.map(metric => metric.sweatRateLh));
+    // Filtro de valores fisiologicamente impossíveis (> 10 L/h) para evitar distorção das estatísticas gerais
+    const validSweatRates = longitudinalMetrics.map(metric => metric.sweatRateLh).filter(rate => rate >= 0 && rate < 10);
+
+    const averageSweatRate = mean(validSweatRates.length > 0 ? validSweatRates : longitudinalMetrics.map(metric => metric.sweatRateLh));
+    const medianSweatRate = median(validSweatRates.length > 0 ? validSweatRates : longitudinalMetrics.map(metric => metric.sweatRateLh));
     const highRiskCount = longitudinalRisks.filter(risk => risk.level === "HIGH").length;
     const attentionRiskCount = longitudinalRisks.filter(risk => risk.level === "ATTENTION").length;
     const mostRelevantRisk = longitudinalRisks
@@ -146,8 +149,11 @@ export default function Historico() {
         .sort((a, b) => b.score - a.score)[0];
     const modalityGroups = filteredEvaluations.reduce<Record<string, number[]>>((acc, av) => {
         const modality = av.modality || "Outro";
+        const rate = getAvaliacaoMetrics(av).sweatRateLh;
+        // Ignora taxas fisicamente impossíveis (> 10 L/h)
+        if (rate >= 10) return acc;
         if (!acc[modality]) acc[modality] = [];
-        acc[modality].push(getAvaliacaoMetrics(av).sweatRateLh);
+        acc[modality].push(rate);
         return acc;
     }, {});
     const modalityAverages = Object.values(modalityGroups).map(values => mean(values));
@@ -156,10 +162,12 @@ export default function Historico() {
         : 0;
     const outdoorRates = filteredEvaluations
         .filter(av => av.isOutdoor === true)
-        .map(av => getAvaliacaoMetrics(av).sweatRateLh);
+        .map(av => getAvaliacaoMetrics(av).sweatRateLh)
+        .filter(rate => rate < 10);
     const indoorRates = filteredEvaluations
         .filter(av => av.isOutdoor === false)
-        .map(av => getAvaliacaoMetrics(av).sweatRateLh);
+        .map(av => getAvaliacaoMetrics(av).sweatRateLh)
+        .filter(rate => rate < 10);
 
     return (
         <div className="min-h-screen bg-[#f4f4f4] flex flex-col lg:flex-row overflow-hidden">
@@ -260,43 +268,82 @@ export default function Historico() {
                         </div>
                     </div>
                     
-                    <div className="bg-white border border-gray-200/80 rounded-2xl p-4 shadow-sm">
-                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 border-b border-gray-100 pb-3 mb-3">
-                            <div>
-                                <h2 className="text-sm sm:text-base font-bold text-gray-800 tracking-tight">
-                                    Perfil Hídrico Longitudinal
-                                </h2>
-                                <p className="text-xs text-gray-400 font-semibold">
-                                    Métricas calculadas com base nas sessões filtradas.
-                                </p>
+                    <div className="rounded-2xl bg-white p-5 shadow-sm hover:shadow-md transition-all duration-300">
+                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 border-b border-gray-100 pb-4 mb-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-1.5 h-6 bg-blue-500 rounded-full shrink-0"></div>
+                                <div>
+                                    <h2 className="text-base font-extrabold text-gray-800 tracking-tight font-sans">
+                                        Perfil Hídrico Longitudinal
+                                    </h2>
+                                    <p className="text-xs text-gray-500 font-medium">
+                                        Métricas calculadas com base nas sessões filtradas.
+                                    </p>
+                                </div>
                             </div>
-                            <span className={`border px-3 py-1 rounded-full text-xs font-bold w-fit ${mostRelevantRisk ? getRiskBadgeClasses(mostRelevantRisk.level) : 'bg-gray-50 text-gray-500 border-gray-200'}`}>
+                            <span className={`border px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-sm transition-all duration-300 ${mostRelevantRisk ? getRiskBadgeClasses(mostRelevantRisk.level) : 'bg-gray-50 text-gray-500 border-gray-200'}`}>
                                 Maior triagem: {mostRelevantRisk?.label || "Sem dados"}
                             </span>
                         </div>
 
-                        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-                            <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
-                                <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Média</span>
-                                <strong className="block text-lg text-gray-800 mt-1">{averageSweatRate.toFixed(2).replace(".", ",")} L/h</strong>
-                            </div>
-                            <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
-                                <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Mediana</span>
-                                <strong className="block text-lg text-gray-800 mt-1">{medianSweatRate.toFixed(2).replace(".", ",")} L/h</strong>
-                            </div>
-                            <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
-                                <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Triagem</span>
-                                <strong className="block text-lg text-gray-800 mt-1">{highRiskCount} alto / {attentionRiskCount} atenção</strong>
-                            </div>
-                            <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
-                                <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Variabilidade</span>
-                                <strong className="block text-lg text-gray-800 mt-1">{modalityVariability.toFixed(2).replace(".", ",")} L/h</strong>
-                            </div>
-                            <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
-                                <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Ambiente</span>
-                                <strong className="block text-sm text-gray-800 mt-1">
-                                    Outdoor {mean(outdoorRates).toFixed(2).replace(".", ",")} · Indoor {mean(indoorRates).toFixed(2).replace(".", ",")}
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                            {/* CARD 1: MÉDIA */}
+                            <div className="group rounded-2xl bg-gradient-to-br from-blue-50/60 to-sky-50/30 border border-blue-100/80 p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm hover:border-blue-200">
+                                <div className="flex justify-between items-start">
+                                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-blue-500">Média</span>
+                                </div>
+                                <strong className="block text-2xl font-black text-blue-900 mt-2 tracking-tight">
+                                    {averageSweatRate.toFixed(2).replace(".", ",")} <span className="text-xs font-bold text-blue-500">L/h</span>
                                 </strong>
+                                <span className="text-[9px] font-semibold text-blue-400/80 block mt-1">Taxa média de suor</span>
+                            </div>
+
+                            {/* CARD 2: MEDIANA */}
+                            <div className="group rounded-2xl bg-gradient-to-br from-indigo-50/60 to-purple-50/30 border border-indigo-100/80 p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm hover:border-indigo-200">
+                                <div className="flex justify-between items-start">
+                                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-indigo-500">Mediana</span>
+                                </div>
+                                <strong className="block text-2xl font-black text-indigo-900 mt-2 tracking-tight">
+                                    {medianSweatRate.toFixed(2).replace(".", ",")} <span className="text-xs font-bold text-indigo-500">L/h</span>
+                                </strong>
+                                <span className="text-[9px] font-semibold text-indigo-400/80 block mt-1">Ponto central das coletas</span>
+                            </div>
+
+                            {/* CARD 3: TRIAGEM */}
+                            <div className="group rounded-2xl bg-gradient-to-br from-amber-50/60 to-orange-50/30 border border-amber-100/80 p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm hover:border-amber-200 col-span-1">
+                                <div className="flex justify-between items-start">
+                                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-amber-600">Triagens de Risco</span>
+                                </div>
+                                <div className="mt-2 flex flex-col justify-end">
+                                    <span className="text-[11px] font-extrabold text-amber-800 flex items-center gap-1.5">
+                                        <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span> {highRiskCount} alto risco
+                                    </span>
+                                    <span className="text-[11px] font-extrabold text-amber-700 flex items-center gap-1.5 mt-1">
+                                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span> {attentionRiskCount} atenção
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* CARD 4: VARIABILIDADE */}
+                            <div className="group rounded-2xl bg-gradient-to-br from-purple-50/60 to-pink-50/30 border border-purple-100/80 p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm hover:border-purple-200">
+                                <div className="flex justify-between items-start">
+                                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-purple-600">Variabilidade</span>
+                                </div>
+                                <strong className="block text-2xl font-black text-purple-900 mt-2 tracking-tight">
+                                    {modalityVariability.toFixed(2).replace(".", ",")} <span className="text-xs font-bold text-purple-500">L/h</span>
+                                </strong>
+                                <span className="text-[9px] font-semibold text-purple-500/75 block mt-1">Diferença entre esportes</span>
+                            </div>
+
+                            {/* CARD 5: AMBIENTE */}
+                            <div className="group rounded-2xl bg-gradient-to-br from-rose-50/60 to-red-50/30 border border-rose-100/80 p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm hover:border-rose-200 col-span-2 sm:col-span-1">
+                                <div className="flex justify-between items-start">
+                                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-rose-600">Ambiente</span>
+                                </div>
+                                <div className="mt-2 flex flex-col justify-end text-rose-900 font-extrabold text-[11px]">
+                                    <span className="truncate">Outdoor: {mean(outdoorRates).toFixed(2).replace(".", ",")} L/h</span>
+                                    <span className="truncate mt-1">Indoor: {mean(indoorRates).toFixed(2).replace(".", ",")} L/h</span>
+                                </div>
                             </div>
                         </div>
                     </div>

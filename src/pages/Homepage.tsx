@@ -109,11 +109,14 @@ export default function Homepage() {
     const modalityMap: Record<string, { count: number; totalSweatRate: number }> = {};
     evaluations.forEach((evalItem) => {
         const mod = evalItem.modality || "Outro";
+        const rate = evalItem.taxaSudorese || 0;
+        // Ignora taxas fisicamente impossíveis (> 10 L/h) para evitar distorção do painel
+        if (rate >= 10) return;
         if (!modalityMap[mod]) {
             modalityMap[mod] = { count: 0, totalSweatRate: 0 };
         }
         modalityMap[mod].count += 1;
-        modalityMap[mod].totalSweatRate += evalItem.taxaSudorese || 0;
+        modalityMap[mod].totalSweatRate += rate;
     });
 
     const totalEvals = evaluations.length;
@@ -143,8 +146,12 @@ export default function Homepage() {
 
     const hydrationMetrics = evaluations.map(getAvaliacaoMetrics);
     const hydrationRisks = evaluations.map(getHydrationRiskProfile);
-    const averageSweatRate = mean(hydrationMetrics.map(metric => metric.sweatRateLh));
-    const medianSweatRate = median(hydrationMetrics.map(metric => metric.sweatRateLh));
+    
+    // Filtro de valores fisiologicamente impossíveis (> 10 L/h) para evitar distorção das estatísticas gerais
+    const validSweatRates = hydrationMetrics.map(metric => metric.sweatRateLh).filter(rate => rate >= 0 && rate < 10);
+    
+    const averageSweatRate = mean(validSweatRates.length > 0 ? validSweatRates : hydrationMetrics.map(metric => metric.sweatRateLh));
+    const medianSweatRate = median(validSweatRates.length > 0 ? validSweatRates : hydrationMetrics.map(metric => metric.sweatRateLh));
     const highRiskCount = hydrationRisks.filter(risk => risk.level === "HIGH").length;
     const attentionRiskCount = hydrationRisks.filter(risk => risk.level === "ATTENTION").length;
     const mostRelevantRisk = hydrationRisks
@@ -203,47 +210,87 @@ export default function Homepage() {
                     </div>
 
                     {!loading && evaluations.length > 0 && (
-                        <div className="border border-gray-200/80 rounded-2xl bg-white p-4 shadow-sm">
-                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-gray-100 pb-3 mb-3">
-                                <div>
-                                    <p className="text-sm sm:text-base font-bold text-gray-800 tracking-tight">
-                                        Perfil Hídrico Longitudinal
-                                    </p>
-                                    <p className="text-xs text-gray-400 font-semibold">
-                                        Média, mediana, variação e triagem de risco das avaliações carregadas.
-                                    </p>
+                        <div className="rounded-2xl bg-white p-5 shadow-sm hover:shadow-md transition-all duration-300">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-gray-100 pb-4 mb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-1.5 h-6 bg-blue-500 rounded-full shrink-0"></div>
+                                    <div>
+                                        <p className="text-base font-extrabold text-gray-800 tracking-tight">
+                                            Perfil Hídrico Longitudinal
+                                        </p>
+                                        <p className="text-xs text-gray-500 font-medium">
+                                            Média, mediana, variação e triagem de risco das avaliações carregadas.
+                                        </p>
+                                    </div>
                                 </div>
-                                <span className={`border px-3 py-1 rounded-full text-xs font-bold w-fit ${mostRelevantRisk ? getRiskBadgeClasses(mostRelevantRisk.level) : 'bg-gray-50 text-gray-500 border-gray-200'}`}>
-                                    Maior triagem: {mostRelevantRisk?.label || "Sem dados"}
+                                <span className={`border px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-sm transition-all duration-300 ${mostRelevantRisk ? getRiskBadgeClasses(mostRelevantRisk.level) : 'bg-gray-50 text-gray-500 border-gray-200'}`}>
+                                    Triagem Geral: {mostRelevantRisk?.label || "Sem dados"}
                                 </span>
                             </div>
 
-                            <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-                                <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
-                                    <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Média</span>
-                                    <strong className="block text-lg text-gray-800 mt-1">{averageSweatRate.toFixed(2).replace(".", ",")} L/h</strong>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                                {/* CARD 1: MÉDIA */}
+                                <div className="group rounded-2xl bg-gradient-to-br from-blue-50/60 to-sky-50/30 border border-blue-100/80 p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm hover:border-blue-200">
+                                    <div className="flex justify-between items-start">
+                                        <span className="text-[10px] uppercase tracking-wider font-extrabold text-blue-500">Média</span>
+                                    </div>
+                                    <strong className="block text-2xl font-black text-blue-900 mt-2 tracking-tight">
+                                        {averageSweatRate.toFixed(2).replace(".", ",")} <span className="text-xs font-bold text-blue-500">L/h</span>
+                                    </strong>
+                                    <span className="text-[9px] font-semibold text-blue-400/80 block mt-1">Taxa média de suor</span>
                                 </div>
-                                <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
-                                    <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Mediana</span>
-                                    <strong className="block text-lg text-gray-800 mt-1">{medianSweatRate.toFixed(2).replace(".", ",")} L/h</strong>
+
+                                {/* CARD 2: MEDIANA */}
+                                <div className="group rounded-2xl bg-gradient-to-br from-indigo-50/60 to-purple-50/30 border border-indigo-100/80 p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm hover:border-indigo-200">
+                                    <div className="flex justify-between items-start">
+                                        <span className="text-[10px] uppercase tracking-wider font-extrabold text-indigo-500">Mediana</span>
+                                    </div>
+                                    <strong className="block text-2xl font-black text-indigo-900 mt-2 tracking-tight">
+                                        {medianSweatRate.toFixed(2).replace(".", ",")} <span className="text-xs font-bold text-indigo-500">L/h</span>
+                                    </strong>
+                                    <span className="text-[9px] font-semibold text-indigo-400/80 block mt-1">Ponto central das coletas</span>
                                 </div>
-                                <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
-                                    <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Var. massa média</span>
-                                    <strong className="block text-lg text-gray-800 mt-1">{averageMassVariation.toFixed(2).replace(".", ",")}%</strong>
+
+                                {/* CARD 3: VARIAÇÃO MASSA */}
+                                <div className="group rounded-2xl bg-gradient-to-br from-emerald-50/60 to-teal-50/30 border border-emerald-100/80 p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm hover:border-emerald-200">
+                                    <div className="flex justify-between items-start">
+                                        <span className="text-[10px] uppercase tracking-wider font-extrabold text-emerald-600">Var. Massa Média</span>
+                                    </div>
+                                    <strong className="block text-2xl font-black text-emerald-900 mt-2 tracking-tight">
+                                        {averageMassVariation.toFixed(2).replace(".", ",")}%
+                                    </strong>
+                                    <span className="text-[9px] font-semibold text-emerald-500/75 block mt-1">Perda média de peso</span>
                                 </div>
-                                <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
-                                    <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Triagem</span>
-                                    <strong className="block text-lg text-gray-800 mt-1">{highRiskCount} alto / {attentionRiskCount} atenção</strong>
+
+                                {/* CARD 4: TRIAGEM */}
+                                <div className="group rounded-2xl bg-gradient-to-br from-amber-50/60 to-orange-50/30 border border-amber-100/80 p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm hover:border-amber-200 col-span-1">
+                                    <div className="flex justify-between items-start">
+                                        <span className="text-[10px] uppercase tracking-wider font-extrabold text-amber-600">Triagens de Risco</span>
+                                    </div>
+                                    <div className="mt-2 flex flex-col justify-end">
+                                        <span className="text-[11px] font-extrabold text-amber-800 flex items-center gap-1.5">
+                                            <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span> {highRiskCount} alto risco
+                                        </span>
+                                        <span className="text-[11px] font-extrabold text-amber-700 flex items-center gap-1.5 mt-1">
+                                            <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span> {attentionRiskCount} atenção
+                                        </span>
+                                    </div>
                                 </div>
-                                <div className="rounded-xl bg-gray-50 border border-gray-200 p-3">
-                                    <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Perfil</span>
-                                    <strong className="block text-sm text-gray-800 mt-1">
+
+                                {/* CARD 5: PERFIL */}
+                                <div className="group rounded-2xl bg-gradient-to-br from-rose-50/60 to-red-50/30 border border-rose-100/80 p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm hover:border-rose-200 col-span-2 sm:col-span-1">
+                                    <div className="flex justify-between items-start">
+                                        <span className="text-[10px] uppercase tracking-wider font-extrabold text-rose-600">Perfil</span>
+                                    </div>
+                                    <strong className="block text-[15px] sm:text-base font-black text-rose-900 mt-3 leading-tight tracking-tight">
                                         {averageSweatRate >= 1.8 ? "Alta perda hídrica" : averageSweatRate >= 1 ? "Perda moderada" : "Perda controlada"}
                                     </strong>
+                                    <span className="text-[9px] font-semibold text-rose-500/75 block mt-1">Classificação geral</span>
                                 </div>
                             </div>
                         </div>
                     )}
+
 
 
                     {loading ? (
