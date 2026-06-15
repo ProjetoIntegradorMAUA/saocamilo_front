@@ -529,7 +529,14 @@ export function buildAvaliacaoReportHtml(avaliacao: AvaliacaoResponse) {
                 ${metricCard("Atleta", avaliacao.atletaNome || "Não informado", "Identificação por nome registrado", true)}
                 ${metricCard("Taxa de sudorese", formatNumber(metrics.sweatRateLh, 2, " L/h"), "Estimativa ajustada", true)}
                 ${metricCard("Balanço hídrico", formatInteger(metrics.hydrationBalance, " mL"), metrics.hydrationBalance < 0 ? "Déficit estimado" : "Superávit estimado")}
-                ${metricCard("Cor da urina", `Escala ${avaliacao.urineColor || "-"}`, getUrineColorLabel(avaliacao.urineColor))}
+                <div class="metric-card">
+                    <span>Cor da urina</span>
+                    <strong style="display:flex;align-items:center;gap:8px;">
+                        <span style="display:inline-block;width:22px;height:22px;border-radius:50%;background:${getUrineColorHex(avaliacao.urineColor)};border:2px solid rgba(0,0,0,0.15);flex-shrink:0;"></span>
+                        Escala ${escapeHtml(String(avaliacao.urineColor || "-"))} — ${escapeHtml(getUrineColorLabel(avaliacao.urineColor))}
+                    </strong>
+                    <small>Classificação basal pré-exercício</small>
+                </div>
                 ${metricCard("Modalidade", avaliacao.modality || "Não informado", formatDate(avaliacao.dataAvaliacao))}
                 ${metricCard("Duração real", formatDuration(avaliacao.durationSeconds), avaliacao.plannedDurationMin ? `Planejado: ${avaliacao.plannedDurationMin} min` : "Planejado não informado")}
                 ${metricCard("Variação de massa", massVariationText, formatNumber(metrics.bodyMassLossPct, 2, "%"))}
