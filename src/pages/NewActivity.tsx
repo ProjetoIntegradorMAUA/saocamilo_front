@@ -61,6 +61,8 @@ export default function NewActivity() {
     const navigate = useNavigate();
     const [status, setStatus] = useState<'pre' | 'running' | 'post'>('pre');
     const [time, setTime] = useState(0);
+    const [realTime, setRealTime] = useState(0);
+    const [stopwatchStarted, setStopwatchStarted] = useState(false);
     const [weather, setWeather] = useState<WeatherData | null>(null);
 
     const [modality, setModality] = useState('Corrida de Rua / Corrida');
@@ -171,14 +173,32 @@ export default function NewActivity() {
     }, []);
 
     useEffect(() => {
+        if (isOfflineSession === false && !stopwatchStarted) {
+            setStopwatchStarted(true);
+        }
+    }, [isOfflineSession, stopwatchStarted]);
+
+    useEffect(() => {
         let interval: ReturnType<typeof setInterval>;
-        if (status === 'running' && isOfflineSession === false) {
+        if (status === 'running' && stopwatchStarted) {
             interval = setInterval(() => {
-                setTime((prev) => prev + 1);
+                setRealTime((prev) => {
+                    const next = prev + 1;
+                    if (!isOfflineSession) {
+                        setTime(next);
+                    }
+                    return next;
+                });
             }, 1000);
         }
         return () => clearInterval(interval);
-    }, [status, isOfflineSession]);
+    }, [status, stopwatchStarted, isOfflineSession]);
+
+    useEffect(() => {
+        if (isOfflineSession === false) {
+            setTime(realTime);
+        }
+    }, [isOfflineSession, realTime]);
 
     useEffect(() => {
         if (isOfflineSession === true) {
@@ -350,6 +370,8 @@ export default function NewActivity() {
                                 setOfflineHours(0);
                                 setOfflineMinutes(0);
                                 setTime(0);
+                                setRealTime(0);
+                                setStopwatchStarted(false);
                             } else if (status === 'post') {
                                 setStatus('running');
                             } else {
