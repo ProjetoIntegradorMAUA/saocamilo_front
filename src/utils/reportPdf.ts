@@ -494,7 +494,32 @@ export function buildAvaliacaoReportHtml(avaliacao: AvaliacaoResponse) {
             color: #6b7280;
             font-size: 10px;
         }
+        .close-bar {
+            background: #ffffff;
+            border-bottom: 1px solid #dde3ea;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .close-btn {
+            background: #9f1724;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .close-btn:hover {
+            background: #82121c;
+        }
         @media print {
+            .no-print { display: none !important; }
             body { background: #ffffff; }
             main {
                 width: 100%;
@@ -510,6 +535,11 @@ export function buildAvaliacaoReportHtml(avaliacao: AvaliacaoResponse) {
     </style>
 </head>
 <body>
+    <div class="close-bar no-print">
+        <button onclick="window.close()" class="close-btn">
+            ✕ Fechar Relatório
+        </button>
+    </div>
     <main>
         <header>
             <div class="brand-row">

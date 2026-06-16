@@ -88,7 +88,7 @@ export default function Login() {
                                 }}
                             />
                         </div>
-                        <div className="mb-2">
+                        <div className="mb-8">
                             <label htmlFor="password" className="block text-gray-700 font-semibold mb-2 text-sm">
                                 Senha
                             </label>
@@ -102,11 +102,6 @@ export default function Login() {
                                     setError("");
                                 }}
                             />
-                        </div>
-                        <div className="mb-8 flex justify-end">
-                            <a href="#" className="text-red-500 hover:text-red-600 text-xs font-medium transition-colors">
-                                Esqueceu sua senha?
-                            </a>
                         </div>
                         <button
                             type="submit"
